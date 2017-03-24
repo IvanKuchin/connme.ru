@@ -27,3 +27,12 @@
 *.exe
 *.out
 *.app
+*.cgi
+
+# password files
+.htpasswd
+ftpsync.settings
+
+# MaxMind DB
+*.mmdb
+
