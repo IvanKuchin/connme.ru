@@ -35,7 +35,10 @@ ftpsync.settings
 
 # MaxMind DB
 *.mmdb
+*.doc*
 
 # archives
 *.tar.gz
 
+# images
+*/images/*
