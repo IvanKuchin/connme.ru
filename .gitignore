@@ -36,3 +36,6 @@ ftpsync.settings
 # MaxMind DB
 *.mmdb
 
+# archives
+*.tar.gz
+
