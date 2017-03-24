@@ -1,0 +1,7 @@
+#ifndef __AVATARUPLOADER__H__
+#define __AVATARUPLOADER__H__
+
+#define	AVATAR_MAX_WIDTH 	800
+#define	AVATAR_MAX_HEIGHT	600
+
+#endif

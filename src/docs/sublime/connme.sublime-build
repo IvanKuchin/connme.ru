@@ -1,0 +1,3 @@
+{
+	"cmd": ["ssh", "-i ~/id_rsa", "ikuchin@connme.ru", "cd ~/src/connme.ru/ && make"]
+}
