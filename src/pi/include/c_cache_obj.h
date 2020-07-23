@@ -15,9 +15,11 @@ using namespace std;
 class c_cache_obj
 {
 	private:
-		map<string, string>				cache;
-		unsigned int					cache_misses = 0;
-		unsigned int					cache_hits = 0;
+		// --- static variable definition makes chache allocation permanent to the process
+		// --- actual variable declaration in .cpp file
+		static map<string, string>			cache;
+		unsigned int						cache_misses = 0;
+		unsigned int						cache_hits = 0;
 
 	public:
 		auto		AddToCache(string _key, string _value) -> string;

@@ -35,6 +35,8 @@ nodiff_files => [
     "system.cpp",
 
     "login.css",
+    "admin/common.css",
+    "pages/common.css",
 
     "faq.js",
     "session.js",
@@ -74,6 +76,8 @@ nodiff_files => [
 
     "forget.htmlt",
     "change_password.htmlt",
+
+    "admin_header.htmlt",
 
     "git_commit.pl",
 

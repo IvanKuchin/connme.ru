@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-#use strict;
+use strict;
+use File::Find;
 
 my $DEBUG = 0;
 my %config = do 'health_srcdiff.conf';
@@ -138,17 +139,17 @@ sub DiffFile
 
 	    if(length($file))
 	    {
-		push(@files, $file);
+			push(@files, $file);
 	    }
 	    else
 	    {
-		if($#files + 1)
-		{
-		    PrintError("$curr_file not found in $domain");
-		}
-		else
-		{
-		}
+			if($#files + 1)
+			{
+			    PrintError("$curr_file not found in $domain");
+			}
+			else
+			{
+			}
 	    }
 	}
 
@@ -194,9 +195,56 @@ sub DiffFiles
     return $result;
 };
 
+# --- Find file part
+
+my	@__file_arr;
+my	$__file_pattern;
+sub __find_sub
+{
+    my $F = $File::Find::name;
+    if($F =~ m/\/build\//)
+    {
+    	# --- skip build folder
+    }
+    elsif ($F =~ m/\/$__file_pattern$/ ) 
+    {
+    	push(@__file_arr,$F);
+    	# print("FOUND: pattern:", $__file_pattern, ", file: ", $F, " arr size:", scalar @file_arr, "\n");
+    }
+}
+
 sub FindFile
 {
     my	($folder, $file) = @_;
 
-    return `find $folder -name $file -type f -print | grep -v "/build/"`;
+    my	$result = "";
+
+    $__file_pattern = $file;
+    @__file_arr = ();
+
+	find({ wanted => \&__find_sub, no_chdir=>1}, $folder);
+
+	my	$arr_size = @__file_arr;
+	# print("-- try to find ", $file, " in folder ", $folder, " -> ", $arr_size, "\n");
+
+	if($arr_size == 1)
+	{
+		$result = $__file_arr[0];
+
+		# print("-----", $result, "\n");
+	}
+	elsif($arr_size == 0)
+	{
+		# --- not an error, file just not found.
+		# --- that could happen if looking for *.cpp in web-folders
+		# --- or *.html in src folder
+	}
+	else
+	{
+	    PrintError($arr_size." x ".$file." found in ".$folder);
+	}
+
+    return $result;
 };
+
+# --- Find file part
