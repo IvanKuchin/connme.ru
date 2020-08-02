@@ -190,16 +190,18 @@ auto			PrintDateTime(const struct tm &_tm) -> string;
 auto			PrintTime(const struct tm &_tm, string format) -> string;
 
 // --- function set for image upload/removal
-int 			GetSpecificData_GetNumberOfFolders(string itemType);
-int 			GetSpecificData_GetMaxFileSize(string itemType);
-unsigned int 	GetSpecificData_GetMaxWidth(string itemType);
-unsigned int 	GetSpecificData_GetMaxHeight(string itemType);
-string 			GetSpecificData_GetBaseDirectory(string itemType);
-string 			GetSpecificData_SelectQueryItemByID(string itemID, string itemType);
-string 			GetSpecificData_UpdateQueryItemByID(string itemID, string itemType, string folderID, string fileName);
-string 			GetSpecificData_GetDBCoverPhotoFolderString(string itemType);
-string 			GetSpecificData_GetDBCoverPhotoFilenameString(string itemType);
-bool			GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *, CUser *);
+auto 			GetSpecificData_GetNumberOfFolders(string itemType) -> int;
+auto 			GetSpecificData_GetMaxFileSize(string itemType) -> int;
+auto		 	GetSpecificData_GetMaxWidth(string itemType) -> unsigned int;
+auto		 	GetSpecificData_GetMaxHeight(string itemType) -> unsigned int;
+auto 			GetSpecificData_GetBaseDirectory(string itemType) -> string;
+auto			GetSpecificData_GetFinalFileExtenstion(string itemType) -> string;
+auto 			GetSpecificData_SelectQueryItemByID(string itemID, string itemType) -> string;
+auto 			GetSpecificData_UpdateQueryItemByID(string itemID, string itemType, string folderID, string fileName) -> string;
+auto 			GetSpecificData_GetDBCoverPhotoFolderString(string itemType) -> string;
+auto 			GetSpecificData_GetDBCoverPhotoFilenameString(string itemType) -> string;
+auto 			GetSpecificData_GetDataTypeByItemType(const string &itemType) -> string;
+auto 			GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *, CUser *) -> string;
 
 // --- UTF8 encoding/decoding
 auto         	convert_utf8_to_windows1251(const char* utf8, char* windows1251, size_t n) -> int;

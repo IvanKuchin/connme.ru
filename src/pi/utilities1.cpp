@@ -3673,19 +3673,55 @@ string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
 	return result;
 }
 
+string GetSpecificData_GetFinalFileExtenstion(string itemType)
+{
+	string	  result = ".jpg";
+
+	MESSAGE_DEBUG("", "", "start");
+
+	if(itemType == "template_sow")						result = ".txt";
+	else if(itemType == "template_psow")				result = ".txt";
+	else if(itemType == "template_costcenter")			result = ".txt";
+	else if(itemType == "template_company")				result = ".txt";
+	else if(itemType == "template_agreement_company")	result = ".txt";
+	else if(itemType == "template_agreement_sow")		result = ".txt";
+	else
+	{
+		MESSAGE_DEBUG("", "", "default extension(" + result + ") taken");
+	}
+
+	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
+
+	return result;
+}
+
+string GetSpecificData_GetDataTypeByItemType(const string &itemType)
+{
+	auto	result = "image"s;
+
+	MESSAGE_DEBUG("", "", "start");
+
+	if(itemType == "template_sow")					result = "template";
+	if(itemType == "template_psow")					result = "template";
+	if(itemType == "template_costcenter")			result = "template";
+	if(itemType == "template_company")				result = "template";
+	if(itemType == "template_agreement_company")	result = "template";
+	if(itemType == "template_agreement_sow")		result = "template";
+
+	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
+
+	return result;
+}
+
 // --- Does the owner user allowed to change it ?
 // --- For example:
 // ---	*) university or school logo can be changed by administartor only.
 // ---	*) gift image could be changed by owner
-bool GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *db, CUser *user)
+auto GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *db, CUser *user) -> string
 {
-	bool	  result = false;
+	auto	  error_message = ""s;
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(db->Query(GetSpecificData_SelectQueryItemByID(itemID, itemType))) // --- item itemID exists ?
 	{
@@ -3694,39 +3730,31 @@ bool GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *db,
 			string	  coverPhotoFolder = db->Get(0, GetSpecificData_GetDBCoverPhotoFolderString(itemType).c_str());
 			string	  coverPhotoFilename = db->Get(0, GetSpecificData_GetDBCoverPhotoFilenameString(itemType).c_str());
 
-			if(coverPhotoFolder.empty() && coverPhotoFilename.empty())
-				result = true;
+			if(coverPhotoFolder.empty() && coverPhotoFilename.empty()) {}
 			else
 			{
-				result = false;
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: access to " + itemType + "(" + itemID + ") denied, because logo already uploaded");
-				}
+				error_message = "logo already uploaded";
+
+				MESSAGE_DEBUG("", "", "access to " + itemType + "(" + itemID + ") denied, because logo already uploaded");
 			}
 		}
 		else if(itemType == "event")
 		{
 			if(user)
 			{
-				if(db->Query("SELECT `id` FROM `event_hosts` WHERE `event_id`=\"" + itemID + "\" AND `user_id`=\"" + user->GetID() + "\";"))
-					result = true;
+				if(db->Query("SELECT `id` FROM `event_hosts` WHERE `event_id`=\"" + itemID + "\" AND `user_id`=\"" + user->GetID() + "\";")) {}
 				else
 				{
-					result = false;
-					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: access to " + itemType + "(" + itemID + ") denied, you are not the event host");
-					}
+					error_message = "you are not the event host";
+
+					MESSAGE_DEBUG("", "", "access to " + itemType + "(" + itemID + ") denied, you are not the event host");
 				}
 			}
 			else
 			{
-				result = false;
-				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: user object is NULL");
-				}
+				error_message = "user object is NULL";
+
+				MESSAGE_ERROR("", "", error_message);
 			}
 		}
 		else if(itemType == "gift")
@@ -3735,50 +3763,38 @@ bool GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *db,
 
 			if(user)
 			{
-				if(user_id == user->GetID())
-					result = true;
+				if(user_id == user->GetID()) {}
 				else
 				{
-					result = false;
-					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: access to " + itemType + "(" + itemID + ") denied, you are not the gift owner");
-					}
+					error_message = "you are not the gift owner";
+
+					MESSAGE_DEBUG("", "", "access to " + itemType + "(" + itemID + ") denied, you are not the gift owner");
 				}
 			}
 			else
 			{
-				result = false;
-				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: user object is NULL");
-				}
+				error_message = "user object is NULL";
+
+				MESSAGE_ERROR("", "", error_message);
 			}
 		}
 		else
 		{
-			CLog	log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+			error_message = "itemType [" + itemType + "] unknown";
+
+			MESSAGE_ERROR("", "", error_message);
 		}
 	}
 	else
 	{
-		result = false;
-		{
-			CLog	log;
-			// --- it could be DEBUG level
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: ERROR: " + itemType + "(" + itemID + ") not found");
-		}
+		error_message = itemType + "(" + itemID + ") not found";
 
+		MESSAGE_ERROR("", "", error_message);
 	}
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (result: " + (result ? "true" : "false") + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (error_message: " + error_message + ")");
 	
-	return result;
+	return error_message;
 }
 
 auto isAllowed_NoSession_Action(string action) -> bool
