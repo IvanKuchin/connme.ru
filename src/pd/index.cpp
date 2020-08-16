@@ -4647,11 +4647,9 @@ int main()
 		// --- JSON avatar list
 		if(action == "JSON_getAvatarList") 
 		{
-			ostringstream	ost;
-			string		sessid;
-			int			affected;
-
 			MESSAGE_DEBUG("", action, "start");
+
+			auto	affected = db.Query("SELECT * FROM `users_avatars` WHERE `userid`=\"" + user.GetID() + "\";");;
 
 			if(user.GetLogin() == "Guest")
 			{
@@ -4660,23 +4658,23 @@ int main()
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}
 
-			ost << "SELECT * FROM `users_avatars` WHERE `userid`=\"" << user.GetID() << "\";";
-			affected = db.Query(ost.str());
 			if(affected > 0)
 			{
+				ostringstream	ost;
+
 				ost.str("");
 				for(auto i = 0; i < affected; i++) 
 				{
+					if(i) ost << ",";
 					ost << "{ \"folder\": \"" << db.Get(i, "folder") << "\", \"filename\": \"" << db.Get(i, "filename") << "\", \"isActive\": \"" << db.Get(i, "isActive") << "\", \"avatarID\": \"" << db.Get(i, "id") << "\" }";
-					if(i < (affected-1)) ost << ", ";
 				}
+
+				indexPage.RegisterVariableForce("result", ost.str());
 			}
 			else
 			{
 				MESSAGE_DEBUG("", action, "there are no avatars for user " + user.GetLogin());
 			}
-
-			indexPage.RegisterVariableForce("result", ost.str());
 
 			if(!indexPage.SetTemplate("ajax_getJobTitles.htmlt"))
 			{
