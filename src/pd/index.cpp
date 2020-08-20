@@ -14004,10 +14004,10 @@ int main()
 		// --- action _news_feed_ MUST BE BELOW action _login_user_
 		if((action == "news_feed") || (action == "getUserWall"))
 		{
-			ostringstream	ost;
-			string			strPageToGet, strNewsOnSinglePage;
-
 			MESSAGE_DEBUG("", action, "start");
+			
+			auto	strNewsOnSinglePage	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("NewsOnSinglePage"));
+			auto	strPageToGet 		= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("page"));
 
 			if((user.GetLogin() == "Guest") && (action == "news_feed"))
 			{
@@ -14016,8 +14016,6 @@ int main()
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}	
 
-			strNewsOnSinglePage	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("NewsOnSinglePage"));
-			strPageToGet 		= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("page"));
 			if(strPageToGet.empty()) strPageToGet = "0";
 			{
 				MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
