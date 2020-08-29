@@ -1,3 +1,3 @@
 # connme.ru
 
-![Travis (.com) branch](https://img.shields.io/travis/com/IvanKuchin/connme.ru/development.svg)
+![Travis (.com) branch](https://travis-ci.com/IvanKuchin/connme.ru.svg?branch=development)
