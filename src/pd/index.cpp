@@ -6017,101 +6017,72 @@ int main()
 
 		if(action == "AJAX_addEditProfileAddCarrierCompany")
 		{
+			auto			error_message = ""s;
 			ostringstream	ostResult;
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
-				MESSAGE_DEBUG("", action, "re-login required");
+				error_message = string(gettext("re-login required"));
 
-				ostResult << "{\"result\": \"error\", \"description\": \"session lost. Need to relogin\"}";
+				MESSAGE_DEBUG("", action, error_message);
+
+				ostResult << "{\"result\": \"error\", \"description\": \"" + error_message + "\"}";
 			}
 			else
 			{
-				string			title = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("title"));
-				string			companyName = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("companyName"));
-				string			occupationStart = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("occupationStart"));
-				string			occupationFinish = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("occupationFinish"));
-				long int		currentCompany = atol(indexPage.GetVarsHandler()->Get("currentCompany").c_str());
-				string			responsibilities = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("responsibilities"));
+				auto			title				= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("title"));
+				auto			companyName			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("companyName"));
+				auto			occupationStart		= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("occupationStart"));
+				auto			occupationFinish	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("occupationFinish"));
+				auto			currentCompany		= atol(indexPage.GetVarsHandler()->Get("currentCompany").c_str());
+				auto			responsibilities	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("responsibilities"));
 				ostringstream	ost;
 
 				if(title.length() && companyName.length() && occupationStart.length() && (currentCompany || occupationFinish.length()))
 				{
-					unsigned long		titleID = 0, companyID = 0, newCarrierID = 0;
-					string				logo_filename = "", logo_folder = "";
-					int					affected;
+					auto		titleID = 0u, companyID = 0u, newCarrierID = 0u;
+					auto		logo_filename = ""s, logo_folder = ""s;
+					auto		affected = db.Query("SELECT * FROM `company_position` WHERE `title`=\"" + title + "\";");
 
-					ost.str("");
-					ost << "SELECT * FROM `company_position` WHERE `title`=\"" << title << "\";";
-					if((affected = db.Query(ost.str())) > 0)
+					if(affected)
 					{
 						titleID = stol(db.Get(0, "id"));
 
-						{
-							CLog	log;
-							ostringstream	ost;
-
-							ost.str("");
-							ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": job title [" << title << "] already exists, no need to update DB.";
-							log.Write(DEBUG, ost.str());
-						}
+						MESSAGE_DEBUG("", action, "job title [" + title + "] already exists, no need to update DB.")
 					}
 					else
 					{
-						{
-							CLog	log;
-							ostringstream	ost;
+						MESSAGE_DEBUG("", action, "new job title [" + title + "] needed to be added to DB")
 
-							ost.str("");
-							ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": new job title [" << title << "] needed to be added to DB";
-							log.Write(DEBUG, ost.str());
-						}
-						ost.str("");
-						ost << "insert into `company_position` (`title`) VALUES (\"" << title << "\");";
-						titleID = db.InsertQuery(ost.str());
+						titleID = db.InsertQuery("insert into `company_position` (`title`) VALUES (\"" + title + "\");");
 					}
 
-					ost.str("");
-					ost << "SELECT * FROM `company` WHERE `name`=\"" << companyName << "\";";
-					if((affected = db.Query(ost.str())) > 0)
+					if((affected = db.Query("SELECT * FROM `company` WHERE `name`=\"" + companyName + "\";")) > 0)
 					{
 						companyID = stol(db.Get(0, "id"));
 						logo_folder = db.Get(0, "logo_folder");
 						logo_filename = db.Get(0, "logo_filename");
 
-						{
-							CLog	log;
-							ostringstream	ost;
-
-							ost.str("");
-							ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": company [" << companyName << "] already exists, no need to update DB.";
-							log.Write(DEBUG, ost.str());
-						}
+						MESSAGE_DEBUG("", action, "company [" + companyName + "] already exists, no need to update DB.")
 					}
 					else
 					{
-						{
-							CLog	log;
-							MESSAGE_DEBUG("", action, "new company [" + companyName + "] needed to be added to DB");
-						}
+						MESSAGE_DEBUG("", action, "new company [" + companyName + "] needed to be added to DB");
 
 						companyID = db.InsertQuery("INSERT INTO `company` (`name`) VALUES (\"" + companyName + "\");");
 						if(companyID)
 						{
 							db.Query("UPDATE `company` SET `link`=\"" + to_string(companyID) + "\" WHERE `id`=\"" + to_string(companyID) + "\";");
+
 							if(db.isError())
 							{
-								CLog			log;
 								MESSAGE_ERROR("", action, "can't update `company`.`link`=" + to_string(companyID) + " WHERE `company`.`id`=" + to_string(companyID) + ", error message (" + db.GetErrorMessage() + ")");
 							}
 						}
 						else
 						{
-							{
-								CLog	log;
-								MESSAGE_ERROR("", action, "insertion company (" + companyName + ") to table `company`");
-							}
+							MESSAGE_ERROR("", action, "insertion company (" + companyName + ") to table `company`");
 						}
 					}
 
@@ -6135,14 +6106,8 @@ int main()
 							}
 							else
 							{
-								{
-									CLog	log;
-									ostringstream	ost;
-
-									ost.str("");
-									ost << __func__ << "[" << __LINE__ << "] " << "::" + action + ": ERROR: fail to INSERT INTO `feed`";
-									log.Write(ERROR, ost.str());
-								}
+								error_message = gettext("SQL syntax error");
+								MESSAGE_ERROR("", action, error_message);
 							}
 							ostResult	<< "{\"result\": \"success\","
 										<< "\"logo_folder\": \"" << logo_folder << "\","
@@ -6153,44 +6118,25 @@ int main()
 						}
 						else
 						{
-							{
-								CLog	log;
-								ostringstream	ost;
+							error_message = gettext("fail to insert to db");
 
-								ost.str("");
-								ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": issue with inserting int DB table [users_company]";
-								log.Write(ERROR, ost.str());
-							}
-
-							ostResult << "{\"result\": \"error\", \"description\": \"issue with DB operations on adding carrier\"}";
+							ostResult << "{\"result\": \"error\", \"description\": \"" + error_message + "\"}";
 						}
 					}
 					else
 					{
-						{
-							CLog	log;
-							ostringstream	ost;
+						error_message = gettext("company or occupation not found");
+						MESSAGE_ERROR("", action, error_message);
 
-							ost.str("");
-							ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": issue with DB operations on companyName or jobTitle";
-							log.Write(ERROR, ost.str());
-						}
-
-						ostResult << "{\"result\": \"error\", \"description\": \"issue with DB operations on companyName or jobTitle\"}";
+						ostResult << "{\"result\": \"error\", \"description\": \"" + error_message + "\"}";
 					}
 				}
 				else
 				{
-					{
-						CLog	log;
-						ostringstream	ost;
+					error_message = gettext("mandatory parameter missed");
+					MESSAGE_ERROR("", action, error_message);
 
-						ost.str("");
-						ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": mandatory parameter missed or empty in HTML request [title, company, dateStart, dateFinish]";
-						log.Write(ERROR, ost.str());
-					}
-
-					ostResult << "{\"result\": \"error\", \"description\": \"some mandatory parameter missed\"}";
+					ostResult << "{\"result\": \"error\", \"description\": \"" + error_message + "\"}";
 				}
 			}
 
@@ -6215,9 +6161,9 @@ int main()
 			}
 			else
 			{
-				string			newVendorName = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("vendor"));
-				string			track = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("track"));
-				string			number = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("number"));
+				auto		newVendorName	 = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("vendor"));
+				auto		track			 = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("track"));
+				auto		number			 = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("number"));
 
 				if(newVendorName.length() && track.length() && number.length())
 				{

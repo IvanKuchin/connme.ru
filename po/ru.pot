@@ -40,6 +40,12 @@ msgstr "Логин должен состоять только из букв"
 msgid "SQL syntax error"
 msgstr "Ошибка БД"
 
+msgid "you are already subscribed"
+msgstr "вы уже подписаны на новости этой компании"
+
+msgid "company or occupation not found"
+msgstr "компания или должность не найдены"
+
 msgid "Sent by"
 msgstr "Отправлено"
 
