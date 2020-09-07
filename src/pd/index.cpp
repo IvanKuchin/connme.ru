@@ -5955,25 +5955,16 @@ int main()
 			}
 			else
 			{
-				auto		respID = stol(CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id")));
+				auto		respID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
 				auto		respText = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("content"));
-				ostringstream	ost;
 
-
-				ost.str("");
-				ost << "SELECT * FROM `users_company` WHERE `id`='" << respID << "' and `user_id`='" << user.GetID() << "';";
-				if(db.Query(ost.str()))
+				if(db.Query("SELECT * FROM `users_company` WHERE `id`='" + respID + "' and `user_id`='" + user.GetID() + "';"))
 				{
 					if(db.Get(0, "responsibilities") != respText)
 					{
-						ost.str("");
-						ost << "update `users_company` set `responsibilities`=\"" << respText << "\" WHERE `id`='" << respID << "';";
-						db.Query(ost.str());
+						db.Query("update `users_company` set `responsibilities`=\"" + respText + "\" WHERE `id`='" + respID + "';");
 
-						// --- Update live feed
-						ost.str("");
-						ost << "INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" << user.GetID() << "\", \"20\", \"" << respID << "\", NOW())";
-						if(db.InsertQuery(ost.str()))
+						if(db.InsertQuery("INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + user.GetID() + "\", \"20\", \"" + respID + "\", NOW())"))
 						{
 
 							ostResult << "{\"result\": \"success\"}";
@@ -5982,10 +5973,7 @@ int main()
 						{
 							ostResult << "{\"result\": \"error\", \"description\": \"error updating live feed\"}";
 
-							{
-								CLog	log;
-								MESSAGE_ERROR("", action, "can't update feed table");
-							}
+							MESSAGE_ERROR("", action, "can't update feed table");
 						}
 					}
 					else
@@ -5996,12 +5984,7 @@ int main()
 				}
 				else
 				{
-					ostringstream	ost;
-
-					{
-						CLog	log;
-						MESSAGE_ERROR("", action, "changing alien profile");
-					}
+					MESSAGE_ERROR("", action, "changing alien profile");
 
 					ostResult << "{\"result\": \"error\", \"description\": \"changing alien profile\"}";
 				}
