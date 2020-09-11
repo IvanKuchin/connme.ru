@@ -1,4 +1,5 @@
 set(EXECUTABLE_CGIs
+    helpdesk.cgi
     account.cgi
     avataruploader.cgi
     generalimageuploader.cgi
@@ -30,18 +31,19 @@ set(JOINT_LIBRARY_SRCs
     cstatistics.cpp
     cvideoconverter.cpp
     c_float.cpp
-    c_cache_obj.cpp
-    c_archive.cpp
+    c_config.cpp
     c_smsc.cpp
-    c_price_spelling.cpp
     utilities1.cpp
     utilities2.cpp
     utilities3.cpp
     utilities_common.cpp
+    c_cache_obj.cpp
+    c_date_spelling.cpp
     )
-
 # ---- list of independent libraries
 set(INDEPENDENT_LIBRARIES_SRC
+    c_archive.cpp
+    c_price_spelling.cpp
     )
 
 # --- MACROSes start ---

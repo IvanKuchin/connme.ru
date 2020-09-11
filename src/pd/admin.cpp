@@ -33,7 +33,7 @@ int main()
 
  
 		CMysql	db;
-		if(db.Connect(DB_NAME, DB_LOGIN, DB_PASSWORD) < 0)
+		if(db.Connect() < 0)
 		{
 			CLog	log(ADMIN_LOG_FILE_NAME);
 

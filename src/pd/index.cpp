@@ -309,7 +309,7 @@ int main()
 			throw CException("Template file was missing");
 		}
 
-		if(db.Connect(DB_NAME, DB_LOGIN, DB_PASSWORD) < 0)
+		if(db.Connect() < 0)
 		{
 			MESSAGE_ERROR("", action, "Can not connect to mysql database");
 			throw CExceptionHTML("MySql connection");
@@ -3175,7 +3175,7 @@ int main()
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}
 
-			if(db1.Connect(DB_NAME, DB_LOGIN, DB_PASSWORD) < 0)
+			if(db1.Connect() < 0)
 			{
 				CLog	log;
 		
@@ -4539,7 +4539,7 @@ int main()
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}
 
-			if(db1.Connect(DB_NAME, DB_LOGIN, DB_PASSWORD) < 0)
+			if(db1.Connect() < 0)
 			{
 				CLog	log;
 		

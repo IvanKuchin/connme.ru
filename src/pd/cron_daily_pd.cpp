@@ -679,7 +679,7 @@ int main()
 	try
 	{
 
-		if(db.Connect(DB_NAME, DB_LOGIN, DB_PASSWORD) < 0)
+		if(db.Connect() < 0)
 		{
 			{ MESSAGE_ERROR("", "", "Can not connect to mysql database"); }
 			throw CExceptionHTML("MySql connection");
