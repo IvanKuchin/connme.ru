@@ -146,7 +146,7 @@ auto 			CutTrailingZeroes(string number) -> string;
 auto			GetSiteThemesInJSONFormat(string sqlQuery, CMysql *, CUser *) -> string;
 
 // --- file system functions
-auto CleanupFilename(string filename) -> string;
+auto			CleanupFilename(string filename) -> string;
 
 // --- string counters
 auto			GetNumberOfCntrls (const wstring &src) -> unsigned int;
