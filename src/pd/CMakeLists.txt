@@ -15,9 +15,13 @@ set(EXECUTABLE_CGIs_with_PI_LIBS
     )
 
 # --- Libraries
+# ---- joint librabry
+set(JOINT_LIBRARY_SRCs
+    utilities_connme1.cpp
+    utilities_connme2.cpp
+)
 # ---- list of independent libraries
 set(INDEPENDENT_LIBRARIES_SRCs
-    utilities_connme1.cpp     # --- order is important, must follow c_bt
     )
 
 # --- MACROSes start ---
@@ -51,6 +55,8 @@ foreach(INDEPENDENT_LIBRARY_SRC ${INDEPENDENT_LIBRARIES_SRCs})
 
     set_pd_lib_properties(${file_without_ext} "${file_without_ext}.cpp" "${PROJECT_ALL_INCLUDE_DIRECTORIES}" "${project_link_libraries}")
 endforeach()
+
+set_pd_lib_properties(__joint_pd "${JOINT_LIBRARY_SRCs}" "${PROJECT_ALL_INCLUDE_DIRECTORIES}" "")
 
 # --- MSVC grouping
 source_group("Headers Private"  FILES ${HDR_PRIVATE})

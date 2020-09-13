@@ -24,4 +24,7 @@ auto			FlipImageVertical(string filename) -> string;
 auto			FlipImageHorizontal(string filename) -> string;
 auto			RenameImageInDB(string image_id, CMysql *) -> string;
 
+auto			GetUserListInJSONFormat_BySearchString(const string &lookForKey, bool include_myself, CMysql *, CUser *) -> string;
+auto			GetUsersID_BySearchString(const string &lookForKey, bool include_myself, CMysql *db, CUser *user) -> vector<string>;
+
 #endif

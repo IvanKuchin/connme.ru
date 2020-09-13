@@ -387,6 +387,53 @@ int main(void)
 			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 		}
 
+		if(action == "AJAX_getUserAutocompleteList")
+		{
+			auto			term = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("term"));
+			auto			template_name = "json_response.htmlt";
+			auto			success_message = ""s;
+			auto			error_message = ""s;
+
+			if(term.length())
+			{
+				auto	users_id	= GetUsersID_BySearchString(term, false, &db, &user);
+
+				if(users_id.size())
+				{
+					int		affected	= db.Query("SELECT `id`, `name`, `nameLast` FROM `users` WHERE `id` IN (" + join(users_id, ",") + ") LIMIT 0, 20;");
+
+					for(int i = 0; i < affected; ++i)
+					{
+						if(i) success_message += ",";
+						success_message += "{\"id\":\"" + db.Get(i, "id") + "\",\"label\":\"" + RemoveQuotas(ConvertHTMLToText(db.Get(i, "name") + " " + db.Get(i, "nameLast"))) + "\"}";
+					}
+				}
+				else
+				{
+					MESSAGE_DEBUG("", action, "no users found");
+				}
+			}
+			else
+			{
+				error_message = gettext("user id not found");
+				MESSAGE_DEBUG("", action, error_message);
+			}
+
+
+			if(error_message.empty())
+			{
+				indexPage.RegisterVariableForce("result", "[" + success_message + "]");
+			}
+			else
+			{
+				MESSAGE_DEBUG("", action, error_message);
+	
+				indexPage.RegisterVariableForce("result", "[]");
+			}
+
+			if(!indexPage.SetTemplate(template_name)) MESSAGE_ERROR("", action, "can't find template " + template_name);
+		}
+
 		MESSAGE_DEBUG("", "", "post-condition if(action == \"" + action + "\")");
 
 		indexPage.OutTemplate();

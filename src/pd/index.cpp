@@ -3102,265 +3102,30 @@ int main()
 			MESSAGE_DEBUG("", action, "finish");
 		}
 
-		// --- JSON friend list for autocomplete
 		if((action == "JSON_getFindFriendsListAutocomplete") || (action == "JSON_getFindFriendsListAutocompleteIncludingMyself") || (action == "JSON_getFindFriendsList"))
 		{
-			ostringstream	ost, ostFinal;
-			string			sessid, lookForKey, userList;
-			vector<string>	searchWords;
+			MESSAGE_DEBUG("", "", "start");
 
-			MESSAGE_DEBUG("", action, "start");
+			auto	lookForKey = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("lookForKey"));
 
-			// --- Initialization
-			ostFinal.str("");
 
-			if(user.GetLogin() == "Guest")
+/*			if(user.GetLogin() == "Guest")
 			{
 				MESSAGE_DEBUG("", action, "re-login required");
 
-				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
+		        indexPage.RegisterVariableForce("result", "{\"status\":\"error\",\"description\":\"re-login required\",\"link\":\"/" + GUEST_USER_DEFAULT_ACTION + "?rand=" + GetRandom(10) + "\"}");
 			}
-
-			lookForKey = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("lookForKey"));
-
-			if(qw(lookForKey, searchWords))
+			else
+*/
+			if(lookForKey.length())
 			{
-
-				ostFinal << "[";
-				{
-					// --- Logging
-					CLog			log;
-
-					MESSAGE_DEBUG("", action, "qw4(" + lookForKey + ")");
-	/*				for(vector<string>::iterator it = searchWords.begin(); it != searchWords.end(); ++it, i++)
-					{
-						ost << string(__func__) + "[" + to_string(__LINE__) << "] " + action + ": parsed value at index " << i << " [" << *it << "]" << endl;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) << "] " + action + ": parsed value at index " << i << " [" << *it << "]" << endl);
-					}
-	*/
-				}
-
-				// --- single search word can be name, surname, company name 
-				if(searchWords.size() == 1)		
-				{
-					{
-						CLog log;
-						MESSAGE_DEBUG("", action, "single word search");
-					}
-
-					// --- Looking through name, surname
-					ost.str("");
-					ost << "SELECT * FROM `users` WHERE "
-							" `isActivated`='Y' and `isblocked`='N' "
-							<< (action == "JSON_getFindFriendsListAutocompleteIncludingMyself" ? "" : " and `users`.`id`!=\"" + user.GetID() + "\" ") <<
-							" and (`name` like \"%" 	<< lookForKey << "%\" or `nameLast` like \"%" 	<< lookForKey << "%\");";
-
-					userList = GetUserListInJSONFormat(ost.str(), &db, &user);
-					if(userList.length() > 0) 
-					{
-						// --- comma required only if previous text is exists
-						if(ostFinal.str().length() > 10) ostFinal << ","; 
-						ostFinal  << std::endl << userList; 
-					}
-
-					// --- Looking through company title
-					ost.str("");
-					ost << "SELECT * FROM `users` "
-							"left join `users_company` on `users_company`.`user_id` = `users`.`id` "
-							"left join `company` on `company`.`id`=`users_company`.`company_id` "
-							"where "
-							"`users`.`isActivated`='Y' "
-							" and `users`.`isblocked`='N' "
-							<< (action == "JSON_getFindFriendsListAutocompleteIncludingMyself" ? "" : " and `users`.`id`!=\"" + user.GetID() + "\" ") <<
-							" and `users_company`.`current_company`='1' "
-							" and `company`.`name` like \"%" 	<< lookForKey << "%\";";
-
-					userList = GetUserListInJSONFormat(ost.str(), &db, &user);
-					if(userList.length() > 0) 
-					{
-						// --- comma required only if previous text is exists
-						if(ostFinal.str().length() > 10) ostFinal << ","; 
-						ostFinal  << std::endl << userList; 
-					}
-
-				}
-
-				// --- two words searching through DB 
-				if(searchWords.size() == 2)
-				{
-					{
-						CLog log;
-						MESSAGE_DEBUG("", action, "two words search");
-					}
-
-					// --- Looking through user name,surname and company title
-					ost.str("");
-					ost << "SELECT * FROM `users` "
-							" left join `users_company` on `users_company`.`user_id` = `users`.`id` "
-							" left join `company` on `company`.`id`=`users_company`.`company_id` "
-							" where "
-							" `users`.`isActivated`='Y' "
-							" and `users`.`isblocked`='N' "
-							<< (action == "JSON_getFindFriendsListAutocompleteIncludingMyself" ? "" : " and `users`.`id`!=\"" + user.GetID() + "\" ") <<
-							" and `users_company`.`current_company`='1' "
-							" and ( "
-							" 	`company`.`name` like \"%" 	<< searchWords[0] << "%\" or "
-							" 	`company`.`name` like \"%" 	<< searchWords[1] << "%\" "
-							" ) and ( "
-							" 	`users`.`name` like \"%" 		<< searchWords[0] << "%\" or "
-							" 	`users`.`name` like \"%" 		<< searchWords[1] << "%\" or "
-							" 	`users`.`nameLast` like \"%" 	<< searchWords[0] << "%\" or "
-							" 	`users`.`nameLast` like \"%" 	<< searchWords[1] << "%\" "
-							" );";
-
-					userList = GetUserListInJSONFormat(ost.str(), &db, &user);
-					if(userList.length() > 0) 
-					{
-						// --- comma required only if previous text is exists
-						if(ostFinal.str().length() > 10) ostFinal << ","; 
-						ostFinal  << std::endl << userList; 
-					}
-					else
-					{
-						// --- here code will be run only if multiwork search was not sucessfull on previous step
-						// --- earlier: user _and_ company is not success
-						// --- here: user _or_ company
-						{
-							CLog log;
-							MESSAGE_DEBUG("", action, "(user _and_ company) has fail, try (user _without_ company) ");
-						}
-
-						ost.str("");
-						ost << "SELECT * FROM `users` "
-								" WHERE `isActivated`='Y' "
-								" and `isblocked`='N' "
-								<< (action == "JSON_getFindFriendsListAutocompleteIncludingMyself" ? "" : " and `users`.`id`!=\"" + user.GetID() + "\" ") <<
-								" and ( "
-								" ( "
-								" 	`users`.`name` like \"%" 		<< searchWords[1] << "%\" and "
-								" 	`users`.`nameLast` like \"%" 	<< searchWords[0] << "%\" "
-								" ) "
-								" or "
-								" ( "
-								" 	`users`.`name` like \"%" 		<< searchWords[0] << "%\" and "
-								" 	`users`.`nameLast` like \"%" 	<< searchWords[1] << "%\" "
-								" ) "
-								" );";
-
-						userList = GetUserListInJSONFormat(ost.str(), &db, &user);
-						if(userList.length() > 0) 
-						{
-							// --- comma required only if previous text is exists
-							if(ostFinal.str().length() > 10) ostFinal << ","; 
-							ostFinal  << std::endl << userList; 
-						}
-					}
-
-				}
-
-				// --- three words searching through DB 
-				if(searchWords.size() == 3)
-				{
-					{
-						CLog log;
-						MESSAGE_DEBUG("", action, "three words search");
-					}
-
-					// --- Looking through user name,surname and company title
-					ost.str("");
-					ost << "SELECT * FROM `users` \
-							left join `users_company` on `users_company`.`user_id` = `users`.`id` \
-							left join `company` on `company`.`id`=`users_company`.`company_id` \
-							where \
-							`users`.`isActivated`='Y' and `users`.`isblocked`='N' and `users`.`id`!=\"" << user.GetID() << "\" and \
-							`users_company`.`current_company`='1' and \
-							( \
-								`company`.`name` like \"%" 		<< searchWords[0] << "%\" or \
-								`company`.`name` like \"%" 		<< searchWords[1] << "%\" or \
-								`company`.`name` like \"%" 		<< searchWords[2] << "%\" \
-							) and ( \
-								`users`.`name` like \"%" 		<< searchWords[0] << "%\" or \
-								`users`.`name` like \"%" 		<< searchWords[1] << "%\" or \
-								`users`.`name` like \"%" 		<< searchWords[2] << "%\" or \
-								`users`.`nameLast` like \"%" 	<< searchWords[0] << "%\" or \
-								`users`.`nameLast` like \"%" 	<< searchWords[1] << "%\" or \
-								`users`.`nameLast` like \"%" 	<< searchWords[2] << "%\" \
-							);";
-
-					userList = GetUserListInJSONFormat(ost.str(), &db, &user);
-					if(userList.length() > 0) 
-					{
-						// --- comma required only if previous text is exists
-						if(ostFinal.str().length() > 10) ostFinal << ","; 
-						ostFinal  << std::endl << userList; 
-					}
-					else
-					{
-						// --- here code will be run only if multiwork search was not sucessfull on previous step
-						// --- earlier: user _and_ company is not success
-						// --- here: user _or_ company
-						{
-							CLog log;
-							MESSAGE_DEBUG("", action, "(user _and_ company) has fail, try (user _without_ company) ");
-						}
-
-						ost.str("");
-						ost << "SELECT * FROM `users` WHERE `isActivated`='Y' and `isblocked`='N' and `id`!=\"" << user.GetID() << "\" and ( \
-								( \
-									`users`.`name` like \"%" 		<< searchWords[1] << "%\" and \
-									`users`.`nameLast` like \"%" 	<< searchWords[0] << "%\" \
-								) \
-								or \
-								( \
-									`users`.`name` like \"%" 		<< searchWords[0] << "%\" and \
-									`users`.`nameLast` like \"%" 	<< searchWords[1] << "%\" \
-								) \
-								or \
-								( \
-									`users`.`name` like \"%" 		<< searchWords[2] << "%\" and \
-									`users`.`nameLast` like \"%" 	<< searchWords[0] << "%\" \
-								) \
-								or \
-								( \
-									`users`.`name` like \"%" 		<< searchWords[0] << "%\" and \
-									`users`.`nameLast` like \"%" 	<< searchWords[2] << "%\" \
-								) \
-								or \
-								( \
-									`users`.`name` like \"%" 		<< searchWords[1] << "%\" and \
-									`users`.`nameLast` like \"%" 	<< searchWords[2] << "%\" \
-								) \
-								or \
-								( \
-									`users`.`name` like \"%" 		<< searchWords[2] << "%\" and \
-									`users`.`nameLast` like \"%" 	<< searchWords[1] << "%\" \
-								) \
-								);";
-
-						userList = GetUserListInJSONFormat(ost.str(), &db, &user);
-						if(userList.length() > 0) 
-						{
-							// --- comma required only if previous text is exists
-							if(ostFinal.str().length() > 10) ostFinal << ","; 
-							ostFinal  << std::endl << userList; 
-						}
-					}
-
-				}
-
-				ostFinal << std::endl << "]";
+				auto	include_myself = (action == "JSON_getFindFriendsListAutocompleteIncludingMyself");
+				indexPage.RegisterVariableForce("result", "[" + GetUserListInJSONFormat_BySearchString(lookForKey, include_myself, &db, &user) + "]");
 			}
-
-			{
-				MESSAGE_DEBUG("", action, "final response [" + ostFinal.str() + "]");
-			}
-
-
-			indexPage.RegisterVariableForce("result", ostFinal.str());
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", action, " template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 		}
