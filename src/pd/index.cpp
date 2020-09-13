@@ -2418,7 +2418,6 @@ int main()
 		{
 			MESSAGE_DEBUG("", action, "start");
 
-			ostringstream	ost, result;
 			auto			sessid						= ""s;
 			auto			friendID					= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("friendID"));
 			auto			requestedFriendshipStatus	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("status"));
@@ -2428,110 +2427,108 @@ int main()
 
 			if(user.GetLogin() == "Guest")
 			{
-				MESSAGE_DEBUG("", action, "re-login required");
-
-				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
-			}
-
-			if((friendID.length() == 0) || (requestedFriendshipStatus.length() == 0))
-			{
-				error_message = gettext("mandatory parameter missed");
-				MESSAGE_ERROR("", action, error_message);
+				error_message = gettext("re-login required");
+				MESSAGE_DEBUG("", action, error_message);
 			}
 			else
 			{
-				if(db.Query("SELECT * FROM `users_friends` WHERE `userID`='" + user.GetID() + "' and `friendID`='" + friendID + "';")) 
-					currentFriendshipStatus = db.Get(0, "state");
-				else 
-					currentFriendshipStatus = "empty";
-
-				if((requestedFriendshipStatus == "requested") || (requestedFriendshipStatus == "requesting")) 
+				if((friendID.length() == 0) || (requestedFriendshipStatus.length() == 0))
 				{
-					if((currentFriendshipStatus == "empty") || (currentFriendshipStatus == "ignored"))
-					{
-						db.Query(
-								"START TRANSACTION;"
-								"INSERT INTO `users_friends` (`userID`, `friendID`, `state`, `date`) "
-								"VALUES (" + quoted(user.GetID()) + "," + quoted(friendID) + ", \"requesting\", NOW());"
-								"INSERT INTO `users_friends` (`userID`, `friendID`, `state`, `date`) "
-								"VALUES (" + quoted(friendID) + ", " + quoted(user.GetID()) + ", \"requested\", NOW());"
-								"INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) "
-								"VALUES(\"\", " + quoted(user.GetID()) + ", \"16\", " + quoted(friendID) + ",  NOW());"
-								"COMMIT;"
-						);
-					}
-					else
-					{
-						error_message = gettext("friendship status can't be changed") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
-						MESSAGE_ERROR("", action, error_message);
-					}
-				}
-				else if (requestedFriendshipStatus == "disconnect")
-				{
-
-					if((currentFriendshipStatus == "requested") || (currentFriendshipStatus == "requesting") || (currentFriendshipStatus == "confirmed") || (currentFriendshipStatus == "blocked"))
-					{
-						db.Query(
-								"DELETE FROM `users_friends` WHERE "
-								"(`userID`=\"" + user.GetID() + "\" AND `friendID`=\"" + friendID + "\" ) "
-								"OR "
-								"(`friendID`=\"" + user.GetID() + "\" AND `userID`=\"" + friendID + "\" );"
-								);
-
-						db.Query(
-								"DELETE FROM `feed` WHERE "
-								"(`userId`=\"" + user.GetID() + "\" AND `actionId`=\"" + friendID + "\" AND `actionTypeId` IN (14, 15, 16)) "
-								"OR "
-								"(`actionId`=\"" + user.GetID() + "\" AND `userId`=\"" + friendID + "\" AND `actionTypeId` IN (14, 15, 16)) "
-								);
-					}
-					else
-					{
-						error_message = gettext("friendship status can't be changed") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
-						MESSAGE_ERROR("", action, error_message);
-					}
-
-				}
-				else if(requestedFriendshipStatus == "confirm")
-				{
-					if((currentFriendshipStatus == "requested") || (currentFriendshipStatus == "requesting") || (currentFriendshipStatus == "confirmed") || (currentFriendshipStatus == "blocked"))
-					{
-						db.Query(
-								"update `users_friends` set `state`='confirmed', `date`=NOW() WHERE "
-								"(`userID`=\"" + user.GetID() + "\" AND `friendID`=\"" + friendID + "\") "
-								"OR "
-								"(`friendID`=\"" + user.GetID() + "\" AND `userID`=\"" + friendID + "\" );"
-						);
-
-						if(db.InsertQuery("INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + user.GetID() + "\", \"14\", \"" + friendID + "\", NOW())"))
-						{
-						}
-						else
-						{
-							MESSAGE_ERROR("", action, "inserting into `feed`");
-						}
-
-						if(db.InsertQuery("INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + friendID + "\", \"14\", \"" + user.GetID() + "\", NOW())"))
-						{
-						}
-						else
-						{
-							MESSAGE_ERROR("", action, "inserting into `feed`");
-						}
-					}
-					else
-					{
-						error_message = gettext("friendship status can't be changed") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
-						MESSAGE_ERROR("", action, error_message);
-					}
+					error_message = gettext("mandatory parameter missed");
+					MESSAGE_ERROR("", action, error_message);
 				}
 				else
 				{
-					error_message = gettext("requested friendship status is unknown") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
-					MESSAGE_ERROR("", action, error_message);
+					if(db.Query("SELECT * FROM `users_friends` WHERE `userID`='" + user.GetID() + "' and `friendID`='" + friendID + "';")) 
+						currentFriendshipStatus = db.Get(0, "state");
+					else 
+						currentFriendshipStatus = "empty";
+
+					if((requestedFriendshipStatus == "requested") || (requestedFriendshipStatus == "requesting")) 
+					{
+						if((currentFriendshipStatus == "empty") || (currentFriendshipStatus == "ignored"))
+						{
+							db.Query(
+									"START TRANSACTION;"
+									"INSERT INTO `users_friends` (`userID`, `friendID`, `state`, `date`) "
+									"VALUES (" + quoted(user.GetID()) + "," + quoted(friendID) + ", \"requesting\", NOW());"
+									"INSERT INTO `users_friends` (`userID`, `friendID`, `state`, `date`) "
+									"VALUES (" + quoted(friendID) + ", " + quoted(user.GetID()) + ", \"requested\", NOW());"
+									"INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) "
+									"VALUES(\"\", " + quoted(user.GetID()) + ", \"16\", " + quoted(friendID) + ",  NOW());"
+									"COMMIT;"
+							);
+						}
+						else
+						{
+							error_message = gettext("friendship status can't be changed") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
+							MESSAGE_ERROR("", action, error_message);
+						}
+					}
+					else if (requestedFriendshipStatus == "disconnect")
+					{
+
+						if((currentFriendshipStatus == "requested") || (currentFriendshipStatus == "requesting") || (currentFriendshipStatus == "confirmed") || (currentFriendshipStatus == "blocked"))
+						{
+							db.Query(
+									"DELETE FROM `users_friends` WHERE "
+									"(`userID`=\"" + user.GetID() + "\" AND `friendID`=\"" + friendID + "\" ) "
+									"OR "
+									"(`friendID`=\"" + user.GetID() + "\" AND `userID`=\"" + friendID + "\" );"
+									);
+
+							db.Query(
+									"DELETE FROM `feed` WHERE "
+									"(`userId`=\"" + user.GetID() + "\" AND `actionId`=\"" + friendID + "\" AND `actionTypeId` IN (14, 15, 16)) "
+									"OR "
+									"(`actionId`=\"" + user.GetID() + "\" AND `userId`=\"" + friendID + "\" AND `actionTypeId` IN (14, 15, 16)) "
+									);
+						}
+						else
+						{
+							error_message = gettext("friendship status can't be changed") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
+							MESSAGE_ERROR("", action, error_message);
+						}
+
+					}
+					else if(requestedFriendshipStatus == "confirm")
+					{
+						if((currentFriendshipStatus == "requested") || (currentFriendshipStatus == "requesting") || (currentFriendshipStatus == "confirmed") || (currentFriendshipStatus == "blocked"))
+						{
+							db.Query(
+									"update `users_friends` set `state`='confirmed', `date`=NOW() WHERE "
+									"(`userID`=\"" + user.GetID() + "\" AND `friendID`=\"" + friendID + "\") "
+									"OR "
+									"(`friendID`=\"" + user.GetID() + "\" AND `userID`=\"" + friendID + "\" );"
+							);
+
+							if(db.InsertQuery("INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + user.GetID() + "\", \"14\", \"" + friendID + "\", NOW())")) {}
+							else
+							{
+								MESSAGE_ERROR("", action, "inserting into `feed`");
+							}
+
+							if(db.InsertQuery("INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + friendID + "\", \"14\", \"" + user.GetID() + "\", NOW())")) {}
+							else
+							{
+								MESSAGE_ERROR("", action, "inserting into `feed`");
+							}
+						}
+						else
+						{
+							error_message = gettext("friendship status can't be changed") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
+							MESSAGE_ERROR("", action, error_message);
+						}
+					}
+					else
+					{
+						error_message = gettext("requested friendship status is unknown") + " ("s + currentFriendshipStatus + " -> " + requestedFriendshipStatus + ")";
+						MESSAGE_ERROR("", action, error_message);
+					}
 				}
 			}
 
+	
 			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 		}
 
