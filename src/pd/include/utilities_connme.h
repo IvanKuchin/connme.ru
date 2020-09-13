@@ -4,20 +4,24 @@
 #include "c_cache_obj.h"
 #include "utilities.h"
 
-string      	GetUserListInJSONFormat(string dbQuery, CMysql *, CUser *);
-string      	GetCompanyListInJSONFormat(string dbQuery, CMysql *, CUser *, bool quickSearch = true, bool includeEmployedUsersList = false);
-string 			GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSinglePage, CUser *, CMysql *);
-string      	GetMessageLikesUsersList(string messageID, CUser *, CMysql *);
-string 			GetBookLikesUsersList(string usersBookID, CUser *, CMysql *);
-string 			GetLanguageLikesUsersList(string usersLanguageID, CUser *, CMysql *);
-string 			GetCompanyLikesUsersList(string usersCompanyID, CUser *, CMysql *);
-string 			GetCertificationLikesUsersList(string usersCertificationID, CUser *, CMysql *);
-string 			GetCourseLikesUsersList(string usersCourseID, CUser *, CMysql *);
-string 			GetUniversityDegreeLikesUsersList(string messageID, CUser *, CMysql *);
-string 			GetBookRatingUsersList(string bookID, CUser *, CMysql *);
-string      	GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned long actionID, CMysql *, CUser *);
-string      	GetUserNotificationInJSONFormat(string sqlRequest, CMysql *, CUser *);
-string 			GetCandidatesListAppliedToVacancyInJSONFormat(string dbQuery, CMysql *);
+// --- this function returns lots of data, be careful with it
+auto 	     	GetUserListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
+// --- use short version of previos function, where possible
+auto 	     	GetUsersNameAvatarInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
+
+auto    	  	GetCompanyListInJSONFormat(string dbQuery, CMysql *, CUser *, bool quickSearch = true, bool includeEmployedUsersList = false) -> string;
+auto 			GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSinglePage, CUser *, CMysql *) -> string;
+auto      		GetMessageLikesUsersList(string messageID, CUser *, CMysql *) -> string;
+auto 			GetBookLikesUsersList(string usersBookID, CUser *, CMysql *) -> string;
+auto 			GetLanguageLikesUsersList(string usersLanguageID, CUser *, CMysql *) -> string;
+auto 			GetCompanyLikesUsersList(string usersCompanyID, CUser *, CMysql *) -> string;
+auto 			GetCertificationLikesUsersList(string usersCertificationID, CUser *, CMysql *) -> string;
+auto 			GetCourseLikesUsersList(string usersCourseID, CUser *, CMysql *) -> string;
+auto 			GetUniversityDegreeLikesUsersList(string messageID, CUser *, CMysql *) -> string;
+auto 			GetBookRatingUsersList(string bookID, CUser *, CMysql *) -> string;
+auto 	     	GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned long actionID, CMysql *, CUser *) -> string;
+auto    	  	GetUserNotificationInJSONFormat(string sqlRequest, CMysql *, CUser *) -> string;
+auto 			GetCandidatesListAppliedToVacancyInJSONFormat(string dbQuery, CMysql *) -> string;
 
 auto			RotateImage(string filename, int degree) -> string;
 auto			FlipImageVertical(string filename) -> string;

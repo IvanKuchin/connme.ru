@@ -1666,7 +1666,7 @@ string GetCourseListInJSONFormat(string dbQuery, CMysql *db, bool includeStudent
 }
 
 // input: ....
-//		  includeStudents will add student counter
+//		  includeStudents will add student counter who possess this language
 string GetLanguageListInJSONFormat(string dbQuery, CMysql *db, bool includeStudents/* = false*/)
 {
 	struct ItemClass {
@@ -1741,59 +1741,81 @@ string GetLanguageListInJSONFormat(string dbQuery, CMysql *db, bool includeStude
 	return ostResult.str();
 }
 
-string GetSkillListInJSONFormat(string dbQuery, CMysql *db)
+string GetUserLanguageListInJSONFormat(string userID, CMysql *db)
 {
-	struct ItemClass {
-		string	  id, title;
-		string	  isComplained, complainedUserList;
-	};
+	MESSAGE_DEBUG("", "", "start");
 
-	ostringstream	   ostResult;
-	int				 itemsCount;
-	vector<ItemClass>   itemsList;
+	auto	result		= ""s;
+	auto	affected	= db->Query(
+				"SELECT `users_language`.`id` as 'users_language_id', `users_language`.`level` as 'language_level', "
+				"`language`.`id` as 'language_id', `language`.`title` as 'language_title', "
+				"`language`.`logo_folder` as 'language_logo_folder', `language`.`logo_filename` as 'language_logo_filename' "
+				"FROM `users_language` "
+				"RIGHT JOIN `language` ON `users_language`.`language_id`=`language`.`id` "
+				"WHERE `users_language`.`user_id`=\"" + userID + "\";"
+				);
 
+	for(auto i = 0; i < affected; i++) 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
+		result += (i ? "," : "");
+		result += "{";
+		result += "\"languageID\":\"" + db->Get(i, "users_language_id") + "\",";
+		result += "\"languageInternalID\":\"" + db->Get(i, "language_id") + "\",";
+		result += "\"languagePhotoFolder\":\"" + db->Get(i, "language_logo_folder") + "\",";
+		result += "\"languagePhotoFilename\":\"" + db->Get(i, "language_logo_filename") + "\",";
+		result += "\"languageTitle\":\"" + db->Get(i, "language_title") + "\",";
+		result += "\"languageLevel\":\"" + db->Get(i, "language_level") + "\"";
+		result += "}";
 	}
 
-	ostResult.str("");
-	itemsCount = db->Query(dbQuery);
-	if(itemsCount)
+	MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(result.length()) + ")");
+
+	return result;
+}
+
+string GetSkillListInJSONFormat(string userID, CMysql *db)
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto					result	= ""s;
+	auto					affected = db->Query(
+												"SELECT `users_skill`.`id` as 'users_skill_id', `skill`.`title` as 'skill_title' "
+												"FROM `users_skill` "
+												"RIGHT JOIN `skill` ON `users_skill`.`skill_id`=`skill`.`id` "
+												"where `users_skill`.`user_id`=\"" + userID + "\";"
+												);
+	map<string, string>		skillMap;
+
+	skillMap.clear();
+
+	if(affected)
 	{
-		for(int i = 0; i < itemsCount; i++) 
-		{
-			ItemClass   item;
+			for(auto i = 0; i < affected; i++) 
+			{
+				skillMap[db->Get(i, "users_skill_id")] = db->Get(i, "skill_title");
+			}
+			for(auto it = skillMap.begin(); it != skillMap.end(); ++it) 
+			{
+				auto	approvers	= GetValuesFromDB("SELECT `approver_userID` FROM `skill_confirmed` WHERE `users_skill_id`=\"" + it->first + "\";", db);
 
-			item.id				 = db->Get(i, "id");
-			item.title			  = db->Get(i, "title");
+				result += ((it != skillMap.begin()) ? "," : "");
+				result += "{";
+				result += "\"skillID\":\"" + it->first + "\",";
+				result += "\"skillTitle\":\"" + it->second + "\",";
 
-			itemsList.push_back(item);						
-		}
-		
-		for(int i = 0; i < itemsCount; i++) 
-		{
+				result += "\"skillConfirmed\":[" + join(approvers, ",") + "]";
 
-				if(ostResult.str().length()) ostResult << ", ";
-
-				ostResult << "{"
-						  << "\"id\": \""		<< itemsList.at(i).id << "\", "
-						  << "\"title\": \""	<< itemsList.at(i).title << "\" "
-						  << "}";
-		} // --- for loop through user list
-	} // --- if sql-query on user selection success
-	else
+				result += "}";
+			}
+	}
+	else 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no skills returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "language path is empty");
 	}
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(result.length()) + ")");
 
-	return ostResult.str();
+	return result;
 }
 
 

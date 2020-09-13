@@ -414,9 +414,9 @@ int main()
 	        }
 	*/
 			if(groupLink.length() && db.Query("SELECT * FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" `feed`.`dstType`=\"group\" AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\") ", currPage, newsOnSinglePage, &user, &db);
+				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
 			else if(groupID.length() && db.Query("SELECT * FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" `feed`.`dstType`=\"group\" AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\") ", currPage, newsOnSinglePage, &user, &db);
+				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
 			else
 			{
                 CLog    log;

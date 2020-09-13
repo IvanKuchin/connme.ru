@@ -3108,20 +3108,23 @@ int main()
 
 			auto	lookForKey = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("lookForKey"));
 
-
-/*			if(user.GetLogin() == "Guest")
+			if(user.GetLogin() == "Guest")
 			{
 				MESSAGE_DEBUG("", action, "re-login required");
-
-		        indexPage.RegisterVariableForce("result", "{\"status\":\"error\",\"description\":\"re-login required\",\"link\":\"/" + GUEST_USER_DEFAULT_ACTION + "?rand=" + GetRandom(10) + "\"}");
 			}
 			else
-*/
-			if(lookForKey.length())
 			{
-				auto	include_myself = (action == "JSON_getFindFriendsListAutocompleteIncludingMyself");
-				indexPage.RegisterVariableForce("result", "[" + GetUserListInJSONFormat_BySearchString(lookForKey, include_myself, &db, &user) + "]");
+				if(lookForKey.length())
+				{
+					auto	include_myself = (action == "JSON_getFindFriendsListAutocompleteIncludingMyself");
+					indexPage.RegisterVariableForce("result", "[" + GetUserListInJSONFormat_BySearchString(lookForKey, include_myself, &db, &user) + "]");
+				}
+				else
+				{
+					MESSAGE_ERROR("", action, "lookForKey is empty");
+				}
 			}
+
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{

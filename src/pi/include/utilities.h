@@ -90,8 +90,7 @@ string 			GetBookListInJSONFormat(string dbQuery, CMysql *, bool includeReaders 
 string 			GetComplainListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false);
 string 			GetCertificationListInJSONFormat(string dbQuery, CMysql *, bool includeDevoted = false);
 string 			GetCourseListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
-string 			GetLanguageListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
-string 			GetSkillListInJSONFormat(string dbQuery, CMysql *);
+string 			GetSkillListInJSONFormat(string user_id, CMysql *);
 string 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
 string 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
 string      	GetUnreadChatMessagesInJSONFormat(CUser *, CMysql *);
@@ -144,6 +143,14 @@ auto			stod_noexcept(const string &) noexcept -> double;
 auto			MaskSymbols(string src, int first_pos, int last_pos) -> string;
 auto 			CutTrailingZeroes(string number) -> string;
 auto			GetSiteThemesInJSONFormat(string sqlQuery, CMysql *, CUser *) -> string;
+
+// --- Language functions
+// ------- do NOT yse this function
+// ------- it is used ONLY for admin part
+auto 			GetLanguageListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
+// ------- use this version, if possible
+auto 			GetUserLanguageListInJSONFormat(string user_id, CMysql *) -> string;
+
 
 // --- file system functions
 auto			CleanupFilename(string filename) -> string;

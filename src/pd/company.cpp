@@ -1014,10 +1014,7 @@ int main()
 		{
 			ostringstream   ostResult;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_getCandidatesAppliedToPosition: start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
@@ -1075,7 +1072,7 @@ int main()
 							  << "}";
 				}
 
-			} // --- if(user.GetLogin() == "Guest")
+			}
 
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
@@ -1086,13 +1083,11 @@ int main()
 
 				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
-			}  // if(!indexPage.SetTemplate("AJAX_getCandidatesAppliedToPosition.htmlt"))
+			} 
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_getCandidatesAppliedToPosition: end");
-			}
-		}   // if(action == "AJAX_getCandidatesAppliedToPosition")
+
+			MESSAGE_DEBUG("", action, "finish");
+		}  
 
 		if(action == "AJAX_amIAppliedToVacancy")
 		{
