@@ -499,170 +499,19 @@ bool YearAgoReminder(CMysql *db)
 	return result;
 }
 
-/*
-bool YearAgoReminder(CMysql *db)
+auto RemoveYearAgoReminder(CMysql *db)
 {
-	bool 				result = false;
-	struct	ItemClass
-	{
-		string	userID;
-		int		commentsMaxValue;
-		int		commentsMinValue;
-	};
-	vector<ItemClass>		itemsList;
-	long int				itemsCount;
+	auto	error_message = ""s;
 
-	{ MESSAGE_DEBUG("", "", "start"); }
+	MESSAGE_DEBUG("", "", "start");
 
-	if((itemsCount = db->Query("SELECT `id` FROM `users` WHERE `isblocked`=\"N\" AND `isactivated`=\"Y\";")) > 0)
-	{
-		long int	usersCount = itemsCount;
+	db->Query("SELECT *  FROM `feed` WHERE `actionTypeId` = \"12\" AND eventTimestamp < DATE_SUB(NOW(), INTERVAL 1 MONTH)");
 
-		itemsList.reserve(usersCount);
-		for(int i = 0; i < usersCount; ++i)
-		{
-			ItemClass	item;
-			item.userID = db->Get(i, "id");
-			itemsList.push_back(item);
-		}
+	MESSAGE_DEBUG("", "", "finish");
 
-		for(int i = 0; i < usersCount; ++i)
-		{
-			int		myPostsYearAgo;
-
-			// --- get posts from year ago sharp
-			myPostsYearAgo = db->Query(
-				" SELECT `messageID`, COUNT(`messageID`) AS `counter`"
-				" FROM `feed_message_comment`"
-				" WHERE"
-				" `type`=\"message\""
-				" AND"
-				" `messageID` IN ("
-					" SELECT `actionId` FROM `feed` WHERE"
-					" `actionTypeId`=\"11\""
-					" AND"
-					" `srcType`=\"user\""
-					" AND"
-					" `userId`=\"" + itemsList[i].userID + "\""
-					" AND"
-					" `eventTimestamp`>=CAST(DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR) AS DATETIME)"
-					" AND"
-					" `eventTimestamp`<=CAST(DATE_ADD(DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR), INTERVAL 1 DAY) AS DATETIME)"
-				" ) GROUP BY `messageID`;"
-				);
-
-			if(myPostsYearAgo)
-			{
-				struct	BestPostType
-				{
-					string	messageID;
-					int		commentsValue;
-				};
-
-				int				commentsMinValue = 0;
-				int 			commentsMaxValue = 0;
-				int				postPopularity = 0;
-				BestPostType	bestPost;
-
-				bestPost.commentsValue = 0;
-
-				for(int j = 0; j < myPostsYearAgo; ++j)
-				{
-					long int 	commentsValue = stol(db->Get(j, "counter"));
-
-					if(commentsValue > bestPost.commentsValue)
-					{
-						bestPost.commentsValue = commentsValue;
-						bestPost.messageID = db->Get(j, "messageID");
-					}
-				}
-
-
-				// --- get all messages over last year
-				if(db->Query(
-					"SELECT MAX(`counter`) AS `commentsMaxValue` FROM ("
-						" SELECT COUNT(`messageID`) AS `counter` "
-						" FROM `feed_message_comment` "
-						" WHERE "
-							" `type`=\"message\""
-							" AND"
-							" `messageID` IN ("
-								"SELECT `actionId` FROM `feed` WHERE"
-									" `actionTypeId`=\"11\""
-									" AND "
-									"`srcType`=\"user\""
-									" AND"
-									" `userId`=\"" + itemsList[i].userID + "\""
-									" AND"
-									" `eventTimestamp`>=CAST(DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR) AS DATETIME)"
-							" )"
-							" GROUP BY `messageID`"
-					") AS t WHERE `counter`>\"0\";"
-					)) commentsMaxValue = stoi(db->Get(0, "commentsMaxValue"));
-
-				if(db->Query(
-					"SELECT MIN(`counter`) AS `commentsMinValue` FROM ("
-						" SELECT COUNT(`messageID`) AS `counter` "
-						" FROM `feed_message_comment` "
-						" WHERE "
-							" `type`=\"message\""
-							" AND"
-							" `messageID` IN ("
-								"SELECT `actionId` FROM `feed` WHERE"
-									" `actionTypeId`=\"11\""
-									" AND "
-									"`srcType`=\"user\""
-									" AND"
-									" `userId`=\"" + itemsList[i].userID + "\""
-									" AND"
-									" `eventTimestamp`>=CAST(DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR) AS DATETIME)"
-							" )"
-							" GROUP BY `messageID`"
-					") AS t WHERE `counter`>\"0\";"
-					)) commentsMinValue = stoi(db->Get(0, "commentsMinValue"));
-
-				itemsList[i].commentsMinValue = commentsMinValue;
-				itemsList[i].commentsMaxValue = commentsMaxValue;
-
-				if(commentsMaxValue)
-				{
-					postPopularity = (bestPost.commentsValue - commentsMinValue) / (commentsMaxValue - commentsMinValue) * 100;
-
-					if(postPopularity > YEAR_AGO_REPOST_THRESHOLD)
-					{
-						// --- repost message to user feed
-						if(db->InsertQuery(" INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) VALUES(\"\",\"" + itemsList[i].userID + "\", \"12\", \"" + bestPost.messageID + "\", NOW());") )
-						{
-
-						}
-						else
-						{
-							MESSAGE_ERROR("", "", " error inserting into `feed` table");
-						}
-	 				}
-				}
-				else
-				{
-					{ MESSAGE_DEBUG("", "", "max comments over the year is 0 for user[" + itemsList[i].userID + "] "); }
-				}
-
-			}
-			else
-			{
-				{ MESSAGE_DEBUG("", "", "user[" + itemsList[i].userID + "] didn't post anything year ago"); }
-			}
-		}
-	}
-	else
-	{ MESSAGE_DEBUG("", "", "no active users"); }
-
-
-
-	{ MESSAGE_DEBUG("", "", "finish"); }
-
-	return result;
+	return error_message;
 }
-*/
+
 int main()
 {
 	CStatistics		appStat;  // --- CStatistics must be firts statement to measure end2end param's
@@ -678,6 +527,7 @@ int main()
 
 	try
 	{
+		auto	error_message = ""s;
 
 		if(db.Connect() < 0)
 		{
@@ -692,6 +542,9 @@ int main()
 
 		//--- year ago activity remainder
 		YearAgoReminder(&db);
+
+		// --- Remove old messages "that happened 1 year ago"
+		if((error_message = RemoveYearAgoReminder(&db)).length()) MESSAGE_ERROR("", "", error_message);
 
 		//--- end of daily cron main functionality
 	}
