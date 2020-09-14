@@ -1618,8 +1618,8 @@ int main()
 					db.Query("DELETE FROM `feed` WHERE `actionTypeId`=\"42\" AND `actionId`=\"" + skillID + "\" AND `userId`=\"" + user.GetID() + "\";");
 					db.Query("DELETE FROM `feed` WHERE `actionTypeId`=\"44\" AND `actionId`=\"" + skillID + "\" AND `userId`=\"" + user.GetID() + "\";");
 
-					db.Query("DELETE FROM `users_skill` WHERE `id`='" + skillID + "' and `user_id`='" + user.GetID() + "';");
 					db.Query("DELETE FROM `skill_confirmed` WHERE `users_skill_id`='" + skillID + "';");
+					db.Query("DELETE FROM `users_skill` WHERE `id`='" + skillID + "' and `user_id`='" + user.GetID() + "';");
 
 					ostFinal.str("");
 					ostFinal << "{" << std::endl;
