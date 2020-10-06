@@ -50,9 +50,7 @@ string GetOpenVacanciesInJSONFormat(string dbQuery, CMysql *db, CUser *user/* = 
 	string		 			result = "";
 	int						itemsCount = 0;
 
-	{
-		MESSAGE_DEBUG("", "", "start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 
@@ -262,93 +260,5 @@ string GetOpenVacanciesInJSONFormat(string dbQuery, CMysql *db, CUser *user/* = 
 	}
 
 	return result;
-}
-
-string GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
-{
-	struct ItemClass 
-	{
-		string	id;
-		string	link;
-		string	title;
-		string	description;
-		string	logo_folder;
-		string	logo_filename;
-		string	owner_id;
-		string	isBlocked;
-		string	eventTimestampCreation;
-		string	eventTimestampLastPost;
-	};
-
-	ostringstream			ost, ostFinal;
-	string					sessid, lookForKey;
-	int						affected;
-	vector<ItemClass>		groupsList;
-
-	{
-		MESSAGE_DEBUG("", "", "start");
-	}
-
-	ostFinal.str("");
-
-	if((affected = db->Query(dbQuery)) > 0)
-	{
-		int						groupCounter = affected;
-
-		groupsList.reserve(groupCounter);  // --- reserving allows avoid moving vector in memory
-											// --- to fit vector into continous memory piece
-
-		for(int i = 0; i < affected; i++)
-		{
-			ItemClass	group;
-
-			group.id = db->Get(i, "id");
-			group.link = db->Get(i, "link");
-			group.title = db->Get(i, "title");
-			group.description = db->Get(i, "description");
-			group.logo_folder = db->Get(i, "logo_folder");
-			group.logo_filename = db->Get(i, "logo_filename");
-			group.owner_id = db->Get(i, "owner_id");
-			group.isBlocked = db->Get(i, "isBlocked");
-			group.eventTimestampCreation = db->Get(i, "eventTimestampCreation");
-			group.eventTimestampLastPost = db->Get(i, "eventTimestampLastPost");
-
-			groupsList.push_back(group);
-		}
-
-		for(int i = 0; i < groupCounter; i++)
-		{
-				string		numberOfMembers = "0";
-
-				if(ostFinal.str().length()) ostFinal << ", ";
-
-				if(db->Query("SELECT COUNT(*) as numberOfMembers FROM `users_subscriptions` WHERE `entity_type`=\"group\" AND `entity_id`=\"" + groupsList[i].id + "\";"))
-					numberOfMembers = db->Get(0, "numberOfMembers");
-
-				ostFinal << "{";
-				ostFinal << "\"id\": \""				  	<< groupsList[i].id << "\",";
-				ostFinal << "\"link\": \""					<< groupsList[i].link << "\",";
-				ostFinal << "\"title\": \""					<< groupsList[i].title << "\",";
-				ostFinal << "\"description\": \""			<< groupsList[i].description << "\",";
-				ostFinal << "\"logo_folder\": \""			<< groupsList[i].logo_folder << "\",";
-				ostFinal << "\"logo_filename\": \""			<< groupsList[i].logo_filename << "\",";
-				ostFinal << "\"isMine\": \""				<< (user ? groupsList[i].owner_id == user->GetID() : false) << "\",";
-				ostFinal << "\"numberOfMembers\": \""		<< numberOfMembers << "\",";
-				ostFinal << "\"isBlocked\": \""				<< groupsList[i].isBlocked << "\",";
-				ostFinal << "\"eventTimestampCreation\": \""<< groupsList[i].eventTimestampCreation << "\",";
-				ostFinal << "\"eventTimestampLastPost\": \""<< groupsList[i].eventTimestampLastPost << "\"";
-				ostFinal << "}";
-		} // --- for loop through group list
-	} // --- if sql-query on group selection success
-	else
-	{
-		MESSAGE_DEBUG("", "", "there are no groups returned by request [" + dbQuery + "]");
-	}
-
-	{
-		MESSAGE_DEBUG("", "", "end (result length = " + to_string(ostFinal.str().length()) + ")");
-	}
-
-	return ostFinal.str();
 }
 

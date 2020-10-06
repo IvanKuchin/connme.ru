@@ -887,3 +887,91 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 	return join(users_vector, ",");
 }
 
+
+auto GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> string
+{
+	struct ItemClass 
+	{
+		string	id;
+		string	link;
+		string	title;
+		string	description;
+		string	logo_folder;
+		string	logo_filename;
+		string	owner_id;
+		string	isBlocked;
+		string	eventTimestampCreation;
+		string	eventTimestampLastPost;
+	};
+
+	ostringstream			ost, ostFinal;
+	string					sessid, lookForKey;
+	int						affected;
+	vector<ItemClass>		groupsList;
+
+	MESSAGE_DEBUG("", "", "start");
+
+	ostFinal.str("");
+
+	if((affected = db->Query(dbQuery)) > 0)
+	{
+		int						groupCounter = affected;
+
+		groupsList.reserve(groupCounter);  // --- reserving allows avoid moving vector in memory
+											// --- to fit vector into continous memory piece
+
+		for(int i = 0; i < affected; i++)
+		{
+			ItemClass	group;
+
+			group.id = db->Get(i, "id");
+			group.link = db->Get(i, "link");
+			group.title = db->Get(i, "title");
+			group.description = db->Get(i, "description");
+			group.logo_folder = db->Get(i, "logo_folder");
+			group.logo_filename = db->Get(i, "logo_filename");
+			group.owner_id = db->Get(i, "owner_id");
+			group.isBlocked = db->Get(i, "isBlocked");
+			group.eventTimestampCreation = db->Get(i, "eventTimestampCreation");
+			group.eventTimestampLastPost = db->Get(i, "eventTimestampLastPost");
+
+			groupsList.push_back(group);
+		}
+
+		for(int i = 0; i < groupCounter; i++)
+		{
+				auto		numberOfMembers				= GetValueFromDB("SELECT COUNT(*) FROM `users` WHERE `id` IN (" + Get_UserIDByGroupID_sqlquery(groupsList[i].id) + ");", db);
+				auto		number_of_posts_last_month	= GetValueFromDB("SELECT COUNT(*) FROM `feed` WHERE `dstType`=\"group\" AND `dstID`=" + quoted(groupsList[i].id) + " AND eventTimestamp>(NOW() - INTERVAL 1 MONTH);", db);
+
+				if(ostFinal.str().length()) ostFinal << ", ";
+
+				ostFinal << "{";
+				ostFinal << "\"id\": \""				  	<< groupsList[i].id << "\",";
+				ostFinal << "\"link\": \""					<< groupsList[i].link << "\",";
+				ostFinal << "\"title\": \""					<< groupsList[i].title << "\",";
+				ostFinal << "\"description\": \""			<< groupsList[i].description << "\",";
+				ostFinal << "\"logo_folder\": \""			<< groupsList[i].logo_folder << "\",";
+				ostFinal << "\"logo_filename\": \""			<< groupsList[i].logo_filename << "\",";
+				ostFinal << "\"number_of_posts_last_month\": \"" << number_of_posts_last_month << "\",";
+				ostFinal << "\"isMine\": \""				<< (user ? groupsList[i].owner_id == user->GetID() : false) << "\",";
+
+				ostFinal << "\"numberOfMembers\": \""		<< numberOfMembers << "\",";
+				ostFinal << "\"subscribers\": ["			<< GetUsersNameAvatarInJSONFormat("SELECT * FROM `users` WHERE `id` IN (" + Get_UserIDByGroupID_sqlquery(groupsList[i].id) + ") ORDER BY RAND() LIMIT 20;", db, user) << "],";
+
+				ostFinal << "\"isBlocked\": \""				<< groupsList[i].isBlocked << "\",";
+				ostFinal << "\"eventTimestampCreation\": \""<< groupsList[i].eventTimestampCreation << "\",";
+				ostFinal << "\"eventTimestampLastPost\": \""<< groupsList[i].eventTimestampLastPost << "\"";
+				ostFinal << "}";
+		} // --- for loop through group list
+	} // --- if sql-query on group selection success
+	else
+	{
+		MESSAGE_DEBUG("", "", "there are no groups returned by request [" + dbQuery + "]");
+	}
+
+	{
+		MESSAGE_DEBUG("", "", "end (result length = " + to_string(ostFinal.str().length()) + ")");
+	}
+
+	return ostFinal.str();
+}

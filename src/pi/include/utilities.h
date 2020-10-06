@@ -85,7 +85,6 @@ auto			isAllowed_NoSession_Action(string action) -> bool;
 auto      		GetBaseUserInfoInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 string      	GetChatMessagesInJSONFormat(string dbQuery, CMysql *);
-string      	GetGroupListInJSONFormat(string dbQuery, CMysql *, CUser *);
 string 			GetBookListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false);
 string 			GetComplainListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false);
 string 			GetCertificationListInJSONFormat(string dbQuery, CMysql *, bool includeDevoted = false);

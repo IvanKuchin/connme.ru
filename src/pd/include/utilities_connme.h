@@ -3,6 +3,8 @@
 
 #include "c_cache_obj.h"
 #include "utilities.h"
+#include "utilities_sql_queries.h"
+
 
 // --- this function returns lots of data, be careful with it
 auto 	     	GetUserListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
@@ -30,5 +32,7 @@ auto			RenameImageInDB(string image_id, CMysql *) -> string;
 
 auto			GetUserListInJSONFormat_BySearchString(const string &lookForKey, bool include_myself, CMysql *, CUser *) -> string;
 auto			GetUsersID_BySearchString(const string &lookForKey, bool include_myself, CMysql *db, CUser *user) -> vector<string>;
+
+auto      		GetGroupListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 
 #endif
