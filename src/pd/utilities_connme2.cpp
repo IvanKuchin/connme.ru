@@ -941,7 +941,6 @@ auto GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> string
 		for(int i = 0; i < groupCounter; i++)
 		{
 				auto		numberOfMembers				= GetValueFromDB("SELECT COUNT(*) FROM `users` WHERE `id` IN (" + Get_UserIDByGroupID_sqlquery(groupsList[i].id) + ");", db);
-				auto		number_of_posts_last_month	= GetValueFromDB("SELECT COUNT(*) FROM `feed` WHERE `dstType`=\"group\" AND `dstID`=" + quoted(groupsList[i].id) + " AND eventTimestamp>(NOW() - INTERVAL 1 MONTH);", db);
 
 				if(ostFinal.str().length()) ostFinal << ", ";
 
@@ -952,7 +951,6 @@ auto GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> string
 				ostFinal << "\"description\": \""			<< groupsList[i].description << "\",";
 				ostFinal << "\"logo_folder\": \""			<< groupsList[i].logo_folder << "\",";
 				ostFinal << "\"logo_filename\": \""			<< groupsList[i].logo_filename << "\",";
-				ostFinal << "\"number_of_posts_last_month\": \"" << number_of_posts_last_month << "\",";
 				ostFinal << "\"isMine\": \""				<< (user ? groupsList[i].owner_id == user->GetID() : false) << "\",";
 
 				ostFinal << "\"numberOfMembers\": \""		<< numberOfMembers << "\",";
