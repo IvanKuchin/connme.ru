@@ -72,8 +72,8 @@ auto      		GetMonthsDeclension(const int value) -> string;
 auto      		GetYearsDeclension(const int value) -> string;
 auto      		GetHumanReadableTimeDifferenceFromNow (const string timeAgo) -> string;
 auto      		SymbolReplace(const string where, const string src, const string dst) -> string;
-auto      		SymbolReplace_KeepDigitsOnly(const string where) -> string;
-// auto         	qw(const string src, vector<string> &dst) -> int;
+auto      		SymbolReplace_KeepDigitsOnly(const string &where) -> string;
+auto         	qw(const string src, vector<string> &dst) -> int;
 auto			join(const vector<string>& vec, string separator = ",") -> string;
 auto			split(const string& s, const char& c) -> vector<string>;
 auto      		UniqueUserIDInUserIDLine(string userIDLine) -> string; //-> decltype(static_cast<string>("123")
@@ -86,26 +86,13 @@ auto			isAllowed_NoSession_Action(string action) -> bool;
 
 auto      		GetBaseUserInfoInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
-string 			GetBookRatingList(string bookID, CMysql *);
-string 			GetCourseRatingList(string courseID, CMysql *);
-string      	GetMessageCommentsCount(string messageID, CMysql *);
-string 			GetCompanyCommentsCount(string messageID, CMysql *);
-string 			GetLanguageCommentsCount(string messageID, CMysql *);
-string 			GetBookCommentsCount(string messageID, CMysql *);
-string 			GetCertificateCommentsCount(string messageID, CMysql *);
-string 			GetUniversityDegreeCommentsCount(string messageID, CMysql *);
-string      	GetMessageSpam(string messageID, CMysql *);
-string      	GetMessageSpamUser(string messageID, string userID, CMysql *);
-string			GetLanguageIDByTitle(string title, CMysql *);
-string			GetSkillIDByTitle(string title, CMysql *);
-string			GetCompanyPositionIDByTitle(string title, CMysql *);
 string 			GetOpenVacanciesInJSONFormat(string companyID, CMysql *, CUser * = NULL);
 string			GetGeoLocalityIDByCityAndRegion(string regionName, string cityName, CMysql *);
 bool        	AllowMessageInNewsFeed(CUser *me, const string messageOwnerID, const string messageAccessRights, vector<string> *messageFriendList);
 bool        	isPersistenceRateLimited(string REMOTE_ADDR, CMysql *);
 bool        	isFileExists(const std::string& name);
-bool			isFilenameImage(string	filename);
-bool			isFilenameVideo(string	filename);
+bool			isFilenameImage(const string &filename);
+bool			isFilenameVideo(const string &filename);
 void        	CopyFile(const string src, const string dst);
 string      	GetCompanyDuplicates(CMysql *);
 string      	GetPicturesWithEmptySet(CMysql *);
@@ -158,6 +145,18 @@ auto			GetValuesFromDB(string sql, CMysql *) -> vector<string>;
 
 // --- login functions
 auto			GetCountryCodeAndPhoneNumberBySMSCode(const string &confirmation_code, const string &session, CMysql *) -> tuple<string, string, string>;
+
+// --- file system functions
+auto			CreateDir(const string &dir) -> bool;
+auto 			RmDirRecursive(const char *dirname) -> bool;
+auto        	isDirExists(const std::string& name) -> bool;
+auto        	isFileExists(const std::string& name) -> bool;
+auto			isFilenameImage(const string &filename) -> bool;
+auto			isFilenameVideo(const string &filename) -> bool;
+auto			GetFileExtension(const string &filename) -> string;
+auto 			getFileSize(const std::string& name) -> off_t;
+auto			CleanupFilename(string	filename) -> string;
+auto        	CopyFile(const string src, const string dst) -> void;
 
 // --- helpdesk
 auto			GetHelpDeskTicketsInJSONFormat(string sqlQuery, CMysql *db, CUser *user) -> string;

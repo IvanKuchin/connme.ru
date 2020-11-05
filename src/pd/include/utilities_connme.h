@@ -27,6 +27,20 @@ auto 			GetSkillListInJSONFormat(string user_id, CMysql *) -> string;
 auto 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
 auto 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
 
+auto			GetCompanyPositionIDByTitle(string title, CMysql *) -> string;
+auto			GetLanguageIDByTitle(string title, CMysql *) -> string;
+auto			GetSkillIDByTitle(string title, CMysql *) -> string;
+auto 			GetBookRatingList(string bookID, CMysql *) -> string;
+auto 			GetCourseRatingList(string courseID, CMysql *) -> string;
+auto 	     	GetMessageCommentsCount(string messageID, CMysql *) -> string;
+auto 			GetCompanyCommentsCount(string messageID, CMysql *) -> string;
+auto 			GetLanguageCommentsCount(string messageID, CMysql *) -> string;
+auto 			GetBookCommentsCount(string messageID, CMysql *) -> string;
+auto 			GetCertificateCommentsCount(string messageID, CMysql *) -> string;
+auto 			GetUniversityDegreeCommentsCount(string messageID, CMysql *) -> string;
+auto    	  	GetMessageSpam(string messageID, CMysql *) -> string;
+auto    	  	GetMessageSpamUser(string messageID, string userID, CMysql *) -> string;
+
 auto	      	GetMessageImageList(string imageSetID, CMysql *) -> string;
 auto    	  	GetCompanyListInJSONFormat(string dbQuery, CMysql *, CUser *, bool quickSearch = true, bool includeEmployedUsersList = false) -> string;
 auto 			GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSinglePage, CUser *, CMysql *) -> string;
