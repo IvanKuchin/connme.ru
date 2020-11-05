@@ -6,11 +6,28 @@
 #include "utilities_sql_queries.h"
 
 
+// --- User language expertise functions
+// ------- do NOT yse this function
+// ------- it is used ONLY for admin part
+auto 			GetLanguageListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
+// ------- use this version, if possible
+auto 			GetUserLanguageListInJSONFormat(string user_id, CMysql *) -> string;
+
+
 // --- this function returns lots of data, be careful with it
 auto 	     	GetUserListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 // --- use short version of previos function, where possible
 auto 	     	GetUsersNameAvatarInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 
+auto 			GetBookListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false) -> string;
+auto 			GetComplainListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false) -> string;
+auto 			GetCertificationListInJSONFormat(string dbQuery, CMysql *, bool includeDevoted = false) -> string;
+auto 			GetCourseListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
+auto 			GetSkillListInJSONFormat(string user_id, CMysql *) -> string;
+auto 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
+auto 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
+
+auto	      	GetMessageImageList(string imageSetID, CMysql *) -> string;
 auto    	  	GetCompanyListInJSONFormat(string dbQuery, CMysql *, CUser *, bool quickSearch = true, bool includeEmployedUsersList = false) -> string;
 auto 			GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSinglePage, CUser *, CMysql *) -> string;
 auto      		GetMessageLikesUsersList(string messageID, CUser *, CMysql *) -> string;
@@ -34,5 +51,8 @@ auto			GetUserListInJSONFormat_BySearchString(const string &lookForKey, bool inc
 auto			GetUsersID_BySearchString(const string &lookForKey, bool include_myself, CMysql *db, CUser *user) -> vector<string>;
 
 auto      		GetGroupListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
+
+auto	      	GetChatMessagesInJSONFormat(string dbQuery, CMysql *) -> string;
+auto	      	GetUnreadChatMessagesInJSONFormat(CUser *, CMysql *) -> string;
 
 #endif

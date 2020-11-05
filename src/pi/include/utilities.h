@@ -84,16 +84,6 @@ auto			isAllowed_NoSession_Action(string action) -> bool;
 
 auto      		GetBaseUserInfoInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
-string      	GetChatMessagesInJSONFormat(string dbQuery, CMysql *);
-string 			GetBookListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false);
-string 			GetComplainListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false);
-string 			GetCertificationListInJSONFormat(string dbQuery, CMysql *, bool includeDevoted = false);
-string 			GetCourseListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
-string 			GetSkillListInJSONFormat(string user_id, CMysql *);
-string 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
-string 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false);
-string      	GetUnreadChatMessagesInJSONFormat(CUser *, CMysql *);
-string      	GetMessageImageList(string imageSetID, CMysql *);
 string 			GetBookRatingList(string bookID, CMysql *);
 string 			GetCourseRatingList(string courseID, CMysql *);
 string      	GetMessageCommentsCount(string messageID, CMysql *);
@@ -142,14 +132,6 @@ auto			stod_noexcept(const string &) noexcept -> double;
 auto			MaskSymbols(string src, int first_pos, int last_pos) -> string;
 auto 			CutTrailingZeroes(string number) -> string;
 auto			GetSiteThemesInJSONFormat(string sqlQuery, CMysql *, CUser *) -> string;
-
-// --- Language functions
-// ------- do NOT yse this function
-// ------- it is used ONLY for admin part
-auto 			GetLanguageListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
-// ------- use this version, if possible
-auto 			GetUserLanguageListInJSONFormat(string user_id, CMysql *) -> string;
-
 
 // --- file system functions
 auto			CleanupFilename(string filename) -> string;
