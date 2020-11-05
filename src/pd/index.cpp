@@ -8081,7 +8081,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access login page, redirect to default page");
 
-				indexPage.Redirect("/" + GetDefaultActionFromUserType(user.GetType(), &db) + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10));
 			}
 
 			MESSAGE_DEBUG("", action, "finish");
@@ -8857,7 +8857,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access activateNewUser page, redirect to default page");
 
-				indexPage.Redirect("/" + GetDefaultActionFromUserType(user.GetType(), &db) + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10));
 			}
 
 
@@ -13194,8 +13194,6 @@ int main()
 					log.Write(DEBUG, ost.str());
 				}
 
-				// occupationFinish = CheckIfFurtherThanNow(occupationFinish);
-
 				ost.str("");
 				ost << "update users_company set `occupation_finish`=\"" << occupationFinish << "\" WHERE `id`='" << companyId << "'";
 				db.Query(ost.str());
@@ -13803,7 +13801,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access showmain page, redirect to default page");
 
-				indexPage.Redirect("/" + GetDefaultActionFromUserType(user.GetType(), &db) + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10));
 			}
 		}
 

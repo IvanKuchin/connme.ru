@@ -19,6 +19,7 @@
 #include <Magick++.h>
 #include <codecvt>		// --- codecvt_utf8
 
+#include "c_date_spelling.h"
 #include "c_smsc.h"
 #include "cmysql.h"
 #include "cfiles.h"
@@ -36,7 +37,9 @@ auto      		rtrim(string& str) -> string;
 auto      		ltrim(string& str) -> string;
 auto      		trim(string& str) -> string;
 auto      		quoted(string src) -> string;
-auto  			toLower(string src) -> string;
+auto			quoted(const vector<string> &) -> vector<string>;
+auto  			toUpper(const string &) -> string;
+auto  			toLower(const string &) -> string;
 auto      		GetRandom(int len) -> string;
 auto      		DeleteHTML(string src, bool removeBR = true) -> string;
 auto      		RemoveQuotas(string src) -> string;
@@ -46,6 +49,7 @@ auto 			RemoveSpecialHTMLSymbols(const wstring &src) -> wstring;
 auto      		RemoveSpecialHTMLSymbols(const string &src) -> string;
 auto      		ReplaceDoubleQuoteToQuote(string src) -> string;
 auto      		ReplaceCRtoHTML(string src) -> string;
+auto			ReplaceWstringAccordingToMap(const wstring &src, const map<wstring, wstring> &replacements) -> wstring;
 auto      		CleanUPText(const string messageBody, bool removeBR = true) -> string;
 auto      		RemoveAllNonAlphabetSymbols(const wstring &src) -> wstring;
 auto      		RemoveAllNonAlphabetSymbols(const string &src) -> string;
@@ -57,8 +61,6 @@ auto			CheckHTTPParam_Number(const string &srcText) -> string;
 auto	 		CheckHTTPParam_Date(string srcText) -> string;
 auto	 		CheckHTTPParam_Float(const string &srcText) -> string;
 auto			CheckHTTPParam_Email(const string &srcText) -> string;
-auto      		CheckIfFurtherThanNow(string occupationStart_cp1251)  -> string;
-auto			GetDefaultActionFromUserType(const string &role, CMysql *) -> string;
 auto			GetDefaultActionFromUserType(CUser *, CMysql *) -> string;
 auto      		GetSecondsSinceY2k() -> double;
 auto      		GetLocalFormattedTimestamp() -> string;
@@ -71,7 +73,7 @@ auto      		GetYearsDeclension(const int value) -> string;
 auto      		GetHumanReadableTimeDifferenceFromNow (const string timeAgo) -> string;
 auto      		SymbolReplace(const string where, const string src, const string dst) -> string;
 auto      		SymbolReplace_KeepDigitsOnly(const string where) -> string;
-auto         	qw(const string src, vector<string> &dst) -> int;
+// auto         	qw(const string src, vector<string> &dst) -> int;
 auto			join(const vector<string>& vec, string separator = ",") -> string;
 auto			split(const string& s, const char& c) -> vector<string>;
 auto      		UniqueUserIDInUserIDLine(string userIDLine) -> string; //-> decltype(static_cast<string>("123")
@@ -127,7 +129,6 @@ string			SubscribeToGroup(string groupID, CUser *, CMysql *);
 string			UnsubscribeFromGroup(string groupID, CUser *, CMysql *);
 bool 			isBotIP(string ip);
 bool			isAdverseWordsHere(string text, CMysql *);
-string			GetDefaultActionLoggedinUser(void);
 auto			stod_noexcept(const string &) noexcept -> double;
 auto			MaskSymbols(string src, int first_pos, int last_pos) -> string;
 auto 			CutTrailingZeroes(string number) -> string;
@@ -169,6 +170,9 @@ auto			GetFAQInJSONFormat(string sqlQuery, CMysql *db, CUser *user) -> string;
 
 // --- date functions
 struct tm		GetTMObject(string date);
+auto			GetSpellingDate(long int seconds_since_epoch) -> string;
+auto			GetSpellingFormattedDate(string date, string format) -> string;
+auto			GetSpellingFormattedDate(struct tm, string format) -> string;
 auto			operator <(const struct tm &tm_1, const struct tm &tm_2) -> bool;
 auto			operator <=(const struct tm &tm_1, const struct tm &tm_2) -> bool;
 auto			operator >(const struct tm &tm_1, const struct tm &tm_2) -> bool;
