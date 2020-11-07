@@ -5413,7 +5413,7 @@ int main()
 
 		}
 
-		if(action == "AJAX_changeEditProfileCompanyEmployemtEndDateStatus")
+		if(action == "AJAX_changeEditProfileCompanyEmploymentEndDateStatus")
 		{
 			ostringstream	ostResult;
 

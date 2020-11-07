@@ -57,7 +57,7 @@ set(PDF_FONT_INSTALL_DIR	${LOCAL_INSTALL_DIR}/libpdf-font)
 set(LIBXL_INSTALL_DIR		${LOCAL_INSTALL_DIR}/libxl)
 
 # ---- libxl library is not in apt-reporsitory, therefore is not installed on the OS
-# ---- to treat it as regulat lib I have to copy it to /usr/local/share..... folder
+# ---- to treat it as regular lib I have to copy it to /usr/local/share..... folder
 # ---- 1) copy libxl to application location
 # ---- 2) work with it as w/ regular library
 # if(EXISTS ${LIBXL_INSTALL_DIR})
