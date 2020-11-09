@@ -15,4 +15,4 @@ https?://(?:(?:www\.|)youtube\.com|youtu.be)/[-a-zA-Z0-9?&=]*
 https?://.*
 
 # --- copyright
-Copyright (C).*
+[a-zA-Z0-9]+@[a-zA-Z0-9]+\.com
