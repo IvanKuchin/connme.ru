@@ -175,7 +175,7 @@ int main()
 				FILE			*f;
 				int				folderID = (int)(rand()/(RAND_MAX + 1.0) * AVATAR_NUMBER_OF_FOLDERS) + 1;
 				string			filePrefix = GetRandom(20);
-				string			file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtention;
+				string			file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 				ostringstream   ost;
 				int			 affected;
 
@@ -216,11 +216,11 @@ int main()
 
 						if((foundPos = tmp.rfind(".")) != string::npos) 
 						{
-							fileExtention = tmp.substr(foundPos, tmp.length() - foundPos);
+							fileExtension = tmp.substr(foundPos, tmp.length() - foundPos);
 						}
 						else
 						{
-							fileExtention = ".jpg";
+							fileExtension = ".jpg";
 						}
 
 						ost.str("");
@@ -228,7 +228,7 @@ int main()
 						file2Check = ost.str();
 
 						ost.str("");
-						ost << "/tmp/tmp_" << filePrefix << fileExtention;
+						ost << "/tmp/tmp_" << filePrefix << fileExtension;
 						tmpFile2Check = ost.str();
 
 						ost.str("");
@@ -263,7 +263,7 @@ int main()
 					if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG))
 					{
 
-						MESSAGE_DEBUG("", "", "choosen filename for avatar [" + file2Check + "]");
+						MESSAGE_DEBUG("", "", "chosen filename for avatar [" + file2Check + "]");
 
 						// --- remove previous logo
 						if(db.Query("SELECT * FROM `users_avatars` WHERE `userid`=\"" + user.GetID() + "\" AND `isActive`=\"1\";"))

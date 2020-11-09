@@ -918,7 +918,7 @@ auto GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> string
 		int						groupCounter = affected;
 
 		groupsList.reserve(groupCounter);  // --- reserving allows avoid moving vector in memory
-											// --- to fit vector into continous memory piece
+											// --- to fit vector into continuous memory piece
 
 		for(int i = 0; i < affected; i++)
 		{

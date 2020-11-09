@@ -177,7 +177,7 @@ int main()
 							FILE			*f;
 							int			 folderID = (int)(rand()/(RAND_MAX + 1.0) * GROUPLOGO_NUMBER_OF_FOLDERS) + 1;
 							string		  filePrefix = GetRandom(20);
-							string		  file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtention;
+							string		  file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 							ostringstream   ost;
 
 							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > GROUPLOGO_MAX_FILE_SIZE) 
@@ -205,11 +205,11 @@ int main()
 
 								if((foundPos = tmp.rfind(".")) != string::npos) 
 								{
-									fileExtention = tmp.substr(foundPos, tmp.length() - foundPos);
+									fileExtension = tmp.substr(foundPos, tmp.length() - foundPos);
 								}
 								else
 								{
-									fileExtention = ".jpg";
+									fileExtension = ".jpg";
 								}
 
 								ost.str("");
@@ -217,7 +217,7 @@ int main()
 								file2Check = ost.str();
 
 								ost.str("");
-								ost << "/tmp/tmp_" << filePrefix << fileExtention;
+								ost << "/tmp/tmp_" << filePrefix << fileExtension;
 								tmpFile2Check = ost.str();
 
 								ost.str("");
@@ -252,13 +252,7 @@ int main()
 							if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG))
 							{
 
-								{
-									CLog	log;
-									ostringstream   ost;
-
-									ost << string(__func__) << "[" << to_string(__LINE__) << "]: choosen filename for avatar [" << file2Check << "]";
-									log.Write(DEBUG, ost.str());
-								}
+								MESSAGE_DEBUG("", "", "chosen filename for avatar [" + file2Check + "]")
 
 // --- Don't forget to remove previous logo
 								if(db.Query("select `logo_folder`, `logo_filename` from `groups` where `id`=\"" + groupID + "\";"))

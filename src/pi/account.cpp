@@ -1363,7 +1363,7 @@ int main()
 				}
 				else
 				{
-					MESSAGE_DEBUG("", action, "previous erros prevent to change subscription mode");
+					MESSAGE_DEBUG("", action, "previous errors prevent to change subscription mode");
 				}
 			}
 			else

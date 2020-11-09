@@ -339,7 +339,7 @@ string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
 	return result;
 }
 
-string GetSpecificData_GetFinalFileExtenstion(string itemType)
+string GetSpecificData_GetFinalFileExtension(string itemType)
 {
 	string	  result = ".jpg";
 
@@ -381,7 +381,7 @@ string GetSpecificData_GetDataTypeByItemType(const string &itemType)
 
 // --- Does the owner user allowed to change it ?
 // --- For example:
-// ---	*) university or school logo can be changed by administartor only.
+// ---	*) university or school logo can be changed by administrator only.
 // ---	*) gift image could be changed by owner
 auto GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *db, CUser *user) -> string
 {

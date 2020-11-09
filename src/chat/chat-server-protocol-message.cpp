@@ -270,7 +270,7 @@ string SaveAndCheckPreImageToTmpLocation(const string &fileContent)
 	// FILE			*f;
 	int				folderID = (int)(rand()/(RAND_MAX + 1.0) * FEEDIMAGE_NUMBER_OF_FOLDERS) + 1;
 	string			filePrefix = GetRandom(20);
-	string			finalFile, tmpFile2Check, tmpImageJPG, fileName, fileExtention;
+	string			finalFile, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 	string			httpImageLocation = "";
 	size_t			base64Prefix = 0;
 	string			result = "";
@@ -293,14 +293,14 @@ string SaveAndCheckPreImageToTmpLocation(const string &fileContent)
 
 		folderID = (int)(rand()/(RAND_MAX + 1.0) * CHAT_IMAGE_NUMBER_OF_FOLDERS) + 1;
 		filePrefix = GetRandom(20);
-		fileExtention = ".jpg";
+		fileExtension = ".jpg";
 
 		ost.str("");
 		ost << IMAGE_CHAT_DIRECTORY << "/" << folderID << "/" << filePrefix << ".jpg";
 		finalFile = ost.str();
 
 		ost.str("");
-		ost << "/tmp/tmp_" << filePrefix << fileExtention;
+		ost << "/tmp/tmp_" << filePrefix << fileExtension;
 		tmpFile2Check = ost.str();
 
 		ost.str("");

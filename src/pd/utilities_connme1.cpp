@@ -734,7 +734,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 	{
 		companyCounter = affected;
 		companiesList.reserve(companyCounter);  // --- reserving allows avoid moving vector in memory
-												// --- to fit vector into continous memory piece
+												// --- to fit vector into continuous memory piece
 
 		for(auto i = 0; i < affected; i++)
 		{
@@ -1505,7 +1505,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 		}
 		else if(feedActionTypeId == "22")
 		{
-			// --- cretificate received
+			// --- certificate received
 
 			if(db->Query("SELECT * FROM `users_certifications` WHERE `id`=\"" + feedActionId + "\";"))
 			{

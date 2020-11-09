@@ -229,10 +229,8 @@ string GenerateImage(string randStr)
 			
 				fileFlagExist = true;	
 				do {
-					{
-						CLog	log;
-						log.Write(DEBUG, "GenerateImage: checking captha file existance");
-					}
+					MESSAGE_DEBUG("", "", "checking captha file existence")
+
 					fileResult = "_";
 					fileResult += GetRandom(10);
 					fileResult += ".gif";
@@ -1814,7 +1812,7 @@ int main()
 			}
 			else
 			{
-				MESSAGE_ERROR("", action, "table compnay is empty");
+				MESSAGE_ERROR("", action, "table company is empty");
 				ost.str("");
 			}
 
@@ -2133,7 +2131,7 @@ int main()
 							 feed_mediaType = "youtube_video";
 							 feed_imageURL = html.GetEmbedVideoURL();
 						}
-						else if((!html.GetPreviewImageFolder().empty()) && (!html.GetPreviewImagePrefix().empty()) && (!html.GetPreviewImageExtention().empty()))
+						else if((!html.GetPreviewImageFolder().empty()) && (!html.GetPreviewImagePrefix().empty()) && (!html.GetPreviewImageExtension().empty()))
 						{
 							// --- 1) check that image actually image
 							// --- 2) move it to finalFoldef
@@ -2156,7 +2154,7 @@ int main()
 							finalFile = ost.str();
 
 							ost.str("");
-							ost << "/tmp/tmp_" << html.GetPreviewImagePrefix() << html.GetPreviewImageExtention();
+							ost << "/tmp/tmp_" << html.GetPreviewImagePrefix() << html.GetPreviewImageExtension();
 							tmpFile2Check = ost.str();
 
 							ost.str("");
@@ -2166,10 +2164,7 @@ int main()
 							if(ImageSaveAsJpgToFeedFolder(tmpFile2Check, tmpImageJPG, exifInfo))
 							{
 
-								{
-									CLog	log;
-									MESSAGE_DEBUG("", action, "choosen filename for feed image [" + finalFile + "]");
-								}
+								MESSAGE_DEBUG("", action, "chosen filename for feed image [" + finalFile + "]");
 
 								CopyFile(tmpImageJPG, finalFile);
 
@@ -5062,7 +5057,7 @@ int main()
 			}
 			else
 			{
-				MESSAGE_DEBUG("", action, "there are no company of current employmant of user " + user.GetID());
+				MESSAGE_DEBUG("", action, "there are no company of current employment of user " + user.GetID());
 			}
 			indexPage.RegisterVariableForce("result", ost.str());
 
@@ -5073,7 +5068,7 @@ int main()
 			}
 
 		}
-		// --- JSON part has eneded
+		// --- JSON part has ended
 
 
 		// --- AJAX part has started
@@ -5171,7 +5166,7 @@ int main()
 				{
 					if(db.Query("SELECT `id` FROM `groups` WHERE `id`=\"" + newsFeedMessageDstID + "\" AND `isBlocked`=\"N\";"))
 					{
-						// --- no checnge in post admittance
+						// --- no change in post admittance
 						db.Query("UPDATE `groups` SET `eventTimestampLastPost`=UNIX_TIMESTAMP() WHERE `id`=\"" + newsFeedMessageDstID + "\";");
 						if(db.isError())
 						{
@@ -5524,7 +5519,7 @@ int main()
 						ostringstream	dictionaryStatement;
 						int				affected;
 
-						// --- check on adverse dictionnary words
+						// --- check on adverse dictionary words
 						dictionaryStatement.str("");
 						ost.str("");
 						ost << "SELECT * FROM `dictionary_adverse`;";
@@ -6995,7 +6990,7 @@ int main()
 						ostringstream	dictionaryStatement;
 						int				affected;
 
-						// --- check on adverse dictionnary words
+						// --- check on adverse dictionary words
 						dictionaryStatement.str("");
 						ost.str("");
 						ost << "SELECT * FROM `dictionary_adverse`;";
@@ -8764,7 +8759,7 @@ int main()
 					// --- account activated
 					act.Activate();
 
-					// --- improve the user expirience by automatically sign-in user
+					// --- improve the user experience by automatically sign-in user
 					// --- automatic sing-in
 					string		sessid, login, rememberMe, lng;
 					CUser		user;
@@ -8807,7 +8802,7 @@ int main()
 								CLog	log;
 								MESSAGE_ERROR("", action, "user [" + user.GetLogin() + "] not activated");
 
-								if(!indexPage.SetTemplate("weberror_user_not_activared.htmlt"))
+								if(!indexPage.SetTemplate("weberror_user_not_activated.htmlt"))
 								{
 									throw CExceptionHTML("template page missing");
 								}
@@ -12580,7 +12575,7 @@ int main()
 					ostFinal.str("");
 					ostFinal << "{" << std::endl;
 					ostFinal << "\"result\" : \"error\"," << std::endl;
-					ostFinal << "\"description\" : \"error updating occupation start in compay\"" << std::endl;
+					ostFinal << "\"description\" : \"error updating occupation start in company\"" << std::endl;
 					ostFinal << "}" << std::endl;
 
 				}
@@ -12698,7 +12693,7 @@ int main()
 							ostFinal.str("");
 							ostFinal << "{" << std::endl;
 							ostFinal << "\"result\" : \"error\"," << std::endl;
-							ostFinal << "\"description\" : \"error updating occupation start in compay\"" << std::endl;
+							ostFinal << "\"description\" : \"error updating occupation start in company\"" << std::endl;
 							ostFinal << "}" << std::endl;
 
 						}
@@ -13242,7 +13237,7 @@ int main()
 					ostFinal.str("");
 					ostFinal << "{" << std::endl;
 					ostFinal << "\"result\" : \"error\"," << std::endl;
-					ostFinal << "\"description\" : \"error updating occupation finish in compay\"" << std::endl;
+					ostFinal << "\"description\" : \"error updating occupation finish in company\"" << std::endl;
 					ostFinal << "}" << std::endl;
 
 				}

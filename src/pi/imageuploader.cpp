@@ -402,7 +402,7 @@ int main()
 					FILE			*f;
 					int			 folderID = (int)(rand()/(RAND_MAX + 1.0) * FEEDIMAGE_NUMBER_OF_FOLDERS) + 1;
 					string		  filePrefix = GetRandom(20);
-					string		  finalFile, tmpFile2Check, tmpImageJPG, fileName, fileExtention;
+					string		  finalFile, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 					ostringstream   ost;
 					struct ExifInfo exifInfo;
 					int			 currFileType = FILETYPE_UNDEFINED;
@@ -463,11 +463,11 @@ int main()
 
 								if((foundPos = tmp.rfind(".")) != string::npos) 
 								{
-									fileExtention = tmp.substr(foundPos, tmp.length() - foundPos);
+									fileExtension = tmp.substr(foundPos, tmp.length() - foundPos);
 								}
 								else
 								{
-									fileExtention = ".jpg";
+									fileExtension = ".jpg";
 								}
 
 								ost.str("");
@@ -475,7 +475,7 @@ int main()
 								finalFile = ost.str();
 
 								ost.str("");
-								ost << "/tmp/tmp_" << filePrefix << fileExtention;
+								ost << "/tmp/tmp_" << filePrefix << fileExtension;
 								tmpFile2Check = ost.str();
 
 								ost.str("");
@@ -509,15 +509,9 @@ int main()
 
 							if(ImageConvertToJpg(tmpFile2Check, tmpImageJPG, exifInfo))
 							{
-								unsigned long	  feed_imagesID = 0;
+								auto	  feed_imagesID = 0;
 
-								{
-									CLog	log;
-									ostringstream   ost;
-
-									ost << __func__ << "[" << __LINE__ << "]: choosen filename for feed image [" << finalFile << "]";
-									log.Write(DEBUG, ost.str());
-								}
+								MESSAGE_DEBUG("", "", "choosen filename for feed image [" + finalFile + "]")
 
 								CopyFile(tmpImageJPG, finalFile);
 
@@ -713,7 +707,7 @@ int main()
 
 									// --- fork here
 									// --- parent process: return response to user (to avoid long waiting)
-									// --- child process: continue video converting to webm-format (very long convertion)
+									// --- child process: continue video converting to webm-format (very long conversion)
 									// --- !!! IMPORTANT !!!
 									// --- no need to add additional functionality here
 									forkPID = fork();
@@ -740,7 +734,7 @@ int main()
 											{
 												{
 													CLog	log;
-													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: can't daemonize SecondStageVideoConvertion-process setsid returns error [" + to_string(EXIT_FAILURE) + "]");
+													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: can't daemonize SecondStageVideoConversion-process setsid returns error [" + to_string(EXIT_FAILURE) + "]");
 												}
 
 												// --- it must be caught by "catch" in child process

@@ -1316,7 +1316,7 @@ string GetCompanyPositionsInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 		int						eventCounter = affected;
 
 		eventsList.reserve(eventCounter);  // --- reserving allows avoid moving vector in memory
-											// --- to fit vector into continous memory piece
+											// --- to fit vector into continuous memory piece
 
 		for(int i = 0; i < affected; i++)
 		{
@@ -1380,7 +1380,7 @@ string GetSiteThemesInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 		int						eventCounter = affected;
 
 		eventsList.reserve(eventCounter);  // --- reserving allows avoid moving vector in memory
-											// --- to fit vector into continous memory piece
+											// --- to fit vector into continuous memory piece
 
 		for(int i = 0; i < affected; i++)
 		{
@@ -2130,7 +2130,7 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 	auto		originalFilename = ""s;
 	auto		preFinalFilename = ""s;
 	auto		fileName = ""s;
-	auto		fileExtention = ""s;
+	auto		fileExtension = ""s;
 	auto		filePrefix = ""s;
 	auto		folderID = 0;
 	
@@ -2151,16 +2151,16 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 					filePrefix = GetRandom(20);
 
 					if((foundPos = f_name.rfind(".")) != string::npos) 
-						fileExtention = f_name.substr(foundPos, f_name.length() - foundPos);
+						fileExtension = f_name.substr(foundPos, f_name.length() - foundPos);
 					else
 					{
 						MESSAGE_ERROR("", "", "fileExtension MUST be predefined, if workflow gets here then filename doesn't contains extension which is wrong. Require to check subcontractor.cpp:AJAX_sumitBT part");
-						fileExtention = ".jpg";
+						fileExtension = ".jpg";
 					}
 
-					originalFilename = "/tmp/tmp_" + filePrefix + fileExtention;
-					preFinalFilename = "/tmp/" + filePrefix + fileExtention;
-					finalFilename = GetSpecificData_GetBaseDirectory(f_type) + "/" + to_string(folderID) + "/" + filePrefix + fileExtention;
+					originalFilename = "/tmp/tmp_" + filePrefix + fileExtension;
+					preFinalFilename = "/tmp/" + filePrefix + fileExtension;
+					finalFilename = GetSpecificData_GetBaseDirectory(f_type) + "/" + to_string(folderID) + "/" + filePrefix + fileExtension;
 				} while(isFileExists(finalFilename) || isFileExists(originalFilename) || isFileExists(preFinalFilename));
 
 				MESSAGE_DEBUG("", "", "Save file to /tmp for checking of image validity [" + originalFilename + "]");
@@ -2240,7 +2240,7 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 
 			unlink(preFinalFilename.c_str());
 
-			result = to_string(folderID) + "/" + filePrefix + fileExtention;
+			result = to_string(folderID) + "/" + filePrefix + fileExtension;
 		}
 		else
 		{

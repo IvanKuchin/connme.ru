@@ -268,7 +268,7 @@ bool CPresenceCache::AddUser(string strUserID)
 			ostringstream	ost;
 
 			ost.str("");
-			ost << "CPresenceCache::AddUser: ERROR: coversation strUserID[" << strUserID << "] to long [" << to_string(userID) << "]";
+			ost << "CPresenceCache::AddUser: ERROR: conversation strUserID[" << strUserID << "] to long [" << to_string(userID) << "]";
 			log.Write(ERROR, ost.str());
 		}
 	}
@@ -320,7 +320,7 @@ string CPresenceCache::GetUserLastOnline(long int userID)
 			ostringstream	ost;
 
 			ost.str("");
-			ost << "CPresenceCache::GetUserLastOnline: ERROR: failed coversation strUserID[" << userID << "] to long [" << to_string(userID) << "]";
+			ost << "CPresenceCache::GetUserLastOnline: ERROR: failed conversation strUserID[" << userID << "] to long [" << to_string(userID) << "]";
 			log.Write(ERROR, ost.str());
 		}
 	}

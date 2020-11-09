@@ -380,7 +380,7 @@ bool YearAgoReminder(CMysql *db)
 							}
 
 							// --- you can NOT merge these two for-loops
-							// --- GetMessageGPSCoordinates will breake dialog with DB
+							// --- GetMessageGPSCoordinates will break dialog with DB
 							for(int j = 0; j < overYearMessageCounter; ++j)
 								postsOverYear[j].gps = GetMessageGPSCoordinates(postsOverYear[j].messageID, db);
 

@@ -1217,7 +1217,7 @@ bool AllowMessageInNewsFeed(CUser *me, const string messageOwnerID, const string
 
 	MESSAGE_DEBUG("", "", "parameters (user [" + me->GetID() + "], messageOwnerID [" + messageOwnerID + "], messageAccessRights [" + messageAccessRights + "]): start");
 
-	// --- messages belons to yourself must be shown unconditionally
+	// --- messages belongs to yourself must be shown unconditionally
 	// --- must be checked before message access private
 	if(me->GetID() == messageOwnerID) return true;
 

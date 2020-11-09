@@ -25,7 +25,7 @@ class CVideoConverter
 	string				_folderID;
 	string				_filePrefix;
 	string				_timestamp;
-	string				_originalFileExtention;
+	string				_originalFileExtension;
 	vector<string>		_exts = {".mp4", ".webm"};
 
 	int					_width = 0, _height = 0;

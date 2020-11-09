@@ -125,7 +125,7 @@ int CPost::CalculateVars()
     if(tmp == NULL)
     {
 		CLog	log;
-		log.Write(ERROR, "CPost::" + string(__func__) + "[" + to_string(__LINE__) + "]: ERROR: POST data is empy");
+		log.Write(ERROR, "CPost::" + string(__func__) + "[" + to_string(__LINE__) + "]: ERROR: POST data is empty");
 		return -1;
     }
 

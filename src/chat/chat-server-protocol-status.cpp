@@ -33,7 +33,7 @@ string ClearConnectionID(long int cnxID)
 				ostringstream	ost;
 	
 				ost.str("");
-				ost << "ClearConnectionID(" << hex << cnxID << "): signal to conncetion to close";
+				ost << "ClearConnectionID(" << hex << cnxID << "): signal to connection to close";
 				log.Write(DEBUG, ost.str());
 			}
 
