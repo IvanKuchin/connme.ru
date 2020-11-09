@@ -186,7 +186,7 @@ pair<float, float> GetMessageGPSCoordinates(string messageID, CMysql *db)
 
 	if(maxDistance > SINGLE_MESSAGE_DISTANCE)
 	{
-		{ MESSAGE_DEBUG("", "", "GPS distance between fotos more than 100 km, made shooting point 'unknown'"); }
+		{ MESSAGE_DEBUG("", "", "GPS distance between photos more than 100 km, made shooting point 'unknown'"); }
 		result = make_pair(0, 0);
 	}
 	else
@@ -514,7 +514,7 @@ auto RemoveYearAgoReminder(CMysql *db)
 
 int main()
 {
-	CStatistics		appStat;  // --- CStatistics must be firts statement to measure end2end param's
+	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CMysql			db;
 	struct timeval	tv;
 

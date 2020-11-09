@@ -281,7 +281,7 @@ string GenerateImage(string randStr)
 
 int main()
 {
-	CStatistics		appStat;  // --- CStatistics must be firts statement to measure end2end param's
+	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
 	CUser			user;
 	string			action = "";
@@ -2134,7 +2134,7 @@ int main()
 						else if((!html.GetPreviewImageFolder().empty()) && (!html.GetPreviewImagePrefix().empty()) && (!html.GetPreviewImageExtension().empty()))
 						{
 							// --- 1) check that image actually image
-							// --- 2) move it to finalFoldef
+							// --- 2) move it to final folder
 							// --- 3) submit to imageTempSet in DB
 							struct ExifInfo exifInfo;
 							string			finalFile, tmpFile2Check, tmpImageJPG;

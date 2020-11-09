@@ -400,7 +400,7 @@ static auto SaveFilesAndUpdateDB(string ticket_history_id, CCgi *indexPage, CMys
 
 int main(void)
 {
-	CStatistics		appStat;  // --- CStatistics must be firts statement to measure end2end param's
+	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
 	CUser			user;
 	CMysql			db;

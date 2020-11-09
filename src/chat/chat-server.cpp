@@ -304,7 +304,7 @@ int main(int argc, char **argv)
     signal(SIGSEGV, crash_handler); 
 
 	/*
-	 * take care to zero down the info struct, he contains random garbaage
+	 * take care to zero down the info struct, he contains random garbage
 	 * from the stack otherwise
 	 */
 	memset(&info, 0, sizeof info);

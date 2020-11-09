@@ -21,7 +21,7 @@ static auto RenumberOrder_in_ImageSet(const string &set_id, CMysql *db)
 
 int main(void)
 {
-	CStatistics		appStat;  // --- CStatistics must be firts statement to measure end2end param's
+	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
 	CUser			user;
 	string			action, partnerID;
