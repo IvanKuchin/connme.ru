@@ -92,7 +92,7 @@ bool ImageSaveAsJpg (const string src, const string dst, struct ExifInfo *exifIn
 			image.resize(Magick::Geometry(newWidth, newHeight, 0, 0));
 		}
 
-		// --- save exifInfo, of exxists
+		// --- save exifInfo, if exists
 		if(exifInfo)
 		{
 			if(imageOrientation == Magick::TopRightOrientation) image.flop();

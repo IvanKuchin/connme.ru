@@ -1104,7 +1104,7 @@ off_t getFileSize(const std::string& name)
 	return result;
 }
 
-// --- extrasct all @[[:digit:]] patterns form srcMessage
+// --- extract all @[[:digit:]] patterns form srcMessage
 vector<string> GetUserTagsFromText(string srcMessage)
 {
 	vector<string>  result;

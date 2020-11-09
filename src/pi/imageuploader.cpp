@@ -511,7 +511,7 @@ int main()
 							{
 								auto	  feed_imagesID = 0;
 
-								MESSAGE_DEBUG("", "", "choosen filename for feed image [" + finalFile + "]")
+								MESSAGE_DEBUG("", "", "chosen filename for feed image [" + finalFile + "]")
 
 								CopyFile(tmpImageJPG, finalFile);
 

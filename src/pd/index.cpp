@@ -229,7 +229,7 @@ string GenerateImage(string randStr)
 			
 				fileFlagExist = true;	
 				do {
-					MESSAGE_DEBUG("", "", "checking captha file existence")
+					MESSAGE_DEBUG("", "", "checking captcha file existence")
 
 					fileResult = "_";
 					fileResult += GetRandom(10);
