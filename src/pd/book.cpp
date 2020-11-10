@@ -884,7 +884,7 @@ int main()
 					nextStep = "readExistingBook";
 				}
 
-				// --- check uniqness of isbn10
+				// --- check uniqueness of isbn10
 				if(!newBookISBN10.empty())
 				{
 					{
@@ -910,7 +910,7 @@ int main()
 					}
 				}
 
-				// --- check uniqness of isbn13
+				// --- check uniqueness of isbn13
 				if(!newBookISBN13.empty())
 				{
 					{

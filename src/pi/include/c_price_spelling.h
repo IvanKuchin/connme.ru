@@ -73,7 +73,7 @@ class C_Price_Spelling
         auto	GetFraction(double param) -> long;
         auto	DeclensionIndex(long number) -> int;
         auto	SpellOrderOfMagnitude(int order_of_magnitude, long number) -> string;
-        auto	SpellUpToThouthand(long, int gender) -> string;
+        auto	SpellUpToThousand(long, int gender) -> string;
         auto	SpellHundreds(long, int gender) -> string;
         auto	Spell11_19(long, int gender) -> string;
         auto	SpellTenths(long, int gender) -> string;

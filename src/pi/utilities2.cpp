@@ -2104,7 +2104,7 @@ static bool CheckImageFileInTempFolder(string src, string dst, string f_type)
 	}
 	catch( Magick::Exception &error_ )
 	{
-		MESSAGE_DEBUG("", "", "ImageMagick read/write trown exception [" + error_.what() + "]");
+		MESSAGE_DEBUG("", "", "ImageMagick read/write thrown exception [" + error_.what() + "]");
 	}
 #else
 

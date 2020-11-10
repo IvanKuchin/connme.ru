@@ -5745,7 +5745,7 @@ int main()
 						{
 							SubscribeToCompany(to_string(companyID), &user, &db);
 
-							// --- Updatint the live feed
+							// --- Updating the live feed
 							ost.str("");
 							ost << "INSERT INTO `feed` (`title`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) VALUES(\"\",\"" << user.GetID() << "\", " << (currentCompany ? "\"1\"" : "\"51\"") << ", \"" << newCarrierID << "\", NOW())";
 							if(db.InsertQuery(ost.str()))
@@ -11553,7 +11553,7 @@ int main()
 						ostFinal.str("");
 						ostFinal << "{";
 						ostFinal << "\"result\" : \"error\",";
-						ostFinal << "\"description\" : \"ERROR udpating recommendation[" << userRecommendationID << "] state\"";
+						ostFinal << "\"description\" : \"ERROR updating recommendation[" << userRecommendationID << "] state\"";
 						ostFinal << "}";
 					}
 				}
@@ -11638,7 +11638,7 @@ int main()
 					ostFinal.str("");
 					ostFinal << "{"
 							 << "\"result\" : \"error\","
-							 << "\"description\" : \"ERROR udpating recommendation[" << user.GetID() << "] state\""
+							 << "\"description\" : \"ERROR updating recommendation[" << user.GetID() << "] state\""
 							 << "}";
 				}
 			}
