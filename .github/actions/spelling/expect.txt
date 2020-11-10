@@ -645,4 +645,9 @@ Zabcdefghijklmnopqrstuvwxyz
 yy
 YYYY
 ZIPBy
+referer
+xxxx
+xxxxxxxx
+xxxxxxxxxxxx
+yxxx
 
