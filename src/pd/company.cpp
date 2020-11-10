@@ -1857,12 +1857,12 @@ int main()
 			}
 		}
 
-		if(action == "AJAX_companyPosessionRequest")
+		if(action == "AJAX_companyPossessionRequest")
 		{
 			ostringstream   ostResult;
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: start");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: start");
 			}
 
 			ostResult.str("");
@@ -1872,7 +1872,7 @@ int main()
 
 				{
 					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: re-login required");
+					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1892,7 +1892,7 @@ int main()
 					{
 						{
 							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: possession request already exists [id = " + db.Get(0, "id") + "]");
+							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: possession request already exists [id = " + db.Get(0, "id") + "]");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"Такой запрос уже существует\"}";
@@ -1940,7 +1940,7 @@ int main()
 									{
 										{
 											CLog	log;
-											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: ERROR: inserting to `user_notification` table");
+											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting to `user_notification` table");
 										}
 									}
 								}
@@ -1948,7 +1948,7 @@ int main()
 								{
 									{
 										CLog	log;
-										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: ERROR: inserting possession request to `company_possession_request` table");
+										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting possession request to `company_possession_request` table");
 									}
 
 									ostResult << "{\"result\": \"error\", \"description\": \"Ошибка БД\"}";
@@ -1959,7 +1959,7 @@ int main()
 							{
 								{
 									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: ERROR: company[" + companyID + "] can't be assigned to user[" + user.GetID() + "] due to current owner exists");
+									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: company[" + companyID + "] can't be assigned to user[" + user.GetID() + "] due to current owner exists");
 								}
 
 								ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть переданна\"}";
@@ -1969,7 +1969,7 @@ int main()
 						{
 							{
 								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: ERROR: company[" + companyID + "] doesn't exists");
+								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: company[" + companyID + "] doesn't exists");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует\"}";
@@ -1980,7 +1980,7 @@ int main()
 				{
 					{
 						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_companyPosessionRequest: ERROR: mandatory parameter missed or empty in HTML request [companyID]");
+						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_companyPossessionRequest: ERROR: mandatory parameter missed or empty in HTML request [companyID]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -1992,22 +1992,22 @@ int main()
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
 				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest:ERROR: can't find template json_response.htmlt");
+				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest:ERROR: can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: finish");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: finish");
 			}
 		}
 
-		if(action == "AJAX_grantPosessionRequest")
+		if(action == "AJAX_grantPossessionRequest")
 		{
 			ostringstream   ostResult;
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPosessionRequest: start");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: start");
 			}
 
 			ostResult.str("");
@@ -2017,7 +2017,7 @@ int main()
 
 				{
 					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPosessionRequest: re-login required");
+					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2086,7 +2086,7 @@ int main()
 											{
 												{
 													CLog	log;
-													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: ERROR: inserting to `user_notification` table");
+													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting to `user_notification` table");
 												}
 											}
 
@@ -2097,7 +2097,7 @@ int main()
 									{
 										{
 											CLog	log;
-											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPosessionRequest: ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
+											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
 										}
 
 										ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть передана\"}";
@@ -2107,7 +2107,7 @@ int main()
 								{
 									{
 										CLog	log;
-										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPosessionRequest: ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
+										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
 									}
 
 									ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует или не ваша\"}";
@@ -2117,7 +2117,7 @@ int main()
 							{
 								{
 									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPosessionRequest: ERROR: mandatory parameter empty [requested_company_id]");
+									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: mandatory parameter empty [requested_company_id]");
 								}
 
 								ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -2127,7 +2127,7 @@ int main()
 						{
 							{
 								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPosessionRequest: ERROR: possession request in wrong state [state: " + status + "], must be in `requested` state");
+								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: possession request in wrong state [state: " + status + "], must be in `requested` state");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2137,7 +2137,7 @@ int main()
 					{
 						{
 							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPosessionRequest: ERROR: possession request [id: " + possessionRequestID + "] not found");
+							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: possession request [id: " + possessionRequestID + "] not found");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2147,7 +2147,7 @@ int main()
 				{
 					{
 						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPosessionRequest: ERROR: notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
+						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти ваш notification\"}";
@@ -2158,22 +2158,22 @@ int main()
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
 				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPosessionRequest:ERROR: can't find template json_response.htmlt");
+				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest:ERROR: can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPosessionRequest: finish");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: finish");
 			}
 		}
 
-		if(action == "AJAX_dropCompanyPosession")
+		if(action == "AJAX_dropCompanyPossession")
 		{
 			ostringstream   ostResult;
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPosession: start");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: start");
 			}
 
 			ostResult.str("");
@@ -2183,7 +2183,7 @@ int main()
 
 				{
 					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPosession: re-login required");
+					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2222,7 +2222,7 @@ int main()
 				{
 					{
 						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_dropCompanyPosession: ERROR: company[" + companyID + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
+						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: ERROR: company[" + companyID + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует или не ваша\"}";
@@ -2233,22 +2233,22 @@ int main()
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
 				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_dropCompanyPosession:ERROR: can't find template json_response.htmlt");
+				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession:ERROR: can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPosession: finish");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: finish");
 			}
 		}
 
-		if(action == "AJAX_rejectPosessionRequest")
+		if(action == "AJAX_rejectPossessionRequest")
 		{
 			ostringstream   ostResult;
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPosessionRequest: start");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: start");
 			}
 
 			ostResult.str("");
@@ -2258,7 +2258,7 @@ int main()
 
 				{
 					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPosessionRequest: re-login required");
+					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2319,7 +2319,7 @@ int main()
 											{
 												{
 													CLog	log;
-													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPosessionRequest: ERROR: inserting to `user_notification` table");
+													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting to `user_notification` table");
 												}
 											}
 
@@ -2330,7 +2330,7 @@ int main()
 									{
 										{
 											CLog	log;
-											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPosessionRequest: ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
+											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
 										}
 
 										ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть передана\"}";
@@ -2340,7 +2340,7 @@ int main()
 								{
 									{
 										CLog	log;
-										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPosessionRequest: ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
+										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
 									}
 
 									ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует или не ваша\"}";
@@ -2350,7 +2350,7 @@ int main()
 							{
 								{
 									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPosessionRequest: ERROR: mandatory parameter empty [requested_company_id]");
+									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: mandatory parameter empty [requested_company_id]");
 								}
 
 								ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -2360,7 +2360,7 @@ int main()
 						{
 							{
 								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPosessionRequest: ERROR: possession request in wrong state [state: " + status + "], must be in `requested` state");
+								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: possession request in wrong state [state: " + status + "], must be in `requested` state");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2370,7 +2370,7 @@ int main()
 					{
 						{
 							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPosessionRequest: ERROR: possession request [id: " + possessionRequestID + "] not found");
+							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: possession request [id: " + possessionRequestID + "] not found");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2380,7 +2380,7 @@ int main()
 				{
 					{
 						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPosessionRequest: ERROR: notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
+						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти ваш notification\"}";
@@ -2391,13 +2391,13 @@ int main()
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
 				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPosessionRequest:ERROR: can't find template json_response.htmlt");
+				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest:ERROR: can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
 				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPosessionRequest: finish");
+				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: finish");
 			}
 		}
 

@@ -8,6 +8,7 @@ sessid=[a-zA-Z0-9]*
 
 # --- uuid:
 \{[0-9A-FA-F]{8}-(?:[0-9A-FA-F]{4}-){3}[0-9A-FA-F]{12}\}
+[-4yx]+
 
 
 # --- URL-s
@@ -16,3 +17,6 @@ https?://.*
 
 # --- copyright
 [a-zA-Z0-9]+@[a-zA-Z0-9]+\.com
+
+# --- random
+rand\=x+

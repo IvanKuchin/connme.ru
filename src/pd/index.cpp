@@ -1753,7 +1753,7 @@ int main()
 			MESSAGE_DEBUG("", action, "finish");
 		}
 
-		// --- AJAX job titeles
+		// --- AJAX job titles
 		if(action == "AJAX_getJobTitles") 
 		{
 			ostringstream	ost;
