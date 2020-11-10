@@ -75,7 +75,7 @@ bool ImageConvertToJpg (const string src, const string dst, struct ExifInfo &exi
 	}
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction from the
+	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 	try {
@@ -421,7 +421,7 @@ int main()
 
 						{
 							ost.str("");
-							ost << __func__ << "[" << __LINE__ << "]: ERROR: feed image file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permited maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter);
+							ost << __func__ << "[" << __LINE__ << "]: ERROR: feed image file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter);
 							log.Write(ERROR, ost.str());
 						}
 
@@ -632,7 +632,7 @@ int main()
 								ostJSONResult << "\"jqXHR\": \"\"" << std::endl;
 								ostJSONResult << "}" << std::endl;
 								if(filesCounter == (indexPage.GetFilesHandler()->Count() - 1)) ostJSONResult << "]";
-							} // --- if image sucessfully converted and saved to image folder
+							} // --- if image successfully converted and saved to image folder
 						} // --- if uploaded file image 
 						else if( (messageMedia == MESSAGE_HAVENO_MEDIA) && (currFileType == FILETYPE_VIDEO) )
 						{
@@ -715,7 +715,7 @@ int main()
 									{
 										pid_t	   sid;
 
-										// --- child proccess
+										// --- child process
 										{
 											CLog	log;
 											log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: child process after fork");

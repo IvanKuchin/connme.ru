@@ -307,7 +307,7 @@ auto GenerateSession(string action, CCgi *indexPage, CMysql *db, CUser *user) ->
 		{
 			action = GetDefaultActionFromUserType(user, db);
 
-			MESSAGE_DEBUG("", "", "META-registration: action has been overriden user.type(" + user->GetType() + ") default action [action = " + action + "]");
+			MESSAGE_DEBUG("", "", "META-registration: action has been overridden user.type(" + user->GetType() + ") default action [action = " + action + "]");
 
 			if(user->GetLogin().empty()) MESSAGE_ERROR("", "", "user login is empty (user login must not be empty, either \"Guest\", or actual user login)");
 		}

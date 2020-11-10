@@ -253,7 +253,7 @@ bool CVideoConverter::ReadMetadataAndResolution()
 				MESSAGE_DEBUG("", "", "video stream dimensions [" + to_string(_width) + "x" + to_string(_height) + "]");
 
 				// --- check video stream meta data
-				// --- is it roteted dimensions
+				// --- is it rotated dimensions
 				tag = nullptr;
 				while ((tag = av_dict_get(stream->metadata, "", tag, AV_DICT_IGNORE_SUFFIX)))
 				{

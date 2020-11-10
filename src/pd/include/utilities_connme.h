@@ -16,7 +16,7 @@ auto 			GetUserLanguageListInJSONFormat(string user_id, CMysql *) -> string;
 
 // --- this function returns lots of data, be careful with it
 auto 	     	GetUserListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
-// --- use short version of previos function, where possible
+// --- use short version of previous function, where possible
 auto 	     	GetUsersNameAvatarInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 
 auto 			GetBookListInJSONFormat(string dbQuery, CMysql *, bool includeReaders = false) -> string;

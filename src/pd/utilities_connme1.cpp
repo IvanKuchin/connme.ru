@@ -1182,7 +1182,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 					ostResult << "}";
 
 					// if(i < (affected - 1)) ostResult << ",";
-				} // --- Message Access Rights onot allow to post it into feed
+				} // --- Message Access Rights allow to post it to the news feed
 			}
 			else
 			{
@@ -1270,7 +1270,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 					ostResult << "}";
 
 					// if(i < (affected - 1)) ostResult << ",";
-				} // --- Message Access Rights onot allow to post it into feed
+				} // --- Message Access Rights allow to post it to the news feed
 			}
 			else
 			{
@@ -3524,9 +3524,9 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 	// --- Company Posession Request
 	if(typeID == 60)
 	{
-		string   company_posesison_request_id = to_string(actionID);
+		string   company_possession_request_id = to_string(actionID);
 
-		if(company_posesison_request_id.length() && db->Query("select * from `company_posession_request` where `id`='" + company_posesison_request_id + "';"))
+		if(company_possession_request_id.length() && db->Query("select * from `company_possession_request` where `id`='" + company_possession_request_id + "';"))
 		{
 			string  friendUserID = db->Get(0, "requester_user_id");
 			string  company_id = db->Get(0, "requested_company_id");
@@ -3543,7 +3543,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					string  friend_userNameLast = db->Get(0, "nameLast");
 					string	  friend_sex = db->Get(0, "sex");
 
-					ostResult << "\"notificationCompanyPosessionRequestID\":\"" << company_posesison_request_id << "\",";
+					ostResult << "\"notificationCompanyPosessionRequestID\":\"" << company_possession_request_id << "\",";
 					ostResult << "\"notificationDescription\":\"" << description << "\",";
 					ostResult << "\"notificationFriendUserID\":\"" << friendUserID << "\",";
 					ostResult << "\"notificationFriendUserName\":\"" << friend_userName << "\",";
@@ -3571,11 +3571,11 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 		else
 		{
 			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_posession_request[id = " + company_posesison_request_id + "]");
+			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_possession_request[id = " + company_possession_request_id + "]");
 		}
 	}
 
-	// --- company posession approved / rejected
+	// --- company possession approved / rejected
 	if((typeID == 61) || (typeID == 62))
 	{
 		string   company_id = to_string(actionID);
@@ -3804,7 +3804,7 @@ auto RotateImage(string filename, int degree) -> string
 	auto	error_message = ""s;
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction from the
+	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 	try {
@@ -3839,7 +3839,7 @@ auto FlipImageHorizontal(string filename) -> string
 	auto	error_message = ""s;
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction from the
+	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 	try {
@@ -3874,7 +3874,7 @@ auto FlipImageVertical(string filename) -> string
 	auto	error_message = ""s;
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction from the
+	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 	try {

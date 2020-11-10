@@ -821,7 +821,7 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 						userFriendship = db->Get(0, "state");
 					}
 
-					// --- Get presense status for chat purposes
+					// --- Get presence status for chat purposes
 					ost1.str("");
 					ost1 << "select COUNT(*) as `number_unread_messages` from `chat_messages` where `fromType`='fromUser' and `fromID`='" << userID << "' and (`messageStatus`='unread' or `messageStatus`='sent' or `messageStatus`='delivered');";
 					if(db->Query(ost1.str()))

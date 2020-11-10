@@ -71,7 +71,7 @@ string	quoted(string src)
 vector<string>	quoted(const vector<string> &src)
 {
 	vector<string>	result;
-	result.reserve(src.size()); // --- reduce probablity of memory reallocation
+	result.reserve(src.size()); // --- reduce probability of memory reallocation
 
 	for(const string &item: src)
 	{
@@ -768,7 +768,7 @@ double GetTimeDifferenceFromNow(const string timeAgo)
 
 	// --- For testing purposes try to use the same Daylight saving as in local clock
 	// --- Test starts on 9/11. If there is no side effect, comment-out previous line.
-	if(local_tm) check_tm.tm_isdst = local_tm->tm_isdst;	// --- "Summer time" is the same as locak clock.
+	if(local_tm) check_tm.tm_isdst = local_tm->tm_isdst;	// --- "Summer time" is the same as local clock.
 
 /*
 	{

@@ -12,7 +12,7 @@ bool ImageSaveAsJpg (const string src, const string dst)
 	}
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction from the
+	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 	try {
@@ -197,7 +197,7 @@ int main()
 						ostringstream	ost;
 
 						ost.str("");
-						ost << string(__func__) + ": ERROR avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permited maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << AVATAR_MAX_FILE_SIZE;
+						ost << string(__func__) + ": ERROR avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << AVATAR_MAX_FILE_SIZE;
 
 						log.Write(ERROR, ost.str());
 						throw CExceptionHTML("avatar file size exceed", indexPage.GetFilesHandler()->GetName(filesCounter));

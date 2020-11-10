@@ -47,7 +47,7 @@ callback_lws_dumb_increment(struct lws *wsi, enum lws_callback_reasons reason,
 			return -1;
 		}
 		if (close_testing && pss->number >= 50) {
-			lwsl_info("close tesing limit, closing\n");
+			lwsl_info("close testing limit, closing\n");
 			return -1;
  		}
 		break;

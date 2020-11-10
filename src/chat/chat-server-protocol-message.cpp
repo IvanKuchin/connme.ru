@@ -24,7 +24,7 @@ bool ImageSaveAsJpg (const string src, const string dst, struct ExifInfo *exifIn
 	}
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction from the
+	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 

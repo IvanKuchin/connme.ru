@@ -343,7 +343,7 @@ bool YearAgoReminder(CMysql *db)
 				{
 					bool	isYearAgoMessageHasGPS = false;
 
-					// --- define mean messages GPS positioninig of a yearAgo message
+					// --- define mean messages GPS positioning of a yearAgo message
 					for(auto it = myPostsYearAgo.begin(); it != myPostsYearAgo.end(); ++it)
 					{
 						it->gps = GetMessageGPSCoordinates(it->messageID, db);
@@ -433,7 +433,7 @@ bool YearAgoReminder(CMysql *db)
 								totalPresenceCounter += it->counter;
 							}
 
-							// --- approximate yearAgo presense to all places
+							// --- approximate yearAgo presence to all places
 							for(auto it = myPostsYearAgo.begin(); it != myPostsYearAgo.end(); ++it)
 							{
 								bool	isFound = false;

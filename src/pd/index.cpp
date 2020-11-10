@@ -6,7 +6,7 @@ bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct Exif
 	MESSAGE_DEBUG("", "", "start (src = " + src + ", dst = " + dst + ")");
 
 #ifndef IMAGEMAGICK_DISABLE
-	// Construct the image object. Seperating image construction FROM the
+	// Construct the image object. Separating image construction FROM the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
 	try {
@@ -3128,7 +3128,7 @@ int main()
 			}
 		}
 
-		// --- JSON industy list for autocomplete
+		// --- JSON industry list for autocomplete
 		if(action == "JSON_getIndustryListAutocomplete")
 		{
 			ostringstream   ost, ostFinal;
@@ -5927,7 +5927,7 @@ int main()
 							else
 							{
 								CLog	log;
-								MESSAGE_ERROR("", action, "inserion into table news_feed");
+								MESSAGE_ERROR("", action, "insertion into table news_feed");
 							}
 
 							ostResult << "{\"result\": \"success\", "
@@ -8102,7 +8102,7 @@ int main()
 
 			if(!indexPage.SetTemplate("logout.htmlt"))
 			{
-				MESSAGE_ERROR("", action, "template file logoug.htmlt was missing");
+				MESSAGE_ERROR("", action, "template file logout.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 
@@ -8164,7 +8164,7 @@ int main()
 				{
 					MESSAGE_DEBUG("", action, "" + action + ": user [" + user.GetLogin() + "] not found");
 
-					// --- don't alert that user is missing, it make reconaissance attack easier
+					// --- don't alert that user is missing, it make reconnaissance attack easier
 					ostResult.str("");
 					ostResult << "{";
 					ostResult << "\"result\": \"error\",";
@@ -11686,18 +11686,12 @@ int main()
 					}
 					else
 					{
-						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": can't find message by imageSetID(" + setID + ")");
-						}
+						MESSAGE_ERROR("", action, "can't find message by imageSetID(" + setID + ")");
 					}
 				}
 				else
 				{
-					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": can't find imageSet by image.id(" + imageIDMarkToRemove + ")");
-					}
+					MESSAGE_ERROR("", action, "can't find imageSet by image.id(" + imageIDMarkToRemove + ")");
 				}
 
 				if(AmIMessageOwner(messageID, &user, &db))
@@ -11721,15 +11715,13 @@ int main()
 								dbQuery = "update `feed_images` set `removeFlag`=\"remove\" WHERE `setID`=\"" + setID + "\";";
 							else
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": video media can't be found because tempSet=0 and setID=0");
+								MESSAGE_ERROR("", action, "video media can't be found because tempSet=0 and setID=0");
 							}
 						} else if(mediaType == "image")
 							dbQuery = "update `feed_images` set `removeFlag`=\"remove\" WHERE `id`=\"" + imageIDMarkToRemove + "\";";
 						else
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": unknown mediaType [" + mediaType + "]");
+							MESSAGE_ERROR("", action, "unknown mediaType [" + mediaType + "]");
 						}
 
 						if(dbQuery.length())
@@ -11745,8 +11737,7 @@ int main()
 							}
 							else
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": marking imageID for removal (" + db.GetErrorMessage() + ")");
+								MESSAGE_ERROR("", action, "marking imageID for removal (" + db.GetErrorMessage() + ")");
 
 								ostFinal.str("");
 								ostFinal << "{";
@@ -11758,10 +11749,7 @@ int main()
 						}
 						else
 						{
-							{
-								CLog log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": update dbQuery is empty");
-							}
+							MESSAGE_ERROR("", action, "update dbQuery is empty");
 
 							ostFinal.str("");
 							ostFinal << "{";
@@ -11773,10 +11761,7 @@ int main()
 					}
 					else
 					{
-						{
-							CLog	log;
-							MESSAGE_DEBUG("", action, "`feed_images`.`tempSet` [" + imageIDMarkToRemove + "]  is empty or doesn't belongs to you");
-						}
+						MESSAGE_ERROR("", action, "`feed_images`.`tempSet` [" + imageIDMarkToRemove + "]  is empty or doesn't belongs to you");
 
 						ostFinal.str("");
 						ostFinal << "{";
@@ -11788,10 +11773,8 @@ int main()
 				}
 				else
 				{
-					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]" + action + ": can't edit message.id(" + messageID + ") such as neighter you(user.id: " + user.GetID() + ") nor your companies are not owning message");
-					}
+					MESSAGE_ERROR("", action, "can't edit message.id(" + messageID + ") such as neither you(user.id: " + user.GetID() + ") nor your companies are not owning message");
+
 					ostFinal.str("");
 					ostFinal << "{";
 					ostFinal << "\"result\" : \"error\",";
@@ -11802,14 +11785,8 @@ int main()
 			}
 			else
 			{
-				{
-					CLog	log;
-					ostringstream	ost;
+				MESSAGE_ERROR("", action, "imageIDMarkToRemove [" + imageIDMarkToRemove + "]  is unknown/empty");
 
-					ost.str("");
-					ost << string(__func__) + "[" + to_string(__LINE__) + "] " + action + ": imageIDMarkToRemove [" << imageIDMarkToRemove << "]  is unknown/empty";
-					log.Write(ERROR, ost.str());
-				}
 				ostFinal.str("");
 				ostFinal << "{" << std::endl;
 				ostFinal << "\"result\" : \"error\"," << std::endl;

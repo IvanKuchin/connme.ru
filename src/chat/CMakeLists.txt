@@ -6,7 +6,7 @@ set(EXECUTABLE_CGIs
 set(INDEPENDENT_LIBRARIES_SRCs
     )
 
-# ---- big joint librabry
+# ---- big joint library
 set(JOINT_LIBRARY_SRCs
     chat-server-protocol-dumb.cpp
     chat-server-requestratelimiter.cpp

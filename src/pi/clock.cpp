@@ -41,18 +41,18 @@ void CLock::Get(string name)
 		throw CException(ost1.str());
 	}
 
-	if((hSem = semget(key, 1, PERM | IPC_CREAT)) < 0) throw CException("semaphor error");
+	if((hSem = semget(key, 1, PERM | IPC_CREAT)) < 0) throw CException("semaphore error");
 }
 
 void CLock::Lock()
 {
-	if(hSem < 0) throw CException("semaphor error");
+	if(hSem < 0) throw CException("semaphore error");
 	semop(hSem, &sop_lock[0], 2);
 }
 
 void CLock::UnLock()
 {
-	if(hSem < 0) throw CException("semaphor error");
+	if(hSem < 0) throw CException("semaphore error");
 	semop(hSem, &sop_unlock[0], 1);
 }
 

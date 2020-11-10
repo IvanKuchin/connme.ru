@@ -188,7 +188,7 @@
 #define CHAT_PRESENCE_CACHE_LIFETIME				FREQUENCY_ECHO_REQUEST
 #define	CHAT_MESSAGES_PER_PAGE						30
 #define	CHAT_MESSAGES_REQUEST_PER_SEC				3
-#define	CHAT_DB_CONNECTION_RESET_TIMEOUT			3600 * 2  // --- timeout in sec, resseting db connection, otherwise MySQL drop connection (show variables like "wait_timeout")
+#define	CHAT_DB_CONNECTION_RESET_TIMEOUT			3600 * 2  // --- timeout in sec, reseting db connection, otherwise MySQL drop connection (show variables like "wait_timeout")
 #define CHAT_IMAGE_NUMBER_OF_FOLDERS				512
 #define	CHAT_IMAGE_MAX_WIDTH					 	640
 #define	CHAT_IMAGE_MAX_HEIGHT						480

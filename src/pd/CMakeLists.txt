@@ -15,7 +15,7 @@ set(EXECUTABLE_CGIs_with_PI_LIBS
     )
 
 # --- Libraries
-# ---- joint librabry
+# ---- joint library
 set(JOINT_LIBRARY_SRCs
     utilities_connme1.cpp
     utilities_connme2.cpp

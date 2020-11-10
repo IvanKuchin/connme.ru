@@ -223,7 +223,7 @@ bool CPresenceCache::AddUser(long int userID)
 				ostringstream	ost;
 
 				ost.str("");
-				ost << "CPresenceCache::AddUser: ERROR: retreiving last_onlineSecondsSinceY2k from db";
+				ost << "CPresenceCache::AddUser: ERROR: retrieving last_onlineSecondsSinceY2k from db";
 				log.Write(ERROR, ost.str());
 			}
 		}
