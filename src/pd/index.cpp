@@ -7072,14 +7072,6 @@ int main()
 		if(action == "AJAX_updateNewsFeedMessage")
 		{
 			ostringstream	ost;
-			string			strPageToGet, strNewsOnSinglePage;
-			string			newsFeedMessageID;
-			string			newsFeedMessageTitle;
-			string			newsFeedMessageLink;
-			string			newsFeedMessageText;
-			string			newsFeedMessageRights;
-			string			newsFeedMessageImageTempSet;
-			string			newsFeedMessageImageSet;
 
 			MESSAGE_DEBUG("", action, "start");
 
@@ -7101,20 +7093,20 @@ int main()
 			else
 			{
 				// --- Authorized user
-				newsFeedMessageID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageID"));
-				newsFeedMessageTitle = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageTitle"));
-				newsFeedMessageLink = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageLink"));
-				newsFeedMessageText = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageText"));
-				newsFeedMessageRights = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageRights"));
-				newsFeedMessageImageTempSet = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageImageTempSet"));
-				newsFeedMessageImageSet = "";
+				auto	newsFeedMessageID				= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageID"));
+				auto	newsFeedMessageTitle			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageTitle"));
+				auto	newsFeedMessageLink				= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageLink"));
+				auto	newsFeedMessageText				= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageText"));
+				auto	newsFeedMessageRights			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageRights"));
+				auto	newsFeedMessageImageTempSet		= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageImageTempSet"));
+				auto	newsFeedMessageImageSet			= ""s;
 
 				// --- messageID defined
 				if(newsFeedMessageID.length() && (AmIMessageOwner(newsFeedMessageID, &user, &db)))
 				{
 					pair<string, string> 	messageOwner = GetMessageOwner(newsFeedMessageID, &user, &db);
-					string					messageOwnerType = messageOwner.first;
-					string					messageOwnerID = messageOwner.second;
+					auto					messageOwnerType = messageOwner.first;
+					auto					messageOwnerID = messageOwner.second;
 
 
 					if(messageOwnerType.length() && messageOwnerID.length())
@@ -7136,7 +7128,6 @@ int main()
 							}
 							else
 							{
-								CLog			log;
 								MESSAGE_DEBUG("", action, "there is no media attached to the message.id [" + newsFeedMessageID + "]");
 							}
 	
@@ -7144,14 +7135,11 @@ int main()
 								db.Query("UPDATE `feed_images` SET `setID`=\"" + newsFeedMessageImageSet + "\", `tempSet`=\"0\" WHERE `tempSet`=\"" + newsFeedMessageImageTempSet + "\" AND `srcType`=\"" + messageOwnerType + "\" AND `userID`=\"" + messageOwnerID + "\";");
 							else
 							{
-								CLog			log;
 								MESSAGE_DEBUG("", action, "tempSet(" + newsFeedMessageImageTempSet + ") empty or zero, no changes in feed_images");
 							}
 	
 							if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImageTempSet == "") && (newsFeedMessageImageSet == "")))
 							{
-								string		messageId;
-					
 								ost.str("");
 								ost << "UPDATE `feed_message` SET  "
 									<< "`title`=\"" << newsFeedMessageTitle << "\", "
