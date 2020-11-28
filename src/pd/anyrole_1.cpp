@@ -434,6 +434,14 @@ int main(void)
 			if(!indexPage.SetTemplate(template_name)) MESSAGE_ERROR("", action, "can't find template " + template_name);
 		}
 
+		if(action == "AJAX_getGroupsOwnedByUser")
+		{
+			auto			success_message = "\"groups\":[" + GetGroupListInJSONFormat("SELECT * FROM `groups` WHERE `owner_id`=" + quoted(user.GetID()) + ";", &db, &user) + "]";
+			auto			error_message = ""s;
+
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
+		}
+
 		MESSAGE_DEBUG("", "", "post-condition if(action == \"" + action + "\")");
 
 		indexPage.OutTemplate();

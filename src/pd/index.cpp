@@ -4907,9 +4907,7 @@ int main()
 			else
 			{
 
-				ost.str("");
-				ost << "update `feed_images` set `tempSet`='0' WHERE `userID`='" << user.GetID() << "';";
-				db.Query(ost.str());
+				db.Query("update `feed_images` set `tempSet`='0' WHERE `userID`='" + user.GetID() + "';");
 
 				indexPage.RegisterVariableForce("result", "{"
 															"\"result\":\"success\","
@@ -4928,7 +4926,6 @@ int main()
 		// --- prepare edit feed image to new image set loading
 		if(action == "AJAX_prepareEditFeedImages")
 		{
-			string			imageTempSet, messageID;
 			ostringstream	ost;
 
 			if(user.GetLogin() == "Guest")
@@ -4944,28 +4941,25 @@ int main()
 			else
 			{
 				
-				messageID = indexPage.GetVarsHandler()->Get("messageID");
-				imageTempSet = indexPage.GetVarsHandler()->Get("imageTempSet");
+				auto	messageID = indexPage.GetVarsHandler()->Get("messageID");
+				auto	imageTempSet = indexPage.GetVarsHandler()->Get("imageTempSet");
 
 				if((messageID.length() > 0) and (messageID != "0") and (imageTempSet.length() > 0) and (imageTempSet != "0"))
 				{
 					if(AmIMessageOwner(messageID, &user, &db))
 					{
-						pair<string, string> 	messageOwner = GetMessageOwner(messageID, &user, &db);
-						string					messageOwnerType = messageOwner.first;
-						string					messageOwnerID = messageOwner.second;
-
+						auto 	messageOwner = GetMessageOwner(messageID, &user, &db);
+						auto	messageOwnerType = messageOwner.first;
+						auto	messageOwnerID = messageOwner.second;
 
 						if(messageOwnerType.length() && messageOwnerID.length())
 						{
-							string  mediaSetID = "";
-
 							// --- "where `tempSet`!='0'" using to speed up lookup through `feed_images` table
 							db.Query("UPDATE `feed_images` set `tempSet`='0' WHERE `srcType`=\"" + messageOwnerType + "\" AND `userID`=\"" + messageOwnerID + "\" and `tempSet`!=\"0\";");
 
 							if(db.Query("SELECT  `imageSetID` FROM  `feed_message` WHERE  `id` = \"" + messageID + "\";"))
 							{
-								string	imageSetID = db.Get(0, "imageSetID");
+								auto	imageSetID = db.Get(0, "imageSetID");
 
 								// --- this condition avoid assigning "lost pictures" to a new message
 								// --- how to reproduce:
@@ -4979,10 +4973,7 @@ int main()
 								}
 								else
 								{
-									{
-										CLog	log;
-										MESSAGE_DEBUG("", action, "there is no media in this post [messageID: " + messageID + string("]"));
-									}
+									MESSAGE_DEBUG("", action, "there is no media in this post [messageID: " + messageID + string("]"));
 								}
 							}
 
@@ -4990,11 +4981,7 @@ int main()
 						}
 						else
 						{
-
-							{
-								CLog	log;
-								MESSAGE_ERROR("", action, "message owner error (type:" + messageOwnerType + ", id:" + messageOwnerID + ")");
-							}
+							MESSAGE_ERROR("", action, "message owner error (type:" + messageOwnerType + ", id:" + messageOwnerID + ")");
 
 							ost.str("");
 							ost << "{";
@@ -5005,19 +4992,13 @@ int main()
 					}
 					else
 					{
-						{
-							CLog	log;
-							MESSAGE_ERROR("", action, "message.id(" + messageID + ") doesn't belongs to user.id(" + user.GetID() + ") or his companies");
-						}
+						MESSAGE_ERROR("", action, "message.id(" + messageID + ") doesn't belongs to user.id(" + user.GetID() + ") or his companies");
 						indexPage.RegisterVariableForce("result", "{\"result\" : \"error\", \"description\" : \"вы не можете редактировать сообщение\"}");
 					}
 				}
 				else
 				{
-					{
-						CLog	log;
-						MESSAGE_ERROR("", action, "messageID(" + messageID + ") or imageTempSet(" + imageTempSet + ") is empty");
-					}
+					MESSAGE_ERROR("", action, "messageID(" + messageID + ") or imageTempSet(" + imageTempSet + ") is empty");
 					indexPage.RegisterVariableForce("result", "{\"result\" : \"error\", \"description\" : \"issue with messageID or imageTempSet parameters (empty or '0')\"}");
 				}
 
