@@ -442,7 +442,7 @@ int main(void)
 			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 		}
 
-		if(action == "AJAX_getGroupsOwnedByUserAndSubscriibedTo")
+		if(action == "AJAX_getGroupsOwnedByUserAndSubscribedTo")
 		{
 			auto			success_message = "\"groups\":[" + GetGroupListInJSONFormat("SELECT * FROM `groups` WHERE `owner_id`=" + quoted(user.GetID()) + " OR `id` IN (" + Get_Groups_UserSubscribedTo_sqlquery(user.GetID()) + ");", &db, &user) + "]";
 			auto			error_message = ""s;
