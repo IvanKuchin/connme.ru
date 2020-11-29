@@ -1304,9 +1304,13 @@ string UpdateMessageDst(const string &messageID, const string &dstType_new, cons
 				{
 					auto group_owner_id = GetValueFromDB(Get_OwnerUserIDByGroupID_sqlquery(dstID_new), db);
 
-					if(group_owner_id == user->GetID())
+					if(
+						(group_owner_id == user->GetID())
+						||
+						amISubscribedToGroup(dstID_new, db, user)
+						)
 					{
-						// --- move message to group
+						// --- move message to my group or subscribed groups
 						db->Query(
 							"UPDATE `feed` SET "
 							"`dstType`=\"" + dstType_new + "\", "
@@ -1352,4 +1356,24 @@ string UpdateMessageDst(const string &messageID, const string &dstType_new, cons
 	MESSAGE_DEBUG("", "", "finish");
 
 	return error_message;
+}
+
+auto amISubscribedToGroup(string group_id, CMysql *db, CUser *user) -> bool
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto result = false;
+
+	if(user && db)
+	{
+		result = db->Query("SELECT `id` FROM `users_subscriptions` WHERE `entity_type`=\"group\" AND `entity_id`=\"" + group_id + "\" AND `user_id`=\"" + user->GetID() + "\";");
+	}
+	else
+	{
+		MESSAGE_ERROR("", "", "user or db parameter is null");
+	}
+
+	MESSAGE_DEBUG("", "", "finish");
+
+	return result;
 }

@@ -28,6 +28,13 @@ inline auto Get_OwnerUserIDByGroupID_sqlquery(const string &id)
 		);
 }
 
+inline auto Get_Groups_UserSubscribedTo_sqlquery(const string &id)
+{
+	return (
+				"SELECT `entity_id` FROM `users_subscriptions` WHERE `user_id` IN (" + id + ") AND `entity_type`=\"group\""
+		);
+}
+
 inline auto Get_SetIDByImageID_sqlquery(const string &id)
 {
 	return (
