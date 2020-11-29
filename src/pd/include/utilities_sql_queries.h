@@ -21,6 +21,13 @@ inline auto Get_UserIDByGroupID_sqlquery(const string &id)
 		);
 }
 
+inline auto Get_OwnerUserIDByGroupID_sqlquery(const string &id)
+{
+	return (
+				"SELECT `owner_id` FROM `groups` WHERE `id` IN (" + id + ")"
+		);
+}
+
 inline auto Get_SetIDByImageID_sqlquery(const string &id)
 {
 	return (

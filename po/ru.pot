@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-28 21:11-0500\n"
+"POT-Creation-Date: 2020-11-28 22:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,6 +75,12 @@ msgstr "компания или должность не найдены"
 
 msgid "db is not initialized"
 msgstr "ошибка БД"
+
+msgid "destination group id unknown"
+msgstr "неизвестная группа"
+
+msgid "destination type unknown"
+msgstr "неизвестный тип перемещения"
 
 msgid "email already exists"
 msgstr "такой email уже зарегистрирован"
@@ -167,7 +173,9 @@ msgid "there was created more token than allowed"
 msgstr "создано больше токенов, чем разрешено"
 
 msgid "to change message destination, it must be written from user only"
-msgstr "что бы изменить место назначения, сообщение должно быть написано от имени пользователя (не компании)"
+msgstr ""
+"что бы изменить место назначения, сообщение должно быть написано от имени "
+"пользователя (не компании)"
 
 msgid "token expired"
 msgstr "токен устарел"

@@ -1293,6 +1293,54 @@ string UpdateMessageDst(const string &messageID, const string &dstType_new, cons
 		else if(srcType_old != "user")
 		{
 			error_message = gettext("to change message destination, it must be written from user only");
+			MESSAGE_ERROR("", "", error_message);
+		}
+		else
+		{
+			// --- message dst could be changed only if message has been written by user only (not company)
+			if(dstType_new == "group")
+			{
+				if(dstID_new.length())
+				{
+					auto group_owner_id = GetValueFromDB(Get_OwnerUserIDByGroupID_sqlquery(dstID_new), db);
+
+					if(group_owner_id == user->GetID())
+					{
+						// --- move message to group
+						db->Query(
+							"UPDATE `feed` SET "
+							"`dstType`=\"" + dstType_new + "\", "
+							"`dstID`=\"" + dstID_new + "\" "
+							"WHERE `actionTypeId`=\"11\" AND `actionId`=" + quoted(messageID) + ";"
+							);
+					}
+					else
+					{
+						error_message = gettext("you are not authorized");
+						MESSAGE_ERROR("", "", error_message);
+					}
+				}
+				else
+				{
+					error_message = gettext("destination group id unknown");
+					MESSAGE_ERROR("", "", error_message);
+				}
+			}
+			else if(dstType_new == "")
+			{
+				// --- move message to users feed
+				db->Query(
+						"UPDATE `feed` SET "
+						"`dstType`=\"" + dstType_new + "\", "
+						"`dstID`=\"" + dstID_new + "\" "
+						"WHERE `actionTypeId`=\"11\" AND `actionId`=" + quoted(messageID) + ";"
+					);
+			}
+			else
+			{
+				error_message = gettext("destination type unknown");
+				MESSAGE_ERROR("", "", error_message);
+			}
 		}
 	}
 	else
