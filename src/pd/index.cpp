@@ -5057,53 +5057,32 @@ int main()
 		// --- AJAX post message to news feed
 		if(action == "AJAX_postNewsFeedMessage")
 		{
-			ostringstream	ost;
-			string			strPageToGet, strNewsOnSinglePage;
-			string			newsFeedMessageDstType;
-			string			newsFeedMessageDstID;
-			string			newsFeedMessageSrcType;
-			string			newsFeedMessageSrcID;
-			string			newsFeedMessageTitle;
-			string			newsFeedMessageLink;
-			string			newsFeedMessageText;
-			string			newsFeedMessageRights;
-			string			newsFeedMessageImageTempSet;
-			string			newsFeedMessageImageSet;
-
 			MESSAGE_DEBUG("", action, "start");
+
+			auto			error_message = ""s;
 
 			if(user.GetLogin() == "Guest")
 			{
 				MESSAGE_DEBUG("", action, "re-login required");
 
-				ost.str("");
-				ost << "[{\"result\": \"error\"}, {\"description\": \"session lost. Need to relogin\"}]";
-
-				indexPage.RegisterVariableForce("result", ost.str());
-
-				if(!indexPage.SetTemplate("json_response.htmlt"))
-				{
-					MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
-
-					throw CExceptionHTML("user not activated");
-				} // if(!indexPage.SetTemplate("json_response.htmlt"))
+				LogoutIfGuest(action, &indexPage, &db, &user);
 			}
 			else
 			{
-				string			prohibitReason = "prohibited to post message";
+				auto			prohibitReason = "prohibited to post message"s;
 				bool			admittedToPost = false;
 
 				// --- Authorized user
-				newsFeedMessageDstType = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageDstType"));
-				newsFeedMessageDstID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageDstID"));
-				newsFeedMessageSrcType = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageSrcType"));
-				newsFeedMessageSrcID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageSrcID"));
-				newsFeedMessageTitle = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageTitle"));
-				newsFeedMessageLink = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageLink"));
-				newsFeedMessageText = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageText"));
-				newsFeedMessageRights = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageRights"));
-				newsFeedMessageImageTempSet = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageImageTempSet"));
-				newsFeedMessageImageSet = "";
+				auto	newsFeedMessageDstType			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageDstType"));
+				auto	newsFeedMessageDstID			= CheckHTTPParam_Number	(indexPage.GetVarsHandler()->Get("newsFeedMessageDstID"));
+				auto	newsFeedMessageSrcType			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageSrcType"));
+				auto	newsFeedMessageSrcID			= CheckHTTPParam_Number	(indexPage.GetVarsHandler()->Get("newsFeedMessageSrcID"));
+				auto	newsFeedMessageTitle			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageTitle"));
+				auto	newsFeedMessageLink				= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageLink"));
+				auto	newsFeedMessageText				= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageText"));
+				auto	newsFeedMessageRights			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageRights"));
+				auto	newsFeedMessageImageTempSet		= CheckHTTPParam_Number	(indexPage.GetVarsHandler()->Get("newsFeedMessageImageTempSet"));
+				auto	newsFeedMessageImageSet = ""s;
 
 				if(newsFeedMessageDstID == "") newsFeedMessageDstID = "0";
 
@@ -5112,7 +5091,6 @@ int main()
 				{
 					if(newsFeedMessageSrcID != user.GetID())	
 					{
-						CLog	log;
 						MESSAGE_ERROR("", action, "spoofed userID");
 					}
 
@@ -5126,20 +5104,14 @@ int main()
 						admittedToPost = true;
 					else
 					{
-						prohibitReason = "неизвестная компания";
-
-						CLog	log;
+						prohibitReason = gettext("company or occupation not found");
 						MESSAGE_ERROR("", action, "userID[" + user.GetID() + "] spoofed companyID[" + newsFeedMessageSrcID + "]");
 					}
 				}
 				else
 				{
-					prohibitReason = "не указан автор сообщения";
-
-					{
-						CLog	log;
-						MESSAGE_ERROR("", action, "unknown newsFeedMessageSrcType[" + newsFeedMessageSrcType + "]");
-					}
+					prohibitReason = gettext("message owner is not known");
+					MESSAGE_ERROR("", action, "unknown newsFeedMessageSrcType[" + newsFeedMessageSrcType + "]");
 				}
 
 				// --- check dst if permitted to post message
@@ -5151,18 +5123,14 @@ int main()
 						db.Query("UPDATE `groups` SET `eventTimestampLastPost`=UNIX_TIMESTAMP() WHERE `id`=\"" + newsFeedMessageDstID + "\";");
 						if(db.isError())
 						{
-							CLog	log;
 							MESSAGE_ERROR("", action, "DB error message(" + db.GetErrorMessage() + ")");
 						}
 					}
 					else
 					{
-						{
-							CLog	log;
-							MESSAGE_ERROR("", action, "group.id[" + newsFeedMessageDstID + "] not found or blocked");
-						}
+						prohibitReason = gettext("group not found or blocked");
+						MESSAGE_ERROR("", action, "group.id[" + newsFeedMessageDstID + "] not found or blocked");
 
-						prohibitReason = "группа не найдена или заблокирована";
 						admittedToPost = false;
 					}
 				}
@@ -5170,11 +5138,9 @@ int main()
 				// --- check adverse words
 				if(isAdverseWordsHere(newsFeedMessageText, &db) || isAdverseWordsHere(newsFeedMessageTitle, &db))
 				{
-					{
-						MESSAGE_DEBUG("", action, "message contains adverse words");
-					}
+					prohibitReason = gettext("adverse words present in message");
+					MESSAGE_DEBUG("", action, prohibitReason);
 
-					prohibitReason = "сообщение содержит запрещенные слова";
 					admittedToPost = false;
 				}
 
@@ -5201,123 +5167,62 @@ int main()
 						}
 						else
 						{
-							CLog			log;
 							MESSAGE_DEBUG("", action, "DEBUG: there are no images associated with `tempSet`='" + newsFeedMessageImageTempSet + "' and `userID`='" + user.GetID() + "'");
 						}
 					}
 					else
 					{
-						CLog			log;
 						MESSAGE_ERROR("", action, "imageTempSet is empty or 0;");
 					}
 
 					if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImageSet == "")))
 					{
-						unsigned long	feed_messageID = 0;
-						ost.str("");
-						ost << "INSERT INTO `feed_message` (`title`, `link`, `message`, `imageSetID`, `access`) "
-							<< "VALUES ("
-							<< "\"" << newsFeedMessageTitle << "\", "
-							<< "\"" << newsFeedMessageLink << "\", "
-							<< "\"" << newsFeedMessageText << "\", "
-							<< "\"" << (newsFeedMessageImageSet.length() ? newsFeedMessageImageSet : "0") << "\", "
-							<< "\"" << newsFeedMessageRights << "\" "
-							<< ");";
-						feed_messageID = db.InsertQuery(ost.str());
+						auto	feed_messageID = db.InsertQuery(
+																"INSERT INTO `feed_message` (`title`, `link`, `message`, `imageSetID`, `access`) "
+																"VALUES ("
+																"\"" + newsFeedMessageTitle + "\", "
+																"\"" + newsFeedMessageLink + "\", "
+																"\"" + newsFeedMessageText + "\", "
+																"\"" + (newsFeedMessageImageSet.length() ? newsFeedMessageImageSet : "0") + "\", "
+																"\"" + newsFeedMessageRights + "\" "
+																");"
+																);
 						if(feed_messageID)
 						{
-							ost.str("");
-							ost << "INSERT INTO `feed` (`title`, `dstType`, `dstID`, `srcType`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" << newsFeedMessageDstType << "\",\"" << newsFeedMessageDstID << "\",\"" << newsFeedMessageSrcType << "\",\"" << newsFeedMessageSrcID << "\", \"11\", " << feed_messageID << ", NOW());";
-
-							if(db.InsertQuery(ost.str()))
+							if(db.InsertQuery("INSERT INTO `feed` (`title`, `dstType`, `dstID`, `srcType`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + newsFeedMessageDstType + "\",\"" + newsFeedMessageDstID + "\",\"" + newsFeedMessageSrcType + "\",\"" + newsFeedMessageSrcID + "\", \"11\", " + to_string(feed_messageID) + ", NOW());"))
 							{
-								ost.str("");
-								ost << "[";
-								ost << "{";
-								ost << "\"result\": \"success\",";
-								ost << "\"description\": \"message has been posted\"";
-								ost << "}";
-								ost << "]";
+								// --- message has been posted
 							}
 							else
 							{
-								{
-									CLog			log;
-									MESSAGE_ERROR("", action, "inserting into feed");
-								}
-								ost.str("");
-								ost << "[";
-								ost << "{";
-								ost << "\"result\": \"error\",";
-								ost << "\"description\": \"error inserting into feed\"";
-								ost << "}";
-								ost << "]";
+								error_message = gettext("SQL syntax error");
+								MESSAGE_ERROR("", action, error_message);
 							}
-
-
 						}
 						else
 						{
-							{
-								CLog			log;
-								MESSAGE_ERROR("", action, "inserting into feed_message");
-							}
-							ost.str("");
-							ost << "[";
-							ost << "{";
-							ost << "\"result\": \"error\",";
-							ost << "\"description\": \"error inserting creating message\"";
-							ost << "}";
-							ost << "]";
+							error_message = gettext("SQL syntax error");
+							MESSAGE_ERROR("", action, error_message);
 						}
 
-						{
-							CLog			log;
-							MESSAGE_DEBUG("", action, "end (message FROM " + newsFeedMessageSrcType + ".id[" + newsFeedMessageSrcID + "] has been posted)");
-						}
+						MESSAGE_DEBUG("", action, "end (message FROM " + newsFeedMessageSrcType + ".id[" + newsFeedMessageSrcID + "] has been posted)");
 					} // if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImage == "")))
 					else
 					{
 						// --- Empty title, message and image
-						{
-							CLog	log;
-							MESSAGE_ERROR("", action, "can't post message due to title, text and image is empty ");
-						}
-
-						ost.str("");
-						ost << "[";
-						ost << "{";
-						ost << "\"result\": \"error\",";
-						ost << "\"description\": \"can't post message due to title, text and image is empty \"";
-						ost << "}";
-						ost << "]";
-
+						error_message = gettext("can't post message due to title, text and image is empty");
+						MESSAGE_ERROR("", action, error_message);
 					} // if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImage == "")))
 				}
 				else
 				{
-					ost.str("");
-					ost << "[";
-					ost << "{";
-					ost << "\"result\": \"error\",";
-					ost << "\"description\": \"" << prohibitReason << "\"";
-					ost << "}";
-					ost << "]";
-					{
-						CLog	log;
-						MESSAGE_ERROR("", action, "" + newsFeedMessageSrcType + ".id[" + newsFeedMessageSrcID + "] prohibited to post");
-					}
+					error_message = prohibitReason;
+
+					MESSAGE_ERROR("", action, "" + newsFeedMessageSrcType + ".id[" + newsFeedMessageSrcID + "] prohibited to post");
 				}
-			} // if(user.GetLogin() == "Guest")
+			}
 
-
-			indexPage.RegisterVariableForce("result", ost.str());
-
-			if(!indexPage.SetTemplate("json_response.htmlt"))
-			{
-				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
-				throw CExceptionHTML("user not activated");
-			} // if(!indexPage.SetTemplate("json_response.htmlt"))
+			AJAX_ResponseTemplate(&indexPage, "", error_message);
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -7047,47 +6952,38 @@ int main()
 			}
 		}
 
-
-
 		// --- AJAX update message to news feed
 		if(action == "AJAX_updateNewsFeedMessage")
 		{
-			ostringstream	ost;
-
 			MESSAGE_DEBUG("", action, "start");
+
+			auto			error_message = ""s;
 
 			if(user.GetLogin() == "Guest")
 			{
 				MESSAGE_DEBUG("", action, "re-login required");
 
-				ost.str("");
-				ost << "[{\"result\": \"error\"}, {\"description\": \"session lost. Need to relogin\"}]";
-
-				indexPage.RegisterVariableForce("result", ost.str());
-
-				if(!indexPage.SetTemplate("json_response.htmlt"))
-				{
-					MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
-					throw CExceptionHTML("user not activated");
-				}
+				LogoutIfGuest(action, &indexPage, &db, &user);
 			}
 			else
 			{
 				// --- Authorized user
-				auto	newsFeedMessageID				= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageID"));
-				auto	newsFeedMessageTitle			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageTitle"));
-				auto	newsFeedMessageLink				= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageLink"));
-				auto	newsFeedMessageText				= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageText"));
-				auto	newsFeedMessageRights			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("newsFeedMessageRights"));
-				auto	newsFeedMessageImageTempSet		= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("newsFeedMessageImageTempSet"));
+				auto	newsFeedMessageID				= CheckHTTPParam_Number	(indexPage.GetVarsHandler()->Get("newsFeedMessageID"));
+				auto	newsFeedMessageDstType			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageDstType"));
+				auto	newsFeedMessageDstID			= CheckHTTPParam_Number	(indexPage.GetVarsHandler()->Get("newsFeedMessageDstID"));
+				auto	newsFeedMessageTitle			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageTitle"));
+				auto	newsFeedMessageLink				= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageLink"));
+				auto	newsFeedMessageText				= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageText"));
+				auto	newsFeedMessageRights			= CheckHTTPParam_Text	(indexPage.GetVarsHandler()->Get("newsFeedMessageRights"));
+				auto	newsFeedMessageImageTempSet		= CheckHTTPParam_Number	(indexPage.GetVarsHandler()->Get("newsFeedMessageImageTempSet"));
 				auto	newsFeedMessageImageSet			= ""s;
 
 				// --- messageID defined
 				if(newsFeedMessageID.length() && (AmIMessageOwner(newsFeedMessageID, &user, &db)))
 				{
-					pair<string, string> 	messageOwner = GetMessageOwner(newsFeedMessageID, &user, &db);
-					auto					messageOwnerType = messageOwner.first;
-					auto					messageOwnerID = messageOwner.second;
+					auto 	messageOwner = GetMessageOwner(newsFeedMessageID, &user, &db);
+					auto	messageOwnerType = messageOwner.first;
+					auto	messageOwnerID = messageOwner.second;
 
 
 					if(messageOwnerType.length() && messageOwnerID.length())
@@ -7121,115 +7017,54 @@ int main()
 	
 							if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImageTempSet == "") && (newsFeedMessageImageSet == "")))
 							{
-								ost.str("");
-								ost << "UPDATE `feed_message` SET  "
-									<< "`title`=\"" << newsFeedMessageTitle << "\", "
-									<< "`link`=\"" << newsFeedMessageLink << "\", "
-									<< "`message`=\"" << newsFeedMessageText << "\", "
-									<< "`imageSetID`=\"" << (newsFeedMessageImageSet == "" ? "0" : newsFeedMessageImageSet) << "\", "
-									<< "`access`=\"" << newsFeedMessageRights << "\" "
-									<< "WHERE `id`='" << newsFeedMessageID << "';";
-								db.Query(ost.str());
-	
-								ost.str("");
-								ost << "[";
-								ost << "{";
-								ost << "\"result\": \"success\",";
-								ost << "\"description\": \"message has been updated\"";
-								ost << "}";
-								ost << "]";
-	
+								error_message = UpdateMessageDst(newsFeedMessageID, newsFeedMessageDstType, newsFeedMessageDstID, &db, &user);
+
+								if(error_message.empty())
 								{
-									CLog			log;
+									db.Query(
+											"UPDATE `feed_message` SET "
+											"`title`=\"" + newsFeedMessageTitle + "\", "
+											"`link`=\"" + newsFeedMessageLink + "\", "
+											"`message`=\"" + newsFeedMessageText + "\", "
+											"`imageSetID`=\"" + (newsFeedMessageImageSet == "" ? "0" : newsFeedMessageImageSet) + "\", "
+											"`access`=\"" + newsFeedMessageRights + "\" "
+											"WHERE `id`='" + newsFeedMessageID + "';"
+										);
 									MESSAGE_DEBUG("", action, "message [id = " + newsFeedMessageID + "] FROM " + messageOwnerType + ".id[" + messageOwnerID + "] has been posted");
 								}
-	
-	
-								indexPage.RegisterVariableForce("result", ost.str());
-	
-								if(!indexPage.SetTemplate("json_response.htmlt"))
+								else
 								{
-									CLog	log;
-									MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
-									throw CExceptionHTML("user not activated");
-								} // if(!indexPage.SetTemplate("json_response.htmlt"))
-							} // if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImage == "")))
+									MESSAGE_ERROR("", action, error_message);
+								}
+							}
 							else
 							{
-								// --- Empty title, message and image
-								ost.str("");
-								ost << "[";
-								ost << "{";
-								ost << "\"result\": \"error\",";
-								ost << "\"description\": \"can't post message due to title, text and image is empty \"";
-								ost << "}";
-								ost << "]";
-	
-	
-								{
-									CLog	log;
-									MESSAGE_ERROR("", action, "can't post message due to title, text and image is empty ");
-								}
-							} // if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImage == "")))
+								error_message = gettext("can't post message due to title, text and image is empty");
+								MESSAGE_ERROR("", action, error_message);
+							}
 						}
 						else
 						{
-							// --- Empty title, message and image
-							ost.str("");
-							ost << "[";
-							ost << "{";
-							ost << "\"result\": \"error\",";
-							ost << "\"description\": \"присутствуют запрещенные слова\"";
-							ost << "}";
-							ost << "]";
-
-
-							{
-								CLog	log;
-								MESSAGE_ERROR("", action, "can't post message due to adverse words");
-							}
+							error_message = gettext("adverse words present in message");
+							MESSAGE_ERROR("", action, "can't post message due to adverse words");
 						}
 					}
 					else
 					{
-						{
-							CLog	log;
-							MESSAGE_ERROR("", action, "message owner error (type:" + messageOwnerType + ", id:" + messageOwnerID + ")");
-						}
-
-						ost.str("");
-						ost << "{";
-						ost << "\"result\" : \"error\",";
-						ost << "\"description\" : \"Ошибка: Не получилось определить владельца сообщения\"";
-						ost << "}";
+						error_message = gettext("you are not authorized");
+						MESSAGE_ERROR("", action, "message owner error (type:" + messageOwnerType + ", id:" + messageOwnerID + ")");
 					}
-		
-				} // if(newsFeedMessageID.length() > 0)
+				}
 				else
 				{
-					// --- Empty title, message and image
-					ost.str("");
-					ost << "[";
-					ost << "{";
-					ost << "\"result\": \"error\",";
-					ost << "\"description\": \"Ошибка: сообщение не найдено или не ваше\"";
-					ost << "}";
-					ost << "]";
-
+					error_message = gettext("message not found");
 					MESSAGE_ERROR("", action, "can't update message due to messageID(" + newsFeedMessageID + ") is empty or not belongs to you");
 				}
-			} // if(user.GetLogin() == "Guest")
-
-			indexPage.RegisterVariableForce("result", ost.str());
-
-			if(!indexPage.SetTemplate("json_response.htmlt"))
-			{
-				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
-				throw CExceptionHTML("Template file was missing");
 			}
 
-			MESSAGE_DEBUG("", action, "finish");
+			AJAX_ResponseTemplate(&indexPage, "", error_message);
 
+			MESSAGE_DEBUG("", action, "finish");
 		}
 
 		// --- AJAX comment on message in news feed

@@ -1231,158 +1231,37 @@ string GetCourseRatingList(string courseID, CMysql *db)
 
 string GetMessageCommentsCount(string messageID, CMysql *db)
 {
-	ostringstream   ost;
-	int			 affected;
-	string		  result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_comment` where `type`=\"message\" and `messageID`='" << messageID << "';";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_comment` where `type`=\"message\" and `messageID`='" + messageID + "';", db);
 }
 
 string GetCompanyCommentsCount(string messageID, CMysql *db)
 {
-	ostringstream   ost;
-	int			 affected;
-	string		  result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_comment` where `type`=\"company\" and `messageID`='" << messageID << "';";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_comment` where `type`=\"company\" and `messageID`='" + messageID + "';", db);
 }
 
 string GetLanguageCommentsCount(string messageID, CMysql *db)
 {
-	ostringstream   ost;
-	int			 affected;
-	string		  result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_comment` where `type`=\"language\" and `messageID`='" << messageID << "';";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_comment` where `type`=\"language\" and `messageID`='" + messageID + "';", db);
 }
 
 string GetBookCommentsCount(string messageID, CMysql *db)
 {
-	ostringstream   ost;
-	int			 affected;
-	string		  result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_comment` where `type`=\"book\" and `messageID`='" << messageID << "';";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_comment` where `type`=\"book\" and `messageID`='" + messageID + "';", db);
 }
 
 string GetCertificateCommentsCount(string messageID, CMysql *db)
 {
-	ostringstream   ost;
-	int			 affected;
-	string		  result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_comment` where `type` in (\"certification\", \"course\") and `messageID`='" << messageID << "';";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_comment` where `type` in (\"certification\", \"course\") and `messageID`='" + messageID + "';", db);
 }
 
 string GetUniversityDegreeCommentsCount(string messageID, CMysql *db)
 {
-	ostringstream   ost;
-	int			 affected;
-	string		  result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_comment` where `type`=\"university\" and `messageID`='" << messageID << "';";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_comment` where `type`=\"university\" and `messageID`='" + messageID + "';", db);
 }
 
 string GetMessageSpam(string messageID, CMysql *db)
 {
-	ostringstream	ost;
-	int				affected;
-	string			result = "0";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_params` where `parameter`='spam' and messageID='" << messageID << "';";
-	affected = db->Query(ost.str());
-
-
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
-
-	MESSAGE_DEBUG("", "", "finish");
-
-
-	return result;
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_params` where `parameter`='spam' and messageID='" + messageID + "';", db);
 }
 
 // --- Function returns true or false depends on userID "spamed" it or not
@@ -1390,24 +1269,39 @@ string GetMessageSpam(string messageID, CMysql *db)
 // --- output: was this message "spamed" by particular user or not
 string GetMessageSpamUser(string messageID, string userID, CMysql *db)
 {
-	ostringstream	ost;
-	int				affected;
-	string			result = "0";
+	return GetValueFromDB("select count(*) as `counter` from `feed_message_params` where `parameter`='spam' and `messageID`='" + messageID + "' and `userID`='" + userID + "' ;", db);
+}
 
+string UpdateMessageDst(const string &messageID, const string &dstType_new, const string &dstID_new, CMysql *db, CUser *user)
+{
 	MESSAGE_DEBUG("", "", "start");
 
-	ost.str("");
-	ost << "select count(*) as `counter` from `feed_message_params` where `parameter`='spam' and `messageID`='" << messageID << "' and `userID`='" << userID << "' ;";
-	affected = db->Query(ost.str());
-	if(affected > 0)
-	{
-		result = db->Get(0, "counter");
-	}
+	auto	error_message = ""s;
+	auto	affected = db->Query("SELECT * FROM `feed` WHERE `actionTypeId`=\"11\" AND `actionId`=" + quoted(messageID) + ";");
 
+	if(affected)
+	{
+		auto	srcType_old	= db->Get(0, "srcType");
+		auto	userId_old	= db->Get(0, "userId");
+		auto	dstType_old	= db->Get(0, "dstType");
+		auto	dstID_old	= db->Get(0, "dstID");
+
+		if((dstType_old == dstType_new) && (dstID_old == dstID_new))
+		{
+			MESSAGE_DEBUG("", "", "nothing to change");
+		}
+		else if(srcType_old != "user")
+		{
+			error_message = gettext("to change message destination, it must be written from user only");
+		}
+	}
+	else
+	{
+		error_message = gettext("message not found");
+		MESSAGE_ERROR("", "", error_message);
+	}
 
 	MESSAGE_DEBUG("", "", "finish");
 
-
-	return result;
+	return error_message;
 }
-

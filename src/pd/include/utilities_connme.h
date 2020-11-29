@@ -40,6 +40,7 @@ auto 			GetCertificateCommentsCount(string messageID, CMysql *) -> string;
 auto 			GetUniversityDegreeCommentsCount(string messageID, CMysql *) -> string;
 auto    	  	GetMessageSpam(string messageID, CMysql *) -> string;
 auto    	  	GetMessageSpamUser(string messageID, string userID, CMysql *) -> string;
+auto			UpdateMessageDst(const string &messageID, const string &dstType_new, const string &dstID_new, CMysql *, CUser *) -> string;
 
 auto	      	GetMessageImageList(string imageSetID, CMysql *) -> string;
 auto    	  	GetCompanyListInJSONFormat(string dbQuery, CMysql *, CUser *, bool quickSearch = true, bool includeEmployedUsersList = false) -> string;
