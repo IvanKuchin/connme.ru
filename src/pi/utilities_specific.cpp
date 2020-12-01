@@ -28,15 +28,16 @@ int GetSpecificData_GetNumberOfFolders(string itemType)
 		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
 	}
 
-	if(itemType == "certification")		result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "course")		result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "university")	result = UNIVERSITYLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "school")		result = SCHOOLLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "language")		result = FLAG_NUMBER_OF_FOLDERS;
-	else if(itemType == "book")			result = BOOKCOVER_NUMBER_OF_FOLDERS;
-	else if(itemType == "company")		result = COMPANYLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "gift")			result = GIFTIMAGE_NUMBER_OF_FOLDERS;
-	else if(itemType == "event")		result = EVENTIMAGE_NUMBER_OF_FOLDERS;
+	if(itemType == "certification")					result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
+	else if(itemType == "course")					result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
+	else if(itemType == "university")				result = UNIVERSITYLOGO_NUMBER_OF_FOLDERS;
+	else if(itemType == "school")					result = SCHOOLLOGO_NUMBER_OF_FOLDERS;
+	else if(itemType == "language")					result = FLAG_NUMBER_OF_FOLDERS;
+	else if(itemType == "book")						result = BOOKCOVER_NUMBER_OF_FOLDERS;
+	else if(itemType == "company")					result = COMPANYLOGO_NUMBER_OF_FOLDERS;
+	else if(itemType == "gift")						result = GIFTIMAGE_NUMBER_OF_FOLDERS;
+	else if(itemType == "event")					result = EVENTIMAGE_NUMBER_OF_FOLDERS;
+	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_NUMBER_OF_FOLDERS;
 	else
 	{
 		CLog	log;
@@ -62,15 +63,16 @@ int GetSpecificData_GetMaxFileSize(string itemType)
 		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
 	}
 
-	if(itemType == "certification")		result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
-	else if(itemType == "course")		result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
-	else if(itemType == "university")	result = UNIVERSITYLOGO_MAX_FILE_SIZE;
-	else if(itemType == "school")		result = SCHOOLLOGO_MAX_FILE_SIZE;
-	else if(itemType == "language")		result = FLAG_MAX_FILE_SIZE;
-	else if(itemType == "book")			result = BOOKCOVER_MAX_FILE_SIZE;
-	else if(itemType == "company")		result = COMPANYLOGO_MAX_FILE_SIZE;
-	else if(itemType == "gift")			result = GIFTIMAGE_MAX_FILE_SIZE;
-	else if(itemType == "event")		result = EVENTIMAGE_MAX_FILE_SIZE;
+	if(itemType == "certification")					result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
+	else if(itemType == "course")					result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
+	else if(itemType == "university")				result = UNIVERSITYLOGO_MAX_FILE_SIZE;
+	else if(itemType == "school")					result = SCHOOLLOGO_MAX_FILE_SIZE;
+	else if(itemType == "language")					result = FLAG_MAX_FILE_SIZE;
+	else if(itemType == "book")						result = BOOKCOVER_MAX_FILE_SIZE;
+	else if(itemType == "company")					result = COMPANYLOGO_MAX_FILE_SIZE;
+	else if(itemType == "gift")						result = GIFTIMAGE_MAX_FILE_SIZE;
+	else if(itemType == "event")					result = EVENTIMAGE_MAX_FILE_SIZE;
+	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_MAX_FILE_SIZE;
 	else
 	{
 		CLog	log;
@@ -164,15 +166,16 @@ string GetSpecificData_GetBaseDirectory(string itemType)
 		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
 	}
 
-	if(itemType == "certification")		result = IMAGE_CERTIFICATIONS_DIRECTORY;
-	else if(itemType == "course")		result = IMAGE_CERTIFICATIONS_DIRECTORY;
-	else if(itemType == "university")	result = IMAGE_UNIVERSITIES_DIRECTORY;
-	else if(itemType == "school")		result = IMAGE_SCHOOLS_DIRECTORY;
-	else if(itemType == "language")		result = IMAGE_FLAGS_DIRECTORY;
-	else if(itemType == "book")			result = IMAGE_BOOKS_DIRECTORY;
-	else if(itemType == "company")		result = IMAGE_COMPANIES_DIRECTORY;
-	else if(itemType == "gift")			result = IMAGE_GIFTS_DIRECTORY;
-	else if(itemType == "event")		result = IMAGE_EVENTS_DIRECTORY;
+	if(itemType == "certification")					result = IMAGE_CERTIFICATIONS_DIRECTORY;
+	else if(itemType == "course")					result = IMAGE_CERTIFICATIONS_DIRECTORY;
+	else if(itemType == "university")				result = IMAGE_UNIVERSITIES_DIRECTORY;
+	else if(itemType == "school")					result = IMAGE_SCHOOLS_DIRECTORY;
+	else if(itemType == "language")					result = IMAGE_FLAGS_DIRECTORY;
+	else if(itemType == "book")						result = IMAGE_BOOKS_DIRECTORY;
+	else if(itemType == "company")					result = IMAGE_COMPANIES_DIRECTORY;
+	else if(itemType == "gift")						result = IMAGE_GIFTS_DIRECTORY;
+	else if(itemType == "event")					result = IMAGE_EVENTS_DIRECTORY;
+	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_DIRECTORY;
 	else
 	{
 		CLog	log;
