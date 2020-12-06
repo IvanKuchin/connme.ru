@@ -8,6 +8,7 @@ string	GetDefaultActionFromUserType(CUser *user, CMysql *db)
 
 	if(user->GetType() == "guest")		result = GUEST_USER_DEFAULT_ACTION;
 	else if(user->GetType() == "user")	result = LOGGEDIN_USER_DEFAULT_ACTION;
+	else if(user->GetType() == "helpdesk") result = LOGGEDIN_HELPDESK_DEFAULT_ACTION;
 	else
 	{
 		MESSAGE_ERROR("", "", "unknown user type (" + user->GetType() + ")");
@@ -22,11 +23,7 @@ int GetSpecificData_GetNumberOfFolders(string itemType)
 {
 	int	  result = 0;
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")					result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
 	else if(itemType == "course")					result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
@@ -40,15 +37,10 @@ int GetSpecificData_GetNumberOfFolders(string itemType)
 	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_NUMBER_OF_FOLDERS;
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (result: " + to_string(result) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
 	
 	return result;
 }
@@ -57,11 +49,7 @@ int GetSpecificData_GetMaxFileSize(string itemType)
 {
 	int	  result = 0;
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")					result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
 	else if(itemType == "course")					result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
@@ -75,15 +63,10 @@ int GetSpecificData_GetMaxFileSize(string itemType)
 	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_MAX_FILE_SIZE;
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (result: " + to_string(result) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
 	
 	return result;
 }
@@ -92,11 +75,7 @@ unsigned int GetSpecificData_GetMaxWidth(string itemType)
 {
 	int	  result = 0;
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")		result = CERTIFICATIONSLOGO_MAX_WIDTH;
 	else if(itemType == "course")		result = CERTIFICATIONSLOGO_MAX_WIDTH;
@@ -109,15 +88,10 @@ unsigned int GetSpecificData_GetMaxWidth(string itemType)
 	else if(itemType == "event")		result = EVENTIMAGE_MAX_WIDTH;
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (result: " + to_string(result) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
 	
 	return result;
 }
@@ -126,11 +100,7 @@ unsigned int GetSpecificData_GetMaxHeight(string itemType)
 {
 	int	  result = 0;
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")		result = CERTIFICATIONSLOGO_MAX_HEIGHT;
 	else if(itemType == "course")		result = CERTIFICATIONSLOGO_MAX_HEIGHT;
@@ -143,15 +113,10 @@ unsigned int GetSpecificData_GetMaxHeight(string itemType)
 	else if(itemType == "event")	  	result = EVENTIMAGE_MAX_HEIGHT;
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (result: " + to_string(result) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
 	
 	return result;
 }
@@ -160,11 +125,7 @@ string GetSpecificData_GetBaseDirectory(string itemType)
 {
 	string	  result = "";
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")					result = IMAGE_CERTIFICATIONS_DIRECTORY;
 	else if(itemType == "course")					result = IMAGE_CERTIFICATIONS_DIRECTORY;
@@ -178,8 +139,7 @@ string GetSpecificData_GetBaseDirectory(string itemType)
 	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_DIRECTORY;
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
 	{
@@ -195,11 +155,7 @@ string GetSpecificData_SelectQueryItemByID(string itemID, string itemType)
 {
 	string	  result = "";
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")		result = "select * from `certification_tracks` where `id`=\"" + itemID + "\";";
 	else if(itemType == "course")		result = "select * from `certification_tracks` where `id`=\"" + itemID + "\";";
@@ -212,8 +168,7 @@ string GetSpecificData_SelectQueryItemByID(string itemID, string itemType)
 	else if(itemType == "event")		result = "select * from `events` where `id`=\"" + itemID + "\";";
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
 	{
@@ -231,11 +186,7 @@ string GetSpecificData_UpdateQueryItemByID(string itemID, string itemType, strin
 	string		logo_folder = "";
 	string		logo_filename = "";
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	logo_folder = GetSpecificData_GetDBCoverPhotoFolderString(itemType);
 	logo_filename = GetSpecificData_GetDBCoverPhotoFilenameString(itemType);
@@ -279,11 +230,7 @@ string GetSpecificData_GetDBCoverPhotoFolderString(string itemType)
 {
 	string	  result = "";
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")	 	result = "logo_folder";
 	else if(itemType == "course")	   	result = "logo_folder";
@@ -296,8 +243,7 @@ string GetSpecificData_GetDBCoverPhotoFolderString(string itemType)
 	else if(itemType == "event")	  	result = "logo_folder";
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
 	{
@@ -313,11 +259,7 @@ string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
 {
 	string	  result = "";
 
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(itemType == "certification")		result = "logo_filename";
 	else if(itemType == "course")		result = "logo_filename";
@@ -330,8 +272,7 @@ string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
 	else if(itemType == "event")		result = "logo_filename";
 	else
 	{
-		CLog	log;
-		log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: itemType [" + itemType + "] unknown");
+		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
 	}
 
 	{

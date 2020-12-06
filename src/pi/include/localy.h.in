@@ -62,10 +62,7 @@
 
 #define	LOGGEDIN_USER_DEFAULT_ACTION				"news_feed"s
 #define	GUEST_USER_DEFAULT_ACTION					"autologin"s
-#define	LOGGEDIN_SUBCONTRACTOR_DEFAULT_ACTION		"subcontractor_dashboard"s
-#define	LOGGEDIN_AGENCY_DEFAULT_ACTION				"agency_dashboard"s
-#define	LOGGEDIN_APPROVER_DEFAULT_ACTION			"approver_dashboard"s
-#define	LOGGEDIN_NOROLE_DEFAULT_ACTION				"initial_wizard"s
+#define	LOGGEDIN_HELPDESK_DEFAULT_ACTION			"helpdesk_dashboard"s
 
 #define	BREADCRUMBS_STR								" | "
 
