@@ -8736,9 +8736,6 @@ int main()
 
 		if(action == "edit_profile")
 		{
-			ostringstream	ost;
-			int		affected;
-			string		userID, name, nameLast, age, cv, pass, address, phone, email, isBlocked, avatarFileName, avatarFolderName, current_company;
 
 			MESSAGE_DEBUG("", action, "start");
 
@@ -8748,115 +8745,116 @@ int main()
 
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}
-
-
-			ost.str("");
-			ost << "SELECT \
-						`users`.`id` 				as `users_id`, \
-						`users`.`name` 				as `users_name`, \
-						`users`.`nameLast`			as `users_nameLast`, \
-						`users`.`cv` 				as `users_cv`, \
-						`users_passwd`.`passwd` 	as `users_passwd_passwd`, \
-						`users`.`address`			as `users_address`, \
-						`users`.`phone`				as `users_phone`, \
-						`users`.`email`				as `users_email`, \
-						`users`.`isblocked`			as `users_isblocked` \
-					FROM `users` \
-					INNER JOIN `users_passwd` ON `users_passwd`.`userID`=`users`.`id` \
-					WHERE `users`.`id`='" << user.GetID() << "' AND `users_passwd`.`isActive`='true';";
-			affected = db.Query(ost.str());
-			if(affected)
-			{
-				indexPage.RegisterVariableForce("menu_profile_active", "active");
-
-
-				userID = db.Get(0, "users_id");
-				name = db.Get(0, "users_name"); 		indexPage.RegisterVariableForce("name", name);
-										  				indexPage.RegisterVariableForce("myFirstName", name);
-				nameLast = db.Get(0, "users_nameLast"); indexPage.RegisterVariableForce("nameLast", nameLast);
-														indexPage.RegisterVariableForce("myLastName", nameLast);
-				cv = db.Get(0, "users_cv");				
-				if(cv == "") cv = "Напишите несколько слов о себе";
-														indexPage.RegisterVariableForce("cv", cv);
-				pass = db.Get(0, "users_passwd_passwd");indexPage.RegisterVariableForce("pass", pass);
-				address = db.Get(0, "users_address");	indexPage.RegisterVariableForce("address", address);
-				phone = db.Get(0, "users_phone");		indexPage.RegisterVariableForce("phone", phone);
-				email = db.Get(0, "users_email"); 		indexPage.RegisterVariableForce("email", email);
-				isBlocked = db.Get(0, "users_isblocked");  
-
-				{ 
-					MESSAGE_DEBUG("", action, " edit_profile: user details isBlocked:[" + isBlocked + "]"); 
-				}
-
-				ost.str("");
-				ost << "SELECT `users_company`.`id` as `users_company_id`, `company`.`name` as `company_name`, `occupation_start`, `occupation_finish`, `current_company`, `responsibilities`, `company_position`.`title` as `title` \
-		FROM  `company` ,  `users_company` ,  `company_position` \
-		WHERE  `user_id` =  '" << userID << "' \
-		AND  `company`.`id` =  `users_company`.`company_id`  \
-		AND  `company_position`.`id` =  `users_company`.`position_title_id`  \
-		ORDER BY  `users_company`.`occupation_start` DESC ";
-				affected = db.Query(ost.str());
-				if(affected > 0) {
-						ostringstream	ost1, ost2, ost3, ost4;
-						string			occupationFinish;
-						ost1.str("");
-						ost2.str("");
-						ost3.str("");
-						ost4.str("");
-
-						for(auto i = 0; i < affected; i++, current_company = "0") {
-							occupationFinish = db.Get(i, "occupation_finish");
-							if(occupationFinish == "0000-00-00") {
-								current_company = "1";
-								ost2.str("");
-								ost2 << indexPage.GetVarsHandler()->Get("currentCompany");
-								if(ost2.str().length() > 1) ost2 << ", ";
-								ost2 << db.Get(i, "company_name");
-								indexPage.RegisterVariableForce("currentCompany", ost2.str());
-							}
-
-							ost1 << "<div class='row'>\n";
-							ost1 << "<div class='col-xs-4'>";
-							ost1 << "<p" << (current_company == "1" ? " class=\"current_company\"" : "") << ">с ";
-							ost1 << "<span data-id='" << db.Get(i, "users_company_id") << "' data-action='update_occupation_start' class='occupation_start datePick'>" << db.Get(i, "occupation_start") << "</span> по ";
-							ost1 << "<span data-id='" << db.Get(i, "users_company_id") << "' data-action='update_occupation_finish' class='occupation_finish editableSpan'>" << (occupationFinish == "0000-00-00" ? "настоящее время" : occupationFinish)  << "</span></p>";
-							ost1 << "</div>\n";
-							ost1 << "<div class='col-xs-6'>";
-							ost1 << "<p" << (current_company == "1" ? " class=\"current_company\" " : "") << "> \
-							<span data-id='" << db.Get(i, "users_company_id") << "' data-action='updateJobTitle' class='jobTitle editableSpan'>"  << db.Get(i, "title") << "</span> в \
-							<span data-id='" << db.Get(i, "users_company_id") << "' data-action='updateCompanyName' class='companyName editableSpan'>" << db.Get(i, "company_name") << "</span>";
-							// ost1 << (current_company == "1" ? " (текущее место работы)" : "") << "</p>";
-							ost1 << "</div>\n";
-							ost1 << "<div class='col-xs-1'>";
-							ost1 << "<span class=\"glyphicon glyphicon-remove animateClass removeCompanyExperience\" aria-hidden=\"true\" data-id='" << db.Get(i, "users_company_id") << "' data-action='AJAX_removeCompanyExperience'></span>";
-							ost1 << "</div>\n";
-							ost1 << "</div> <!-- row -->\n\n";
-							ost1 << "<div class='row'>\n";
-							ost1 << "<div class='col-xs-1'>";
-							ost1 << "</div>\n";
-							ost1 << "<div class='col-xs-9'>";
-							ost1 << "<p id=\"responsibilities" << db.Get(i, "users_company_id") << "\" class=\"editableParagraph\" data-action=\"update_responsibilities\" data-id=\"" << db.Get(i, "users_company_id") << "\">";
-							if((db.Get(i,"responsibilities")).length())
-								ost1 << db.Get(i,"responsibilities");
-							else
-								ost1 << "Опишите круг своих обязанностей работы в компании";
-							ost1 << "</p>";
-							ost1 << "</div>\n";
-							ost1 << "<div class='col-xs-1'>";
-							ost1 << "</div>\n";
-							ost1 << "</div>\n\n";
-						}
-						indexPage.RegisterVariableForce("carrierPath", ost1.str());
-				}
-				else 
-				{
-					indexPage.RegisterVariableForce("carrierPath", "Вы не заполнили опыт работы");
-				}
-			}
 			else
 			{
-				MESSAGE_DEBUG("", action, "there is no user in DB [" + indexPage.GetVarsHandler()->Get("loginUser") + "]");
-				CExceptionHTML("no user");
+				auto		affected = db.Query(
+						"SELECT \
+							`users`.`id` 				as `users_id`, \
+							`users`.`name` 				as `users_name`, \
+							`users`.`nameLast`			as `users_nameLast`, \
+							`users`.`cv` 				as `users_cv`, \
+							`users_passwd`.`passwd` 	as `users_passwd_passwd`, \
+							`users`.`address`			as `users_address`, \
+							`users`.`phone`				as `users_phone`, \
+							`users`.`email`				as `users_email`, \
+							`users`.`isblocked`			as `users_isblocked` \
+						FROM `users` \
+						INNER JOIN `users_passwd` ON `users_passwd`.`userID`=`users`.`id` \
+						WHERE `users`.`id`='" + user.GetID() + "' AND `users_passwd`.`isActive`='true';"
+					);
+				if(affected)
+				{
+					ostringstream	ost;
+
+					auto userID = db.Get(0, "users_id");
+					auto name = db.Get(0, "users_name"); 		indexPage.RegisterVariableForce("name", name);
+												  				indexPage.RegisterVariableForce("myFirstName", name);
+					auto nameLast = db.Get(0, "users_nameLast"); indexPage.RegisterVariableForce("nameLast", nameLast);
+																indexPage.RegisterVariableForce("myLastName", nameLast);
+					auto cv = db.Get(0, "users_cv");				
+					if(cv == "") cv = "Напишите несколько слов о себе";
+																indexPage.RegisterVariableForce("cv", cv);
+					auto pass = db.Get(0, "users_passwd_passwd");indexPage.RegisterVariableForce("pass", pass);
+					auto address = db.Get(0, "users_address");	indexPage.RegisterVariableForce("address", address);
+					auto phone = db.Get(0, "users_phone");		indexPage.RegisterVariableForce("phone", phone);
+					auto email = db.Get(0, "users_email"); 		indexPage.RegisterVariableForce("email", email);
+					auto isBlocked = db.Get(0, "users_isblocked");  
+
+					indexPage.RegisterVariableForce("menu_profile_active", "active");
+
+					MESSAGE_DEBUG("", action, " edit_profile: user details isBlocked:[" + isBlocked + "]"); 
+
+					ost.str("");
+					ost << "SELECT `users_company`.`id` as `users_company_id`, `company`.`name` as `company_name`, `occupation_start`, `occupation_finish`, `current_company`, `responsibilities`, `company_position`.`title` as `title` \
+			FROM  `company` ,  `users_company` ,  `company_position` \
+			WHERE  `user_id` =  '" << userID << "' \
+			AND  `company`.`id` =  `users_company`.`company_id`  \
+			AND  `company_position`.`id` =  `users_company`.`position_title_id`  \
+			ORDER BY  `users_company`.`occupation_start` DESC ";
+					affected = db.Query(ost.str());
+					if(affected > 0)
+					{
+							ostringstream	ost1, ost2;
+							auto			occupationFinish = ""s;
+							auto			current_company = ""s;
+
+							ost1.str("");
+
+							for(auto i = 0; i < affected; i++, current_company = "0") {
+								occupationFinish = db.Get(i, "occupation_finish");
+								if(occupationFinish == "0000-00-00") 
+								{
+									current_company = "1";
+									ost2.str("");
+									ost2 << indexPage.GetVarsHandler()->Get("currentCompany");
+									if(ost2.str().length() > 1) ost2 << ", ";
+									ost2 << db.Get(i, "company_name");
+									indexPage.RegisterVariableForce("currentCompany", ost2.str());
+								}
+
+								ost1 << "<div class='row'>\n";
+								ost1 << "<div class='col-xs-4'>";
+								ost1 << "<p" << (current_company == "1" ? " class=\"current_company\"" : "") << ">с ";
+								ost1 << "<span data-id='" << db.Get(i, "users_company_id") << "' data-action='update_occupation_start' class='occupation_start datePick'>" << db.Get(i, "occupation_start") << "</span> по ";
+								ost1 << "<span data-id='" << db.Get(i, "users_company_id") << "' data-action='update_occupation_finish' class='occupation_finish editableSpan'>" << (occupationFinish == "0000-00-00" ? "настоящее время" : occupationFinish)  << "</span></p>";
+								ost1 << "</div>\n";
+								ost1 << "<div class='col-xs-6'>";
+								ost1 << "<p" << (current_company == "1" ? " class=\"current_company\" " : "") << "> \
+								<span data-id='" << db.Get(i, "users_company_id") << "' data-action='updateJobTitle' class='jobTitle editableSpan'>"  << db.Get(i, "title") << "</span> в \
+								<span data-id='" << db.Get(i, "users_company_id") << "' data-action='updateCompanyName' class='companyName editableSpan'>" << db.Get(i, "company_name") << "</span>";
+								// ost1 << (current_company == "1" ? " (текущее место работы)" : "") << "</p>";
+								ost1 << "</div>\n";
+								ost1 << "<div class='col-xs-1'>";
+								ost1 << "<span class=\"glyphicon glyphicon-remove animateClass removeCompanyExperience\" aria-hidden=\"true\" data-id='" << db.Get(i, "users_company_id") << "' data-action='AJAX_removeCompanyExperience'></span>";
+								ost1 << "</div>\n";
+								ost1 << "</div> <!-- row -->\n\n";
+								ost1 << "<div class='row'>\n";
+								ost1 << "<div class='col-xs-1'>";
+								ost1 << "</div>\n";
+								ost1 << "<div class='col-xs-9'>";
+								ost1 << "<p id=\"responsibilities" << db.Get(i, "users_company_id") << "\" class=\"editableParagraph\" data-action=\"update_responsibilities\" data-id=\"" << db.Get(i, "users_company_id") << "\">";
+								if((db.Get(i,"responsibilities")).length())
+									ost1 << db.Get(i,"responsibilities");
+								else
+									ost1 << "Опишите круг своих обязанностей работы в компании";
+								ost1 << "</p>";
+								ost1 << "</div>\n";
+								ost1 << "<div class='col-xs-1'>";
+								ost1 << "</div>\n";
+								ost1 << "</div>\n\n";
+							}
+							indexPage.RegisterVariableForce("carrierPath", ost1.str());
+					}
+					else 
+					{
+						indexPage.RegisterVariableForce("carrierPath", "Вы не заполнили опыт работы");
+					}
+				}
+				else
+				{
+					MESSAGE_DEBUG("", action, "there is no user in DB [" + indexPage.GetVarsHandler()->Get("loginUser") + "]");
+					CExceptionHTML("no user");
+				}
 			}
 
 			indexPage.RegisterVariableForce("title", "Моя страница");
