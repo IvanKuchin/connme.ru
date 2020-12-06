@@ -13,10 +13,7 @@ string GetBookListInJSONFormat(string dbQuery, CMysql *db, bool includeReaders/*
 	vector<BookClass>			   bookList;
 
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	booksCount = db->Query(dbQuery);
@@ -106,10 +103,7 @@ string GetComplainListInJSONFormat(string dbQuery, CMysql *db, bool includeReade
 	vector<ComplainClass>		   complainList;
 
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	complainsCount = db->Query(dbQuery);
@@ -178,10 +172,7 @@ string GetCertificationListInJSONFormat(string dbQuery, CMysql *db, bool include
 	int				 itemsCount;
 	vector<ItemClass>   itemsList;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	itemsCount = db->Query(dbQuery);
@@ -261,10 +252,7 @@ string GetCourseListInJSONFormat(string dbQuery, CMysql *db, bool includeStudent
 	int				 itemsCount;
 	vector<ItemClass>   itemsList;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	itemsCount = db->Query(dbQuery);
@@ -391,10 +379,7 @@ string GetUniversityListInJSONFormat(string dbQuery, CMysql *db, bool includeStu
 	int				 itemsCount;
 	vector<ItemClass>   itemsList;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	itemsCount = db->Query(dbQuery);
@@ -474,10 +459,7 @@ string GetSchoolListInJSONFormat(string dbQuery, CMysql *db, bool includeStudent
 	int				 itemsCount;
 	vector<ItemClass>   itemsList;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	itemsCount = db->Query(dbQuery);
@@ -556,10 +538,7 @@ string GetLanguageListInJSONFormat(string dbQuery, CMysql *db, bool includeStude
 	int				 itemsCount;
 	vector<ItemClass>   itemsList;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostResult.str("");
 	itemsCount = db->Query(dbQuery);
@@ -659,10 +638,7 @@ string GetMessageImageList(string imageSetID, CMysql *db)
 	ostringstream	ost;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	if(imageSetID != "0")
 	{
@@ -723,10 +699,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 	vector<CompanyClass>			companiesList;
 	int							 companyCounter = 0;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostFinal.str("");
 
@@ -1029,15 +1002,15 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 	for(auto i = 0; i < affected; i++)
 	{
 		ostringstream   ost1;
-		string		  srcAvatarPath;
-		string		  dstAvatarPath;
-		string		  feedID = itemsList[i].feed_id;
-		string		  feedActionTypeId = itemsList[i].feed_actionTypeId;
-		string		  feedActionId = itemsList[i].feed_actionId;
-		string		  feedMessageOwner = itemsList[i].src_id;
-		string		  feedMessageTimestamp = itemsList[i].feed_eventTimestamp;
-		string		  messageSrcObject = "";
-		string		  messageDstObject = "";
+		auto		  srcAvatarPath = ""s;
+		auto		  dstAvatarPath = ""s;
+		auto		  feedID = itemsList[i].feed_id;
+		auto		  feedActionTypeId = itemsList[i].feed_actionTypeId;
+		auto		  feedActionId = itemsList[i].feed_actionId;
+		auto		  feedMessageOwner = itemsList[i].src_id;
+		auto		  feedMessageTimestamp = itemsList[i].feed_eventTimestamp;
+		auto		  messageSrcObject = ""s;
+		auto		  messageDstObject = ""s;
 
 		// --- avatar for srcObj
 		if(itemsList[i].src_type == "user")
@@ -1582,7 +1555,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			
 		}
-		else if(feedActionTypeId == "23")
+		else if((feedActionTypeId == "23") || (feedActionTypeId == "57"))
 		{
 			// --- course received
 
@@ -1965,14 +1938,12 @@ string GetBookLikesUsersList(string usersBookID, CUser *user, CMysql *db)
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeBook' and `messageID`='" + usersBookID + "';");
 	if(affected > 0) 
 	{
+		
 		ost.str("");
 		ost << "select * from `users` where id in (";
 		for(auto i = 0; i < affected; i++)
@@ -1984,10 +1955,7 @@ string GetBookLikesUsersList(string usersBookID, CUser *user, CMysql *db)
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
@@ -2002,10 +1970,7 @@ string GetLanguageLikesUsersList(string usersLanguageID, CUser *user, CMysql *db
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeLanguage' and `messageID`='" + usersLanguageID + "';");
 	if(affected > 0) 
@@ -2021,10 +1986,7 @@ string GetLanguageLikesUsersList(string usersLanguageID, CUser *user, CMysql *db
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
@@ -2039,10 +2001,7 @@ string GetCompanyLikesUsersList(string usersCompanyID, CUser *user, CMysql *db)
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeCompany' and `messageID`='" + usersCompanyID + "';");
 	if(affected > 0) 
@@ -2058,10 +2017,7 @@ string GetCompanyLikesUsersList(string usersCompanyID, CUser *user, CMysql *db)
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
@@ -2076,10 +2032,7 @@ string GetCertificationLikesUsersList(string usersCertificationID, CUser *user, 
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeCertification' and `messageID`='" + usersCertificationID + "';");
 	if(affected > 0) 
@@ -2095,10 +2048,7 @@ string GetCertificationLikesUsersList(string usersCertificationID, CUser *user, 
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
@@ -2113,10 +2063,7 @@ string GetCourseLikesUsersList(string usersCourseID, CUser *user, CMysql *db)
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeCourse' and `messageID`='" + usersCourseID + "';");
 	if(affected > 0) 
@@ -2132,10 +2079,7 @@ string GetCourseLikesUsersList(string usersCourseID, CUser *user, CMysql *db)
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
@@ -2150,10 +2094,7 @@ string GetUniversityDegreeLikesUsersList(string universityDegreeID, CUser *user,
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeUniversityDegree' and `messageID`='" + universityDegreeID + "';");
 	if(affected > 0) 
@@ -2169,10 +2110,7 @@ string GetUniversityDegreeLikesUsersList(string universityDegreeID, CUser *user,
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
@@ -2187,10 +2125,7 @@ string GetBookRatingUsersList(string bookID, CUser *user, CMysql *db)
 	int			 affected;
 	string		  result = "";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `users_books` where `bookID`=\"" + bookID + "\";");
 	if(affected > 0) 
@@ -2206,10 +2141,7 @@ string GetBookRatingUsersList(string bookID, CUser *user, CMysql *db)
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
 
-	{
-		CLog			log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
