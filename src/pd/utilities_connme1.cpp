@@ -1920,8 +1920,8 @@ string GetMessageLikesUsersList(string messageID, CUser *user, CMysql *db)
 {
 	MESSAGE_DEBUG("", "", "start");
 
-	auto			users_id	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='like' and `messageID`='" + messageID + "';", db);
-	auto			result		= (users_id.size() ? GetUsersNameAvatarInJSONFormat("select * from users where id in (" + join(users_id, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='like' and `messageID`='" + messageID + "';", db);
+	auto	result		= (user_ids.size() ? GetUsersNameAvatarInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
 
 	MESSAGE_DEBUG("", "", "finish (result length: " + to_string(result.length()) + ")")
 
@@ -1934,16 +1934,21 @@ string GetMessageLikesUsersList(string messageID, CUser *user, CMysql *db)
 // --- output: was this message "liked" by particular user or not
 string GetBookLikesUsersList(string usersBookID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='likeBook' and `messageID`='" + usersBookID + "';", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
 
-	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `feed_message_params` where `parameter`='likeBook' and `messageID`='" + usersBookID + "';");
 	if(affected > 0) 
 	{
-		
+
 		ost.str("");
 		ost << "select * from `users` where id in (";
 		for(auto i = 0; i < affected; i++)
@@ -1954,7 +1959,7 @@ string GetBookLikesUsersList(string usersBookID, CUser *user, CMysql *db)
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -1966,6 +1971,11 @@ string GetBookLikesUsersList(string usersBookID, CUser *user, CMysql *db)
 // --- output: was this message "liked" by particular user or not
 string GetLanguageLikesUsersList(string usersLanguageID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+	
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='likeLanguage' and `messageID`='" + usersLanguageID + "';", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
@@ -1985,7 +1995,7 @@ string GetLanguageLikesUsersList(string usersLanguageID, CUser *user, CMysql *db
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -1997,6 +2007,11 @@ string GetLanguageLikesUsersList(string usersLanguageID, CUser *user, CMysql *db
 // --- output: was this message "liked" by particular user or not
 string GetCompanyLikesUsersList(string usersCompanyID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='likeCompany' and `messageID`='" + usersCompanyID + "';", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
@@ -2016,7 +2031,7 @@ string GetCompanyLikesUsersList(string usersCompanyID, CUser *user, CMysql *db)
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -2028,6 +2043,11 @@ string GetCompanyLikesUsersList(string usersCompanyID, CUser *user, CMysql *db)
 // --- output: was this message "liked" by particular user or not
 string GetCertificationLikesUsersList(string usersCertificationID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='likeCertification' and `messageID`='" + usersCertificationID + "';", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
@@ -2047,7 +2067,7 @@ string GetCertificationLikesUsersList(string usersCertificationID, CUser *user, 
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -2059,6 +2079,11 @@ string GetCertificationLikesUsersList(string usersCertificationID, CUser *user, 
 // --- output: was this message "liked" by particular user or not
 string GetCourseLikesUsersList(string usersCourseID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='likeCourse' and `messageID`='" + usersCourseID + "';", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
@@ -2078,7 +2103,7 @@ string GetCourseLikesUsersList(string usersCourseID, CUser *user, CMysql *db)
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -2090,6 +2115,11 @@ string GetCourseLikesUsersList(string usersCourseID, CUser *user, CMysql *db)
 // --- output: was this message "liked" by particular user or not
 string GetUniversityDegreeLikesUsersList(string universityDegreeID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	user_ids	= GetValuesFromDB("select `userID` from `feed_message_params` where `parameter`='likeUniversityDegree' and `messageID`='" + universityDegreeID + "';", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
@@ -2109,7 +2139,7 @@ string GetUniversityDegreeLikesUsersList(string universityDegreeID, CUser *user,
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -2121,11 +2151,16 @@ string GetUniversityDegreeLikesUsersList(string universityDegreeID, CUser *user,
 // --- output: was this message "liked" by particular user or not
 string GetBookRatingUsersList(string bookID, CUser *user, CMysql *db)
 {
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	user_ids	= GetValuesFromDB("select `userID` from `users_books` where `bookID`=\"" + bookID + "\";", db);
+	auto	result		= (user_ids.size() ? GetUserListInJSONFormat("select * from `users` where `id` in (" + join(user_ids, ",") + ") and `isactivated`='Y' and `isblocked`='N';", db, user) : "");
+
+/*
 	ostringstream   ost;
 	int			 affected;
 	string		  result = "";
 
-	MESSAGE_DEBUG("", "", "start");
 
 	affected = db->Query("select * from `users_books` where `bookID`=\"" + bookID + "\";");
 	if(affected > 0) 
@@ -2140,7 +2175,7 @@ string GetBookRatingUsersList(string bookID, CUser *user, CMysql *db)
 		ost << ") and `isactivated`='Y' and `isblocked`='N';";
 		result = GetUserListInJSONFormat(ost.str(), db, user);
 	}
-
+*/
 	MESSAGE_DEBUG("", "", "finish (returning string length " + to_string(result.length()) + ")");
 
 	return result;
@@ -2148,15 +2183,9 @@ string GetBookRatingUsersList(string bookID, CUser *user, CMysql *db)
 
 string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned long actionID, CMysql *db, CUser *user)
 {
+	MESSAGE_DEBUG("", "", "start (typeID=" + to_string(typeID) + ", actionID=" + to_string(actionID) + ")");
+
 	ostringstream   ostResult, ost;
-
-	{
-		CLog	log;
-		
-		log.Write(DEBUG, string(__func__) + "(typeID=" + to_string(typeID) + ", actionID=" + to_string(actionID) + ")[" + to_string(__LINE__) + "]: start");
-	}
-
-
 	ostResult.str("");
 
 	// --- comment provided
@@ -2166,28 +2195,28 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 
 		if(db->Query("select * from  `feed_message_comment` where `id`=\"" + to_string(comment_id) + "\";"))
 		{
-			string  friend_userID = db->Get(0, "userID");
-			string  commentTitle = db->Get(0, "comment");
-			string  commentTimestamp = db->Get(0, "eventTimestamp");
-			string  messageID = db->Get(0, "messageID");
-			string  commentType = db->Get(0, "type");
+			auto  friend_userID		= db->Get(0, "userID");
+			auto  commentTitle		= db->Get(0, "comment");
+			auto  commentTimestamp	= db->Get(0, "eventTimestamp");
+			auto  messageID			= db->Get(0, "messageID");
+			auto  commentType		= db->Get(0, "type");
 
 			if(commentType == "message")
 			{
 				if(db->Query("select * from  `feed_message` where `id`=\"" + messageID + "\";"))
 				{
-					string  messageTitle = db->Get(0, "title");
-					string  messageBody = db->Get(0, "message");
-					string  messageImageSetID = db->Get(0, "imageSetID");
+					auto  messageTitle			= db->Get(0, "title");
+					auto  messageBody			= db->Get(0, "message");
+					auto  messageImageSetID		= db->Get(0, "imageSetID");
 
 					if(db->Query("select * from `users` where `id`=\"" + friend_userID + "\";"))
 					{
-						string	  friend_userName = db->Get(0, "name");
-						string	  friend_userNameLast = db->Get(0, "nameLast");
-						string	  friend_sex = db->Get(0, "sex");
-						string	  imageSetFolder = "";
-						string	  imageSetPic = "";
-						string	  messageMediaType = "";
+						auto	  friend_userName		= db->Get(0, "name");
+						auto	  friend_userNameLast	= db->Get(0, "nameLast");
+						auto	  friend_sex			= db->Get(0, "sex");
+						auto	  imageSetFolder		= ""s;
+						auto	  imageSetPic			= ""s;
+						auto	  messageMediaType		= ""s;
 
 						if(messageImageSetID.length() && (messageImageSetID != "0") && (db->Query("select * from `feed_images` where `setID`=\"" + messageImageSetID + "\";")))
 						{
