@@ -804,15 +804,9 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 					}
 
 					// --- Get user avatars
-					ost1.str("");
-					ost1 << "select * from `users_avatars` where `userid`='" << userID << "' and `isActive`='1';";
 					avatarPath = "empty";
-					if(db->Query(ost1.str()))
-					{
-						ost1.str("");
-						ost1 << "/images/avatars/avatars" << db->Get(0, "folder") << "/" << db->Get(0, "filename");
-						avatarPath = ost1.str();
-					}
+					if(db->Query("select * from `users_avatars` where `userid`='" + userID + "' and `isActive`='1';"))
+						avatarPath = "/images/avatars/avatars" + db->Get(0, "folder") + "/" + db->Get(0, "filename");
 
 					// --- Get friendship status
 					userFriendship = "empty";
