@@ -35,6 +35,13 @@ inline auto Get_Groups_UserSubscribedTo_sqlquery(const string &id)
 		);
 }
 
+inline auto Get_Companies_UserSubscribedTo_sqlquery(const string &id)
+{
+	return (
+				"SELECT `entity_id` FROM `users_subscriptions` WHERE `user_id` IN (" + id + ") AND `entity_type`=\"company\""
+		);
+}
+
 inline auto Get_SetIDByImageID_sqlquery(const string &id)
 {
 	return (
@@ -71,6 +78,5 @@ inline auto Get_UserRibbonsIDByUserID_sqlquery(const string &id)
 				"SELECT `ribbon_id` FROM `users_ribbons` WHERE `user_id` IN (" + id + ")"
 		);
 }
-
 
 #endif

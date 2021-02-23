@@ -858,7 +858,9 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 							  "\"email_changeable\": \""			+ (isMe ? itemsList[i].email_changeable : "") + "\","
 							  "\"helpdesk_subscriptions_sms\": ["	+ (isMe ? quoted(itemsList[i].helpdesk_subscription_S1_sms) + "," + quoted(itemsList[i].helpdesk_subscription_S2_sms) + "," + quoted(itemsList[i].helpdesk_subscription_S3_sms) + "," + quoted(itemsList[i].helpdesk_subscription_S4_sms)  : "") + "],"
 							  "\"helpdesk_subscriptions_email\": ["	+ (isMe ? quoted(itemsList[i].helpdesk_subscription_S1_email) + "," + quoted(itemsList[i].helpdesk_subscription_S2_email) + "," + quoted(itemsList[i].helpdesk_subscription_S3_email) + "," + quoted(itemsList[i].helpdesk_subscription_S4_email)  : "") + "],"
-							  "\"subscriptions\":[" 				+ (isMe ? GetUserSubscriptionsInJSONFormat("SELECT * FROM `users_subscriptions` WHERE `user_id`=\"" + userID + "\";", db) : "") + "],"
+							  "\"subscriptions\":[" 				+ GetUserSubscriptionsInJSONFormat("SELECT * FROM `users_subscriptions` WHERE `user_id`=\"" + userID + "\";", db) + "],"
+							  "\"groups\":[" 						+ GetGroupListInJSONFormat("SELECT * FROM `groups` WHERE `id` IN (" + Get_Groups_UserSubscribedTo_sqlquery(userID) + ");", db, user) + "],"
+							  "\"subscribed_companies\":[" 			+ GetCompanyListInJSONFormat("SELECT * FROM `company` WHERE `id` IN (" + Get_Companies_UserSubscribedTo_sqlquery(userID) + ");", db, user) + "],"
 							  "\"isBlocked\": \""					+ itemsList[i].isBlocked + "\","
 							  "\"isMe\": \""						+ (isMe ? "yes" : "no") + "\"," +
 							  AdditionalUserData(userID, db, user) +
@@ -1420,7 +1422,6 @@ auto GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 					result += "\"received_timestamp\": \""	+ itemList[i].received_timestamp + "\"";
 					result += "}";
 			}
-
 		}
 		else
 		{
