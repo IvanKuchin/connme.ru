@@ -279,16 +279,18 @@ unsigned long CMysql::InsertQuery(const string &query)
 
 string CMysql::Get(int row, const string &name)
 {
-    return Get(row, name.c_str());
+    if(resultSet)
+        return ResultValue(resultSet, row, name.c_str());
+    return(NULL);
 }
-
+/*
 string CMysql::Get(int row, const char *name)
 {
     if(resultSet)
         return ResultValue(resultSet, row, name);
     return(NULL);
 }
-
+*/
 string CMysql::Get(int row, int col)
 {
     if(resultSet)

@@ -69,7 +69,7 @@ class CMysql : public CMysqlSkel
 		int				Query(const string &query);
 		unsigned long	InsertQuery(const string &query);
 		string			Get(int rows, const string &field);
-		string			Get(int rows, const char *field);
+		// string			Get(int rows, const char *field);
 		string			Get(int rows, int col);
 		MYSQL_ROW		NextRow(void);
 		char*			GetFast(int col);
