@@ -843,7 +843,7 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 							  "\"last_onlineSecondsSinceY2k\": \""  + userLastOnlineSecondSinceY2k + "\","
 							  "\"userFriendship\": \""				+ userFriendship + "\","
 							  "\"avatar\": \""						+ avatarPath + "\","
-							  "\"ribbons\": ["						+ GetUserRibbons_InJSONFormat("SELECT * FROM `users_ribbons WHERE `id` IN (" + Get_UserRibbonsIDByUserID_sqlquery(userID) + ");", db) + "],"
+							  "\"ribbons\": ["						+ GetUserRibbons_InJSONFormat("SELECT * FROM `users_ribbons` WHERE `id` IN (" + Get_UserRibbonsIDByUserID_sqlquery(userID) + ");", db) + "],"
 							  "\"currentEmployment\": "				+ userCurrentEmployment + ", "
 							  "\"currentCity\": \""					+ userCurrentCity + "\", "
 							  "\"numberUnreadMessages\": \""		+ numberUreadMessages + "\", "
@@ -1384,6 +1384,7 @@ auto GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 		string	user_id;
 		string	ribbon_id;
 		string	received_timestamp;
+		string	condition_title;
 	};
 
 	vector<ItemClass>		itemList;
@@ -1406,6 +1407,7 @@ auto GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 				item.user_id = db->Get(i, "user_id");
 				item.ribbon_id = db->Get(i, "ribbon_id");
 				item.received_timestamp = db->Get(i, "received_timestamp");
+				// item.condition_title = db->Get(i, "condition_title");
 
 				itemList.push_back(item);
 			}
@@ -1418,7 +1420,7 @@ auto GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 					result += "{";
 					result += "\"id\": \""				  	+ itemList[i].id + "\",";
 					result += "\"user_id\": \""				+ itemList[i].user_id + "\",";
-					result += "\"ribbon\": {"				+ GetRibbons_InJSONFormat("SELECT * FROM `ribbons` WHERE `id` IN (" + itemList[i].ribbon_id + ");", db) + "},";
+					result += "\"ribbon\":"					+ GetRibbons_InJSONFormat("SELECT * FROM `ribbons` WHERE `id` IN (" + itemList[i].ribbon_id + ");", db) + ",";
 					result += "\"received_timestamp\": \""	+ itemList[i].received_timestamp + "\"";
 					result += "}";
 			}
