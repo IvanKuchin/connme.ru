@@ -682,6 +682,7 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 		string	country_code;
 		string	email;
 		string	email_changeable;
+		string	ribbons;
 		string	userBirthday;
 		string	userBirthdayAccess;
 		string	userAppliedVacanciesRender;
@@ -842,6 +843,7 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 							  "\"last_onlineSecondsSinceY2k\": \""  + userLastOnlineSecondSinceY2k + "\","
 							  "\"userFriendship\": \""				+ userFriendship + "\","
 							  "\"avatar\": \""						+ avatarPath + "\","
+							  "\"ribbons\": ["						+ GetUserRibbons_InJSONFormat("SELECT * FROM `users_ribbons WHERE `id` IN (" + Get_UserRibbonsIDByUserID_sqlquery(userID) + ");", db) + "],"
 							  "\"currentEmployment\": "				+ userCurrentEmployment + ", "
 							  "\"currentCity\": \""					+ userCurrentCity + "\", "
 							  "\"numberUnreadMessages\": \""		+ numberUreadMessages + "\", "
@@ -1365,6 +1367,129 @@ auto amISubscribedToGroup(string group_id, CMysql *db, CUser *user) -> bool
 	else
 	{
 		MESSAGE_ERROR("", "", "user or db parameter is null");
+	}
+
+	MESSAGE_DEBUG("", "", "finish");
+
+	return result;
+}
+
+auto GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string
+{
+	struct ItemClass 
+	{
+		string	id;
+		string	user_id;
+		string	ribbon_id;
+		string	received_timestamp;
+	};
+
+	vector<ItemClass>		itemList;
+
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	result = ""s;
+
+	if(db)
+	{
+		if(query.length())
+		{
+			auto	affected = db->Query(query);
+
+			for(auto i = 0; i < affected; ++i)
+			{
+				ItemClass	item;
+
+				item.id = db->Get(i, "id");
+				item.user_id = db->Get(i, "user_id");
+				item.ribbon_id = db->Get(i, "ribbon_id");
+				item.received_timestamp = db->Get(i, "received_timestamp");
+
+				itemList.push_back(item);
+			}
+
+
+			for(auto i = 0u; i < itemList.size(); i++)
+			{
+					if(result.length()) result += ", ";
+
+					result += "{";
+					result += "\"id\": \""				  	+ itemList[i].id + "\",";
+					result += "\"user_id\": \""				+ itemList[i].user_id + "\",";
+					result += "\"ribbon\": {"				+ GetRibbons_InJSONFormat("SELECT * FROM `ribbons` WHERE `id` IN (" + itemList[i].ribbon_id + ");", db) + "},";
+					result += "\"received_timestamp\": \""	+ itemList[i].received_timestamp + "\"";
+					result += "}";
+			}
+
+		}
+		else
+		{
+			MESSAGE_ERROR("", "", gettext("mandatory parameter missed"));
+		}
+	}
+	else
+	{
+		MESSAGE_ERROR("", "", gettext("SQL syntax error"));
+	}
+
+	MESSAGE_DEBUG("", "", "finish");
+
+	return result;
+}
+
+auto GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string
+{
+	struct ItemClass 
+	{
+		string	id;
+		string	title;
+		string	image;
+	};
+
+	vector<ItemClass>		itemList;
+
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	result = ""s;
+
+	if(db)
+	{
+		if(query.length())
+		{
+			auto	affected = db->Query(query);
+
+			for(auto i = 0; i < affected; ++i)
+			{
+				ItemClass	item;
+
+				item.id = db->Get(i, "id");
+				item.title = db->Get(i, "title");
+				item.image = db->Get(i, "image");
+
+				itemList.push_back(item);
+			}
+
+
+			for(auto i = 0u; i < itemList.size(); i++)
+			{
+					if(result.length()) result += ", ";
+
+					result += "{";
+					result += "\"id\": \""				  	+ itemList[i].id + "\",";
+					result += "\"title\": \""				+ itemList[i].title + "\",";
+					result += "\"image\": \""				+ itemList[i].image + "\"";
+					result += "}";
+			}
+
+		}
+		else
+		{
+			MESSAGE_ERROR("", "", gettext("mandatory parameter missed"));
+		}
+	}
+	else
+	{
+		MESSAGE_ERROR("", "", gettext("SQL syntax error"));
 	}
 
 	MESSAGE_DEBUG("", "", "finish");

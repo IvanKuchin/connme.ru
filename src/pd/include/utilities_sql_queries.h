@@ -65,6 +65,12 @@ inline auto Get_MaxOrderByImageID_sqlquery(const string &id)
 		);
 }
 
+inline auto Get_UserRibbonsIDByUserID_sqlquery(const string &id)
+{
+	return (
+				"SELECT `ribbon_id` FROM `users_ribbons` WHERE `user_id` IN (" + id + ")"
+		);
+}
 
 
 #endif

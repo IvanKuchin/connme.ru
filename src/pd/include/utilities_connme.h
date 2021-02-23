@@ -26,6 +26,9 @@ auto 			GetCourseListInJSONFormat(string dbQuery, CMysql *, bool includeStudents
 auto 			GetSkillListInJSONFormat(string user_id, CMysql *) -> string;
 auto 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
 auto 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
+auto			GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string;
+auto 			GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string;
+
 
 auto			GetCompanyPositionIDByTitle(string title, CMysql *) -> string;
 auto			GetLanguageIDByTitle(string title, CMysql *) -> string;
