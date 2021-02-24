@@ -1019,12 +1019,15 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			{
 				messageSrcObject = "\"type\":\"" + itemsList[i].src_type + "\",\"id\":\"" + itemsList[i].src_id + "\",\"name\":\"" + db->Get(0, "name") + "\",\"nameLast\":\"" + db->Get(0, "nameLast") + "\",\"sex\":\"" + db->Get(0, "sex") + "\",\"link\":\"\"";
 
+				auto ribbons = GetRibbons_InJSONFormat(Get_RibbonsIDByUserID_DisplayToday_sqlquery(itemsList[i].src_id), db);
+
 				if(db->Query("SELECT * FROM `users_avatars` WHERE `userid`='" + itemsList[i].src_id + "' and `isActive`='1';"))
 					srcAvatarPath = "/images/avatars/avatars" + string(db->Get(0, "folder")) + "/" + string(db->Get(0, "filename"));
 				else
 					srcAvatarPath = "empty";
 
-				messageSrcObject = messageSrcObject + ",\"avatar\":\"" + srcAvatarPath + "\"";
+
+				messageSrcObject = messageSrcObject + ",\"avatar\":\"" + srcAvatarPath + "\",\"ribbons\":[" + ribbons + "]";
 			}
 			else
 			{

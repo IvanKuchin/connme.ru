@@ -255,10 +255,7 @@ string GetOpenVacanciesInJSONFormat(string dbQuery, CMysql *db, CUser *user/* = 
 
 	result = ostResult.str();
 
-	{
-		MESSAGE_DEBUG("", "", "end (returning string length " + to_string(result.length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "end (returning string length " + to_string(result.length()) + ")");
 
 	return result;
 }
-

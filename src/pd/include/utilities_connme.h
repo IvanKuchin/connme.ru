@@ -28,6 +28,7 @@ auto 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStud
 auto 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
 auto			GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string;
 auto 			GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string;
+auto 			AttachRibbon(const string &feed_id, CMysql *db, CUser *user) -> string;
 
 
 auto			GetCompanyPositionIDByTitle(string title, CMysql *) -> string;

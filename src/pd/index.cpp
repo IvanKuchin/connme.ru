@@ -5189,9 +5189,17 @@ int main()
 																);
 						if(feed_messageID)
 						{
-							if(db.InsertQuery("INSERT INTO `feed` (`title`, `dstType`, `dstID`, `srcType`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + newsFeedMessageDstType + "\",\"" + newsFeedMessageDstID + "\",\"" + newsFeedMessageSrcType + "\",\"" + newsFeedMessageSrcID + "\", \"11\", " + to_string(feed_messageID) + ", NOW());"))
+							auto	feed_id = db.InsertQuery("INSERT INTO `feed` (`title`, `dstType`, `dstID`, `srcType`, `userId`, `actionTypeId`, `actionId`, `eventTimestamp`) values(\"\",\"" + newsFeedMessageDstType + "\",\"" + newsFeedMessageDstID + "\",\"" + newsFeedMessageSrcType + "\",\"" + newsFeedMessageSrcID + "\", \"11\", " + to_string(feed_messageID) + ", NOW());");
+							if(feed_id)
 							{
 								// --- message has been posted
+
+								// --- attach ribbon
+								error_message = AttachRibbon(to_string(feed_id), &db, &user);
+								if(error_message.length())
+								{
+									MESSAGE_ERROR("", action, error_message);
+								}
 							}
 							else
 							{

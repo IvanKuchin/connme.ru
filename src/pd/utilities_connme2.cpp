@@ -1407,7 +1407,6 @@ auto GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 				item.user_id = db->Get(i, "user_id");
 				item.ribbon_id = db->Get(i, "ribbon_id");
 				item.received_timestamp = db->Get(i, "received_timestamp");
-				// item.condition_title = db->Get(i, "condition_title");
 
 				itemList.push_back(item);
 			}
@@ -1447,6 +1446,8 @@ auto GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 		string	id;
 		string	title;
 		string	image;
+		string	display_period_start;
+		string	display_period_end;
 	};
 
 	vector<ItemClass>		itemList;
@@ -1468,6 +1469,8 @@ auto GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 				item.id = db->Get(i, "id");
 				item.title = db->Get(i, "title");
 				item.image = db->Get(i, "image");
+				item.display_period_start = db->Get(i, "display_period_start");
+				item.display_period_end = db->Get(i, "display_period_end");
 
 				itemList.push_back(item);
 			}
@@ -1480,7 +1483,9 @@ auto GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 					result += "{";
 					result += "\"id\": \""				  	+ itemList[i].id + "\",";
 					result += "\"title\": \""				+ itemList[i].title + "\",";
-					result += "\"image\": \""				+ itemList[i].image + "\"";
+					result += "\"image\": \""				+ RIBBON_URL_FOLDER + itemList[i].image + "\",";
+					result += "\"display_period_start\": \""+ itemList[i].display_period_start + "\",";
+					result += "\"display_period_end\": \""	+ itemList[i].display_period_end + "\"";
 					result += "}";
 			}
 
@@ -1498,4 +1503,61 @@ auto GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string
 	MESSAGE_DEBUG("", "", "finish");
 
 	return result;
+}
+
+static auto __AreActiveRibbons(const string &message_title, CMysql *db, CUser *user)
+{
+	return GetValuesFromDB(	Get_ActiveRibbonsIDToday_sqlquery() + 
+							" AND "
+							"(`id` NOT IN(" + Get_UserRibbonsIDByUserID_sqlquery(user->GetID()) + "))"
+							" AND "
+							"LOCATE(`condition_title`, \"" + message_title + "\")>0"
+							, db);
+}
+
+static auto __PinRibbonsToAvatar(const vector<string> &ribbons, CMysql *db, CUser *user)
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	error_message = ""s;
+
+	for(auto &ribbon_id: ribbons)
+	{
+		auto	user_ribbon_id = db->InsertQuery("INSERT INTO `users_ribbons` (`user_id`, `ribbon_id`, `received_timestamp`) VALUES (" + user->GetID() + ", " + ribbon_id + ", UNIX_TIMESTAMP());");
+	}
+
+
+	MESSAGE_DEBUG("", "", "finish");
+
+	return error_message;
+}
+
+auto AttachRibbon(const string &feed_id, CMysql *db, CUser *user) -> string
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	error_message = ""s;
+	auto	message_title = GetValueFromDB("SELECT `title` FROM `feed_message` WHERE `id` IN (" + Get_MessageIDByFeedID_sqlquery(feed_id) + ");", db);
+
+	if(message_title.length())
+	{
+		auto	ribbons = __AreActiveRibbons(message_title, db, user);
+
+		if(ribbons.size())
+		{
+			error_message = __PinRibbonsToAvatar(ribbons, db, user);
+		}
+		else
+		{
+			MESSAGE_DEBUG("", "", "no ribbons to pin");
+		}
+	}
+	else
+	{
+		MESSAGE_DEBUG("", "", "message title is empty");
+	}
+
+	MESSAGE_DEBUG("", "", "finish (error_message: " + error_message + ")");
+
+	return error_message;
 }

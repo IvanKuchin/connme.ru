@@ -56,6 +56,13 @@ inline auto Get_MessageIDByImageID_sqlquery(const string &id)
 		);
 }
 
+inline auto Get_MessageIDByFeedID_sqlquery(const string &id)
+{
+	return (
+				"SELECT `actionId` FROM `feed` WHERE `id` IN (" + id + ") AND `actionTypeId`=\"11\""
+		);
+}
+
 inline auto Get_OrderByImageID_sqlquery(const string &id)
 {
 	return (
@@ -76,6 +83,28 @@ inline auto Get_UserRibbonsIDByUserID_sqlquery(const string &id)
 {
 	return (
 				"SELECT `ribbon_id` FROM `users_ribbons` WHERE `user_id` IN (" + id + ")"
+		);
+}
+
+inline auto Get_RibbonsIDByUserID_DisplayToday_sqlquery(const string &id)
+{
+	return (
+				"SELECT * FROM `ribbons` WHERE `id` IN "
+				"(" + Get_UserRibbonsIDByUserID_sqlquery(id) + ")"
+				"AND"
+				"("
+				"	(`ribbons`.`display_period_start` <= DATE(NOW())) AND (DATE(NOW()) <= `ribbons`.`display_period_end`)"
+				")"
+		);
+}
+
+inline auto Get_ActiveRibbonsIDToday_sqlquery()
+{
+	return (
+				"SELECT `id` FROM `ribbons` WHERE "
+				"("
+				"	(`ribbons`.`receive_period_start` <= DATE(NOW())) AND (DATE(NOW()) <= `ribbons`.`receive_period_end`)"
+				")"s
 		);
 }
 
