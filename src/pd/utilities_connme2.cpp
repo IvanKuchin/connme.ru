@@ -1523,7 +1523,7 @@ static auto __PinRibbonsToAvatar(const vector<string> &ribbons, CMysql *db, CUse
 
 	for(auto &ribbon_id: ribbons)
 	{
-		auto	user_ribbon_id = db->InsertQuery("INSERT INTO `users_ribbons` (`user_id`, `ribbon_id`, `received_timestamp`) VALUES (" + user->GetID() + ", " + ribbon_id + ", UNIX_TIMESTAMP());");
+		db->InsertQuery("INSERT INTO `users_ribbons` (`user_id`, `ribbon_id`, `received_timestamp`) VALUES (" + user->GetID() + ", " + ribbon_id + ", UNIX_TIMESTAMP());");
 	}
 
 
