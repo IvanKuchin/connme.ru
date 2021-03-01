@@ -7,6 +7,8 @@
 #
 # This currently works probably only for Linux
 
+message(STATUS "looking for libwebsockets")
+
 FIND_PATH ( LIBWEBSOCKETS_INCLUDE_DIR libwebsockets.h
     /usr/local/include
     /usr/include
@@ -19,7 +21,7 @@ FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES websockets
 
 GET_FILENAME_COMPONENT( LIBWEBSOCKETS_LIBRARY_DIR ${LIBWEBSOCKETS_LIBRARIES} PATH )
 
-SET ( LIBWEBSOCKETS_FOUND "NO" )
+SET ( LIBWEBSOCKETS_FOUND OFF )
 IF ( LIBWEBSOCKETS_INCLUDE_DIR )
     IF ( LIBWEBSOCKETS_LIBRARIES )
         SET ( LIBWEBSOCKETS_FOUND "YES" )
@@ -31,3 +33,9 @@ MARK_AS_ADVANCED(
     LIBWEBSOCKETS_INCLUDE_DIR
     LIBWEBSOCKETS_LIBRARIES
 )
+
+IF (LIBWEBSOCKETS_FOUND)
+    message(STATUS "looking for libwebsockets - done")
+else()
+    message(FATAL_ERROR "ERROR: libwebsockets not installed. Clone guthub repo https://github.com/warmcat/libwebsockets.git and build")
+endif()
