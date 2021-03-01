@@ -9,9 +9,9 @@ RUN echo mysql-server mysql-server/root_password password root | debconf-set-sel
 RUN echo mysql-server mysql-server/root_password_again password root | debconf-set-selections
 RUN apt-get update \
         && apt-get install --no-install-recommends --no-install-suggests -y software-properties-common \
-        && add-apt-repository -y ppa:jonathonf/ffmpeg-3 \
+        && add-apt-repository -y ppa:jonathonf/ffmpeg-4 \
         && apt update \
-        && apt-get install --no-install-recommends --no-install-suggests -y graphicsmagick-libmagick-dev-compat libgraphicsmagick++-dev libwebp-dev libmaxminddb-dev ffmpeg git libmysqlclient-dev libssl-dev libavutil-dev libavcodec-dev libavformat-dev libcurl4-openssl-dev build-essential cmake pkg-config mysql-server libhpdf-dev
+        && apt-get install --no-install-recommends --no-install-suggests -y graphicsmagick-libmagick-dev-compat libgraphicsmagick++-dev libwebp-dev libmaxminddb-dev ffmpeg git ca-certificates libmysqlclient-dev libssl-dev libavutil-dev libavcodec-dev libavformat-dev libcurl4-openssl-dev build-essential cmake pkg-config mysql-server libhpdf-dev libarchive-dev
 
 # COPY my_script.sh /root/
 # COPY sql /root/
