@@ -10,11 +10,13 @@
 message(STATUS "looking for libwebsockets")
 
 FIND_PATH ( LIBWEBSOCKETS_INCLUDE_DIR libwebsockets.h
+    /usr/local/share/libwebsockets/include
     /usr/local/include
     /usr/include
 )
 
-FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES libwebsockets.a
+FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES websockets
+    /usr/local/share/libwebsockets/lib
     /usr/local/lib
     /usr/lib
 )

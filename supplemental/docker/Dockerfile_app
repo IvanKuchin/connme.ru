@@ -1,3 +1,23 @@
+FROM ubuntu:xenial as libwebsocket
+
+RUN apt update
+RUN apt install --no-install-recommends --no-install-suggests -y \
+		build-essential \
+		ca-certificates \
+		cmake \
+		git \
+		libssl-dev \
+		pkg-config
+RUN git clone -b v2.2.0 --depth 1 https://github.com/warmcat/libwebsockets.git \
+	&& cd /libwebsockets \
+	&& mkdir build \
+	&& cd build \
+	&& cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
+	&& make -j4 install
+
+
+
+
 FROM ubuntu:xenial
 
 LABEL maintainer="ikuchin"
@@ -5,13 +25,42 @@ LABEL maintainer="ikuchin"
 ENV VERSION   0.1
 
 
-RUN echo mysql-server mysql-server/root_password password root | debconf-set-selections
-RUN echo mysql-server mysql-server/root_password_again password root | debconf-set-selections
-RUN apt-get update \
-        && apt-get install --no-install-recommends --no-install-suggests -y software-properties-common \
+# RUN echo mysql-server mysql-server/root_password password root | debconf-set-selections
+# RUN echo mysql-server mysql-server/root_password_again password root | debconf-set-selections
+
+# following two commands suppose to be reused from cache
+RUN apt update
+RUN apt install --no-install-recommends --no-install-suggests -y \
+		build-essential \
+		ca-certificates \
+		cmake \
+		git \
+		libssl-dev \
+		pkg-config
+
+COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
+
+RUN apt-get install --no-install-recommends --no-install-suggests -y software-properties-common \
         && add-apt-repository -y ppa:jonathonf/ffmpeg-4 \
         && apt update \
-        && apt-get install --no-install-recommends --no-install-suggests -y graphicsmagick-libmagick-dev-compat libgraphicsmagick++-dev libwebp-dev libmaxminddb-dev ffmpeg git ca-certificates libmysqlclient-dev libssl-dev libavutil-dev libavcodec-dev libavformat-dev libcurl4-openssl-dev build-essential cmake pkg-config mysql-server libhpdf-dev libarchive-dev
+        && apt-get install --no-install-recommends --no-install-suggests -y \ 
+	        ffmpeg \
+	        graphicsmagick-libmagick-dev-compat \
+	        libavcodec-dev \
+	        libavformat-dev \
+	        libavutil-dev \
+	        libcurl4-openssl-dev \
+	        libgraphicsmagick++-dev \
+	        libhpdf-dev \
+	        libmaxminddb-dev \
+	        libmysqlclient-dev \
+	        libwebp-dev
+	        # mysql-server
+RUN git clone -b development --depth 1 https://github.com/IvanKuchin/connme.ru.git
+WORKDIR /connme.ru
+RUN mkdir build && cd build && cmake .. # && make -j4 && make install
+
+
 
 # COPY my_script.sh /root/
 # COPY sql /root/
@@ -25,3 +74,4 @@ RUN apt-get update \
 STOPSIGNAL SIGTERM
 
 # CMD ["/root/my_script.sh"]
+

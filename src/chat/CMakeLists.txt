@@ -32,6 +32,10 @@ endmacro()
 include(FindPkgConfig)
 find_package(LibWebSockets REQUIRED)
 
+set(CHAT_EXTERNAL_INCLUDE_DIRECTORIES
+    ${LIBWEBSOCKETS_INCLUDE_DIR}
+    )
+
 set(CHAT_EXTERNAL_LIBS
     ${LIBWEBSOCKETS_LIBRARIES}
     )
@@ -47,6 +51,7 @@ set(PROJECT_CHAT_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/chat/include/
     ${PROJECT_PI_INCLUDE_DIRECTORIES}
     ${PROJECT_PD_INCLUDE_DIRECTORIES}
+    ${CHAT_EXTERNAL_INCLUDE_DIRECTORIES}
     )
 
 # ---- list of independent libraries
