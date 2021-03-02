@@ -88,6 +88,14 @@ macro(__add_executable_4libs target_executable include_directories lib_list1 lib
     target_link_libraries       (${target_executable}    ${lib_list1} ${lib_list2} ${lib_list3} ${lib_list4})
 endmacro()
 
+macro(__add_executable_5libs target_executable include_directories lib_list1 lib_list2 lib_list3 lib_list4 lib_list5)
+    string(REGEX REPLACE "(^.*/|\\.[^.]*$)" "" file_without_ext ${target_executable})
+
+    add_executable              (${target_executable}    ${file_without_ext}.cpp)
+    target_include_directories  (${target_executable}    PRIVATE ${include_directories})
+    target_link_libraries       (${target_executable}    ${lib_list1} ${lib_list2} ${lib_list3} ${lib_list4} ${lib_list5})
+endmacro()
+
 # --- MACROSes finish ---
 
 
@@ -97,7 +105,6 @@ include(FindPkgConfig)
 pkg_check_modules(LIBMYSQLCLIENT REQUIRED mysqlclient)
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
-find_package(LibWebSockets REQUIRED)
 #find_package(Libhpdf REQUIRED)
 #find_package(Libarchive REQUIRED)
 #find_package(Libxl REQUIRED)
@@ -147,7 +154,6 @@ set(PROJECT_EXTERNAL_LIBS
     ${MAXMINDDB_LIBRARY}
     ${HPDF_LIBRARY}
     ${ARCHIVE_LIBRARY}
-    ${LIBWEBSOCKETS_LIBRARIES}
     ${XL_LIBRARY}
     )
 
