@@ -651,4 +651,7 @@ xxxxxxxx
 xxxxxxxxxxxx
 yxxx
 ISubscribed
+ofs
+DIRS
+executables
 

@@ -7296,12 +7296,12 @@ int main()
 							ost.str("");
 							ost << "{";
 							ost << "\"result\": \"error\",";
-							ost << "\"description\": \"users_companys.id [" << newsFeedMessageID << "] is not exists\"";
+							ost << "\"description\": \"users_companies.id [" << newsFeedMessageID << "] is not exists\"";
 							ost << "}";
 
 							CLog	log;
 
-							MESSAGE_ERROR("", action, "can't find ID in users_companys table");
+							MESSAGE_ERROR("", action, "can't find ID in users_companies table");
 						}
 					} // --- action == "AJAX_commentOnCompanyInNewsFeed"
 					if(action == "AJAX_commentOnScienceDegreeInNewsFeed")
