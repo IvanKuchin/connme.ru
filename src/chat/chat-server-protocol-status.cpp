@@ -96,10 +96,8 @@ string GetConnectionStatus()
 		}
 		else
 		{
-			{
-				CLog	log(CHAT_LOG_FILE_NAME);
-				log.Write(ERROR, "GetConnectionStatus: ERROR: stuck connection without user assigned, drop it ...");
-			}
+			CLog	log(CHAT_LOG_FILE_NAME);
+			log.Write(ERROR, "GetConnectionStatus: ERROR: stuck connection without user assigned, drop it ...");
 		}
 
 		ostResult << (i ? "," : "") << "{\"peer\":\"" << connectionIterator->ip << "\",\"time\":\"" << date << "\"," <<
