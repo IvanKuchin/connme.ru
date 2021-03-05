@@ -1023,7 +1023,8 @@ string GetChatInitialData(struct per_session_data__message *pss, const string ac
 				CLog	log(CHAT_LOG_FILE_NAME);
 				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: query for JSON prepared [", friendsSqlQuery.str(), "]");
 			}
-			userArray = GetUserListInJSONFormat(friendsSqlQuery.str(), &db, pss->user);
+			// userArray = GetUserListInJSONFormat(friendsSqlQuery.str(), &db, pss->user);
+			userArray = GetUsersNameAvatarInJSONFormat(friendsSqlQuery.str(), &db, pss->user);
 
 			// --- get messages for friends users
 			affected = db.Query(friendsSqlQuery.str());

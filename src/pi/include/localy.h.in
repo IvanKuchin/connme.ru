@@ -193,7 +193,7 @@
 #define	CHAT_LOG_FILE_NAME							string(LOGDIR) + DOMAIN_NAME + ".chat"
 #define	CHAT_MAX_PACKET_SIZE						4096
 #define CHAT_PRESENCE_CACHE_LIFETIME				FREQUENCY_ECHO_REQUEST
-#define	CHAT_MESSAGES_PER_PAGE						30
+#define	CHAT_MESSAGES_PER_PAGE						20
 #define	CHAT_MESSAGES_REQUEST_PER_SEC				3
 #define	CHAT_DB_CONNECTION_RESET_TIMEOUT			3600 * 2  // --- timeout in sec, resetting db connection, otherwise MySQL drop connection (show variables like "wait_timeout")
 #define CHAT_IMAGE_NUMBER_OF_FOLDERS				512
