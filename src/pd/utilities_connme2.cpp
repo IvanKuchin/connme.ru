@@ -787,11 +787,11 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 					{
 						for(int j = 0; j < affected1; j++)
 						{
-							ost1 << "{ \
-									\"companyID\": \"" << db->Get(j, "company_id") << "\", \
-									\"company\": \"" << db->Get(j, "company_name") << "\", \
-									\"title\": \"" << db->Get(j, "users_company_position_title") << "\" \
-									}";
+							ost1 << "{"
+									"\"companyID\": \""	<< db->Get(j, "company_id")						<< "\","
+									"\"company\": \""	<< db->Get(j, "company_name")					<< "\","
+									"\"title\": \""		<< db->Get(j, "users_company_position_title")	<< "\""
+									"}";
 							if(j < (affected1 - 1)) ost1 << ", ";
 						}
 					}
@@ -918,7 +918,7 @@ auto GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> string
 		groupsList.reserve(groupCounter);  // --- reserving allows avoid moving vector in memory
 											// --- to fit vector into continuous memory piece
 
-		for(int i = 0; i < affected; i++)
+		for(auto i = 0; i < affected; i++)
 		{
 			ItemClass	group;
 
@@ -936,7 +936,7 @@ auto GetGroupListInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> string
 			groupsList.push_back(group);
 		}
 
-		for(int i = 0; i < groupCounter; i++)
+		for(auto i = 0; i < groupCounter; i++)
 		{
 				auto		numberOfMembers				= GetValueFromDB("SELECT COUNT(*) FROM `users` WHERE `id` IN (" + Get_UserIDByGroupID_sqlquery(groupsList[i].id) + ");", db);
 
@@ -982,24 +982,22 @@ string GetUnreadChatMessagesInJSONFormat(CUser *user, CMysql *db)
 
 	result.str("");
 
-	ost.str("");
-	ost << "select * from `chat_messages` where `toID`='" << user->GetID() << "' and (`messageStatus`='unread' or `messageStatus`='delivered' or `messageStatus`='sent');";
-	affected = db->Query(ost.str());
+	affected = db->Query("select * from `chat_messages` where `toID`='" + user->GetID() + "' and (`messageStatus`='unread' or `messageStatus`='delivered' or `messageStatus`='sent');");
 	if(affected)
 	{
-		for(int i = 0; i < affected; i++)
+		for(auto i = 0; i < affected; i++)
 		{
-			result << (i ? "," : "") << "{\
-				\"id\": \""					<< db->Get(i, "id") << "\", \
-				\"message\": \"" 			<< ReplaceDoubleQuoteToQuote(db->Get(i, "message")) << "\", \
-				\"fromType\": \"" 			<< db->Get(i, "fromType") << "\",\
-				\"fromID\": \""				<< db->Get(i, "fromID") << "\",\
-				\"toType\": \""			 	<< db->Get(i, "toType") << "\",\
-				\"toID\": \""	 			<< db->Get(i, "toID") << "\",\
-				\"messageType\": \""		<< db->Get(i, "messageType") << "\",\
-				\"messageStatus\": \""		<< db->Get(i, "messageStatus") << "\",\
-				\"eventTimestamp\": \""		<< db->Get(i, "eventTimestamp") << "\"\
-			}";
+			result << (i ? "," : "") << "{"
+				"\"id\": \""				<< db->Get(i, "id") << "\", "
+				"\"message\": \"" 			<< ReplaceDoubleQuoteToQuote(db->Get(i, "message")) << "\", "
+				"\"fromType\": \"" 			<< db->Get(i, "fromType") << "\","
+				"\"fromID\": \""			<< db->Get(i, "fromID") << "\","
+				"\"toType\": \""			<< db->Get(i, "toType") << "\","
+				"\"toID\": \""	 			<< db->Get(i, "toID") << "\","
+				"\"messageType\": \""		<< db->Get(i, "messageType") << "\","
+				"\"messageStatus\": \""		<< db->Get(i, "messageStatus") << "\","
+				"\"eventTimestamp\": \""	<< db->Get(i, "eventTimestamp") << "\""
+			"}";
 		}
 	}
 	
@@ -1025,21 +1023,21 @@ string GetChatMessagesInJSONFormat(string dbQuery, CMysql *db)
 	affected = db->Query(dbQuery);
 	if(affected)
 	{
-		for(int i = 0; i < affected; i++)
+		for(auto i = 0; i < affected; i++)
 		{
-			result << (i ? "," : "") << "{\
-				\"id\": \""						<< db->Get(i, "id") << "\", \
-				\"message\": \"" 				<< ReplaceDoubleQuoteToQuote(db->Get(i, "message")) << "\", \
-				\"fromType\": \"" 				<< db->Get(i, "fromType") << "\",\
-				\"fromID\": \""					<< db->Get(i, "fromID") << "\",\
-				\"toType\": \""			 		<< db->Get(i, "toType") << "\",\
-				\"toID\": \""	 				<< db->Get(i, "toID") << "\",\
-				\"messageStatus\": \""		  << db->Get(i, "messageStatus") << "\",\
-				\"messageType\": \""			<< db->Get(i, "messageType") << "\",\
-				\"eventTimestampDelta\": \""	<< GetHumanReadableTimeDifferenceFromNow(db->Get(i, "eventTimestamp")) << "\",\
-				\"secondsSinceY2k\": \""		<< db->Get(i, "secondsSinceY2k") << "\",\
-				\"eventTimestamp\": \""			<< db->Get(i, "eventTimestamp") << "\"\
-			}";
+			result << (i ? "," : "") << "{"
+				"\"id\": \""					<< db->Get(i, "id") << "\", "
+				"\"message\": \"" 				<< ReplaceDoubleQuoteToQuote(db->Get(i, "message")) << "\", "
+				"\"fromType\": \"" 				<< db->Get(i, "fromType") << "\","
+				"\"fromID\": \""				<< db->Get(i, "fromID") << "\","
+				"\"toType\": \""			 	<< db->Get(i, "toType") << "\","
+				"\"toID\": \""	 				<< db->Get(i, "toID") << "\","
+				"\"messageStatus\": \""		 	<< db->Get(i, "messageStatus") << "\","
+				"\"messageType\": \""			<< db->Get(i, "messageType") << "\","
+				"\"eventTimestampDelta\": \""	<< GetHumanReadableTimeDifferenceFromNow(db->Get(i, "eventTimestamp")) << "\","
+				"\"secondsSinceY2k\": \""		<< db->Get(i, "secondsSinceY2k") << "\","
+				"\"eventTimestamp\": \""		<< db->Get(i, "eventTimestamp") << "\""
+			"}";
 		}
 	}
 	
@@ -1190,7 +1188,7 @@ string GetBookRatingList(string bookID, CMysql *db)
 	affected = db->Query("select * from `users_books` where `bookID`=\"" + bookID + "\";");
 	if(affected > 0)
 	{
-		for(int i = 0; i < affected; ++i)
+		for(auto i = 0; i < affected; ++i)
 		{
 			if(i) result += ",";
 			result += db->Get(i, "rating");
@@ -1215,7 +1213,7 @@ string GetCourseRatingList(string courseID, CMysql *db)
 	affected = db->Query("select * from `users_courses` where `track_id`=\"" + courseID + "\";");
 	if(affected > 0)
 	{
-		for(int i = 0; i < affected; ++i)
+		for(auto i = 0; i < affected; ++i)
 		{
 			if(i) result += ",";
 			result += db->Get(i, "rating");
