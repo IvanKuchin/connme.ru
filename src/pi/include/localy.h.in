@@ -82,9 +82,6 @@
 #define	HELPDESK_STATE_CLOSE_PENDING				"close_pending"s
 #define	HELPDESK_STATE_CLOSED						"closed"s
 
-#define HELPDESK_TICKET_CLOSE_PENDING_TIMEOUT		2			// --- in days
-#define HELPDESK_TICKET_CUSTOMER_PENDING_TIMEOUT	7			// --- in days
-
 #define	DEFAULT_LANGUAGE							"ru"
 #define	TEMPLATE_PATH								string(ROOTDIR) + string("/cgi-bin/templates/")
 
