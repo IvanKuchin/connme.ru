@@ -38,6 +38,8 @@ set(CHAT_EXTERNAL_INCLUDE_DIRECTORIES
 
 set(CHAT_EXTERNAL_LIBS
     ${LIBWEBSOCKETS_LIBRARIES}
+    /usr/lib/x86_64-linux-gnu/libz.a    # --- required by libwebsocket.a, doesn't need in case of dynamic linking
+    /usr/lib/x86_64-linux-gnu/libssl.a  # --- required by libwebsocket.a, doesn't need in case of dynamic linking
     )
 
 

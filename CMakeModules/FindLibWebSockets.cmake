@@ -15,7 +15,7 @@ FIND_PATH ( LIBWEBSOCKETS_INCLUDE_DIR libwebsockets.h
     /usr/include
 )
 
-FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES websockets
+FIND_LIBRARY ( LIBWEBSOCKETS_LIBRARIES libwebsockets.a
     /usr/local/share/libwebsockets/lib
     /usr/local/lib
     /usr/lib
