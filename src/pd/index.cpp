@@ -286,14 +286,14 @@ int main()
 	CUser			user;
 	string			action = "";
 	CMysql			db;
-	struct timeval	tv;
+	struct timespec	tv;
 
 	MESSAGE_DEBUG("", action, " " + __FILE__);
 
 	signal(SIGSEGV, crash_handler); 
 
-	gettimeofday(&tv, NULL);
-	srand(tv.tv_sec * tv.tv_usec * 100000);
+	timespec_get(&tv, TIME_UTC);
+	srand(tv.tv_nsec ^ tv.tv_sec);
 
 	try
 	{
@@ -8220,7 +8220,10 @@ int main()
 							{
 								MESSAGE_DEBUG("", action, "" + action + ": switching session (" + sessid + ") FROM Guest to user (" + user.GetLogin() + ")");
 
-								db.Query("UPDATE `sessions` SET `user_id`=\"" + user.GetID() + "\", `ip`=\"" + getenv("REMOTE_ADDR") + "\", `expire`=\"" + (rememberMe == "remember-me" ? "0" : to_string(SESSION_LEN * 60)) + "\" WHERE `id`=\"" + sessid + "\";");
+								// FlawFinder: ignore
+								auto ra = getenv("REMOTE_ADDR");
+
+								db.Query("UPDATE `sessions` SET `user_id`=\"" + user.GetID() + "\", `ip`=\"" + ra + "\", `expire`=\"" + (rememberMe == "remember-me" ? "0" : to_string(SESSION_LEN * 60)) + "\" WHERE `id`=\"" + sessid + "\";");
 
 								if(db.isError())
 								{
