@@ -33,14 +33,12 @@ include(FindPkgConfig)
 find_package(LibWebSockets REQUIRED)
 
 set(CHAT_EXTERNAL_INCLUDE_DIRECTORIES
-    ${LIBWEBSOCKETS_INCLUDE_DIR}
-    )
+    ${LIBWEBSOCKETS_INCLUDE_DIRS}
+)
 
 set(CHAT_EXTERNAL_LIBS
-    ${LIBWEBSOCKETS_LIBRARIES}
-    /usr/lib/x86_64-linux-gnu/libz.a    # --- required by libwebsocket.a, doesn't need in case of dynamic linking
-    /usr/lib/x86_64-linux-gnu/libssl.a  # --- required by libwebsocket.a, doesn't need in case of dynamic linking
-    )
+    ${LIBWEBSOCKETS_STATIC_LIBRARIES}
+)
 
 
 GET_DIRECTORY_PROPERTY  (PROJECT_PD_INCLUDE_DIRECTORIES DIRECTORY ${PROJECT_SOURCE_DIR}/src/pd/ DEFINITION PROJECT_PD_INCLUDE_DIRECTORIES)

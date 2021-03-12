@@ -103,11 +103,14 @@ endmacro()
 include(FindPkgConfig)
 
 pkg_check_modules(LIBMYSQLCLIENT REQUIRED mysqlclient)
+#find_library(LIBMYSQLCLIENT NAMES libmysqlclient.a)
+
 find_package(OpenSSL REQUIRED)
 find_package(CURL REQUIRED)
 #find_package(Libhpdf REQUIRED)
 #find_package(Libarchive REQUIRED)
 #find_package(Libxl REQUIRED)
+
 
 if(IMAGEMAGICK_DISABLE)
     message("Magick++ turned off")
@@ -145,7 +148,7 @@ set(PROJECT_PI_INCLUDE_DIRECTORIES
     )
 
 set(PROJECT_EXTERNAL_LIBS
-    ${LIBMYSQLCLIENT_LIBRARIES}
+    ${LIBMYSQLCLIENT_STATIC_LIBRARIES}
     ${OPENSSL_CRYPTO_LIBRARIES}
     ${IMAGEMAGICK_LIBRARY}
     ${CURL_LIBRARIES}
