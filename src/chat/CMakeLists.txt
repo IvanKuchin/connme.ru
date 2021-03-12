@@ -23,7 +23,7 @@ macro(set_chat_lib_properties target_lib proj_src proj_inc_list proj_lib_list)
     target_include_directories  (${target_lib}      PUBLIC  ${proj_inc_list})
     target_link_libraries       (${target_lib}      ${proj_lib_list})
 
-    set(PROJECT_CHAT_LIBS         ${PROJECT_PD_LIBS}  ${target_lib})
+    set(PROJECT_CHAT_LIBS         ${PROJECT_CHAT_LIBS}  ${target_lib})
 endmacro()
 
 # --- MACROSes finish ---
@@ -31,6 +31,7 @@ endmacro()
 # --- Packages and libraries control
 include(FindPkgConfig)
 find_package(LibWebSockets REQUIRED)
+find_package(LibSSL REQUIRED)
 
 set(CHAT_EXTERNAL_INCLUDE_DIRECTORIES
     ${LIBWEBSOCKETS_INCLUDE_DIRS}
@@ -38,6 +39,7 @@ set(CHAT_EXTERNAL_INCLUDE_DIRECTORIES
 
 set(CHAT_EXTERNAL_LIBS
     ${LIBWEBSOCKETS_STATIC_LIBRARIES}
+    ${LIBSSL_STATIC_LIBRARIES}
 )
 
 
@@ -75,6 +77,7 @@ source_group("Resources"        FILES ${RESOURCES})
 # ---- 2) Normal build link with _all_ libraries (.o), therefore change in any .src trigger re-link for all executables
 foreach(EXECUTABLE_CGI ${EXECUTABLE_CGIs})
     __add_executable_5libs  (${EXECUTABLE_CGI} "${PROJECT_CHAT_INCLUDE_DIRECTORIES}" "${PROJECT_CHAT_LIBS}" "${PROJECT_PD_LIBS}" "${PROJECT_PI_LIBS}" "${CHAT_EXTERNAL_LIBS}" "${PROJECT_EXTERNAL_LIBS}")
+    #__add_executable_4libs  (${EXECUTABLE_CGI} "${PROJECT_CHAT_INCLUDE_DIRECTORIES}" "${PROJECT_CHAT_LIBS}"  "${PROJECT_PI_LIBS}" "${CHAT_EXTERNAL_LIBS}" "${PROJECT_EXTERNAL_LIBS}")
 endforeach()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

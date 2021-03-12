@@ -72,7 +72,6 @@ auto			GetUsersID_BySearchString(const string &lookForKey, bool include_myself, 
 
 auto      		GetGroupListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 
-auto	      	GetChatMessagesInJSONFormat(string dbQuery, CMysql *) -> string;
 auto	      	GetUnreadChatMessagesInJSONFormat(CUser *, CMysql *) -> string;
 
 #endif

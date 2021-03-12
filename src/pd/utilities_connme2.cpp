@@ -1009,46 +1009,6 @@ string GetUnreadChatMessagesInJSONFormat(CUser *user, CMysql *db)
 	return	result.str();
 }
 
-string GetChatMessagesInJSONFormat(string dbQuery, CMysql *db)
-{
-	ostringstream	result, ost;
-	int				affected;
-
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
-	}
-	result.str("");
-
-	affected = db->Query(dbQuery);
-	if(affected)
-	{
-		for(auto i = 0; i < affected; i++)
-		{
-			result << (i ? "," : "") << "{"
-				"\"id\": \""					<< db->Get(i, "id") << "\", "
-				"\"message\": \"" 				<< ReplaceDoubleQuoteToQuote(db->Get(i, "message")) << "\", "
-				"\"fromType\": \"" 				<< db->Get(i, "fromType") << "\","
-				"\"fromID\": \""				<< db->Get(i, "fromID") << "\","
-				"\"toType\": \""			 	<< db->Get(i, "toType") << "\","
-				"\"toID\": \""	 				<< db->Get(i, "toID") << "\","
-				"\"messageStatus\": \""		 	<< db->Get(i, "messageStatus") << "\","
-				"\"messageType\": \""			<< db->Get(i, "messageType") << "\","
-				"\"eventTimestampDelta\": \""	<< GetHumanReadableTimeDifferenceFromNow(db->Get(i, "eventTimestamp")) << "\","
-				"\"secondsSinceY2k\": \""		<< db->Get(i, "secondsSinceY2k") << "\","
-				"\"eventTimestamp\": \""		<< db->Get(i, "eventTimestamp") << "\""
-			"}";
-		}
-	}
-	
-	{
-		CLog	log;
-		log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]: end"));
-	}
-
-	return  result.str();
-}
-
 string GetCompanyPositionIDByTitle(string positionTitle, CMysql *db)
 {
 	ostringstream   ost;
