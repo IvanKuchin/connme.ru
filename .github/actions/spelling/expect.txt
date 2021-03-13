@@ -651,4 +651,10 @@ xxxxxxxx
 xxxxxxxxxxxx
 yxxx
 ISubscribed
-
+ofs
+DIRS
+executables
+timespec
+libssl
+libz
+linux

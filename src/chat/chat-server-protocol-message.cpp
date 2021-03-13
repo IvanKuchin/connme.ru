@@ -791,17 +791,13 @@ bool ReplicateMessageToAllConnectionsSrcUser(CSingleMessage *singleMessage)
 		}
 		else
 		{
-			{
-				CLog			log(CHAT_LOG_FILE_NAME);
-				struct timeval	stm;
-				ostringstream	ost;
+			CLog			log(CHAT_LOG_FILE_NAME);
+			string			remote_ip = getenv("REMOTE_ADDR");
+			struct timeval	stm;
 
-				gettimeofday(&stm, NULL);
-				ost.str("");
-				ost << __func__ << "[" << __LINE__ << "]: ERROR: cnx (cnx lifetime = " << to_string(stm.tv_sec - connectionIterator->tv_established.tv_sec) << " sec.) without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped ...";
+			gettimeofday(&stm, NULL);
 
-				log.Write(ERROR, ost.str());
-			}
+			log.Write(ERROR, "cnx without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped (lifetime " + to_string(stm.tv_sec - connectionIterator->tv_established.tv_sec) + " sec, IP " + remote_ip + ")");
 		} // --- if(connectionIterator->user)
 
 		connectionIterator = connectionIterator->nextConnection;
@@ -864,17 +860,13 @@ bool ReplicateMessageToAllConnectionsDstUser(CSingleMessage *singleMessage)
 		}
 		else
 		{
-			{
-				CLog			log(CHAT_LOG_FILE_NAME);
-				struct timeval	stm;
-				ostringstream	ost;
+			CLog			log(CHAT_LOG_FILE_NAME);
+			string			remote_ip = getenv("REMOTE_ADDR");
+			struct timeval	stm;
 
-				gettimeofday(&stm, NULL);
-				ost.str("");
-				ost << __func__ << "[" << __LINE__ << "]: ERROR: cnx (cnx lifetime = " << to_string(stm.tv_sec - connectionIterator->tv_established.tv_sec) << " sec.) without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped ...";
+			gettimeofday(&stm, NULL);
 
-				log.Write(ERROR, ost.str());
-			}
+			log.Write(ERROR, "cnx without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped (lifetime " + to_string(stm.tv_sec - connectionIterator->tv_established.tv_sec) + " sec, IP " + remote_ip + ")");
 		} // --- if(connectionIterator->user)
 
 		connectionIterator = connectionIterator->nextConnection;
@@ -948,6 +940,46 @@ string SubmitMessageToDB(string toType, string toID, string fromType, string fro
 	}
 
 	return result;
+}
+
+auto GetChatMessagesInJSONFormat(string dbQuery, CMysql *db)
+{
+	{
+		CLog	log(CHAT_LOG_FILE_NAME);
+		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: start");
+	}
+
+	ostringstream	result, ost;
+	auto			affected = db->Query(dbQuery);
+
+	result.str("");
+
+	if(affected)
+	{
+		for(auto i = 0; i < affected; i++)
+		{
+			result << (i ? "," : "") << "{"
+				"\"id\": \""					<< db->Get(i, "id") << "\", "
+				"\"message\": \"" 				<< ReplaceDoubleQuoteToQuote(db->Get(i, "message")) << "\", "
+				"\"fromType\": \"" 				<< db->Get(i, "fromType") << "\","
+				"\"fromID\": \""				<< db->Get(i, "fromID") << "\","
+				"\"toType\": \""			 	<< db->Get(i, "toType") << "\","
+				"\"toID\": \""	 				<< db->Get(i, "toID") << "\","
+				"\"messageStatus\": \""		 	<< db->Get(i, "messageStatus") << "\","
+				"\"messageType\": \""			<< db->Get(i, "messageType") << "\","
+				"\"eventTimestampDelta\": \""	<< GetHumanReadableTimeDifferenceFromNow(db->Get(i, "eventTimestamp")) << "\","
+				"\"secondsSinceY2k\": \""		<< db->Get(i, "secondsSinceY2k") << "\","
+				"\"eventTimestamp\": \""		<< db->Get(i, "eventTimestamp") << "\""
+			"}";
+		}
+	}
+	
+	{
+		CLog	log(CHAT_LOG_FILE_NAME);
+		log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]: end"));
+	}
+
+	return  result.str();
 }
 
 string GetChatInitialData(struct per_session_data__message *pss, const string activeUserID)
@@ -1031,7 +1063,8 @@ string GetChatInitialData(struct per_session_data__message *pss, const string ac
 				CLog	log(CHAT_LOG_FILE_NAME);
 				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: query for JSON prepared [", friendsSqlQuery.str(), "]");
 			}
-			userArray = GetUserListInJSONFormat(friendsSqlQuery.str(), &db, pss->user);
+			// userArray = GetUserListInJSONFormat(friendsSqlQuery.str(), &db, pss->user);
+			userArray = GetUsersNameAvatarInJSONFormat(friendsSqlQuery.str(), &db, pss->user);
 
 			// --- get messages for friends users
 			affected = db.Query(friendsSqlQuery.str());
@@ -1141,17 +1174,13 @@ string GetChatInitialData(struct per_session_data__message *pss, const string ac
 	}
 	else
 	{
-		{
-				CLog			log(CHAT_LOG_FILE_NAME);
-				struct timeval	stm;
-				ostringstream	ost;
+		CLog			log(CHAT_LOG_FILE_NAME);
+		string			remote_ip = getenv("REMOTE_ADDR");
+		struct timeval	stm;
 
-				gettimeofday(&stm, NULL);
-				ost.str("");
-				ost << __func__ << "[" << __LINE__ << "]: ERROR: cnx (cnx lifetime = " << to_string(stm.tv_sec - pss->tv_established.tv_sec) << " sec.) without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped ...";
+		gettimeofday(&stm, NULL);
 
-				log.Write(ERROR, ost.str());
-		}
+		log.Write(ERROR, "cnx without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped (lifetime " + to_string(stm.tv_sec - pss->tv_established.tv_sec) + " sec, IP " + remote_ip + ")");
 	} // --- if(connectionIterator->user)
 
 	{
@@ -1161,6 +1190,8 @@ string GetChatInitialData(struct per_session_data__message *pss, const string ac
 
 	return ostFinal.str();
 }
+
+
 
 string GetMessageBlock(string friendID, string minMessageID, struct per_session_data__message *pss)
 {
@@ -1198,17 +1229,13 @@ string GetMessageBlock(string friendID, string minMessageID, struct per_session_
 	}
 	else
 	{
-		{
-				CLog			log(CHAT_LOG_FILE_NAME);
-				struct timeval	stm;
-				ostringstream	ost;
+		CLog			log(CHAT_LOG_FILE_NAME);
+		string			remote_ip = getenv("REMOTE_ADDR");
+		struct timeval	stm;
 
-				gettimeofday(&stm, NULL);
-				ost.str("");
-				ost << __func__ << "[" << __LINE__ << "]: ERROR: cnx (cnx lifetime = " << to_string(stm.tv_sec - pss->tv_established.tv_sec) << " sec.) without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped ...";
+		gettimeofday(&stm, NULL);
 
-				log.Write(ERROR, ost.str());
-		}
+		log.Write(ERROR, "cnx without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped (lifetime " + to_string(stm.tv_sec - pss->tv_established.tv_sec) + " sec, IP " + remote_ip + ")");
 	} // --- if(connectionIterator->user)
 
 
@@ -1292,17 +1319,12 @@ bool ChangeMessageStatusInDB(string messageID, string messageStatus, struct per_
 	}
 	else
 	{
-		{
-				CLog			log(CHAT_LOG_FILE_NAME);
-				struct timeval	stm;
-				ostringstream	ost;
+		CLog			log(CHAT_LOG_FILE_NAME);
+		string			remote_ip = getenv("REMOTE_ADDR");
+		struct timeval	stm;
 
-				gettimeofday(&stm, NULL);
-				ost.str("");
-				ost << __func__ << "[" << __LINE__ << "]: ERROR: cnx (cnx lifetime = " << to_string(stm.tv_sec - pss->tv_established.tv_sec) << " sec.) without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped ...";
-
-				log.Write(ERROR, ost.str());
-		}
+		gettimeofday(&stm, NULL);
+		log.Write(ERROR, "cnx without user assigned, might be user do not OpenSession yet, if cnx will be alive long it must be dropped (lifetime " + to_string(stm.tv_sec - pss->tv_established.tv_sec) + " sec, IP " + remote_ip + ")");
 	} // --- if(connectionIterator->user)
 
 	{

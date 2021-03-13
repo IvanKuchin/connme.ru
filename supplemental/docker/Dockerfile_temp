@@ -1,0 +1,10 @@
+FROM ubuntu:xenial
+
+LABEL maintainer="ikuchin"
+
+ENV VERSION   0.1
+
+RUN  echo "123" > /123
+
+# CMD ["/root/my_script.sh"]
+

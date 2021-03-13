@@ -286,14 +286,14 @@ int main()
 	CUser			user;
 	string			action = "";
 	CMysql			db;
-	struct timeval	tv;
+	struct timespec	tv;
 
 	MESSAGE_DEBUG("", action, " " + __FILE__);
 
 	signal(SIGSEGV, crash_handler); 
 
-	gettimeofday(&tv, NULL);
-	srand(tv.tv_sec * tv.tv_usec * 100000);
+	timespec_get(&tv, TIME_UTC);
+	srand(tv.tv_nsec ^ tv.tv_sec);
 
 	try
 	{
@@ -4246,7 +4246,7 @@ int main()
 				throw CException("Template file was missing");
 			}
 		}
-
+/*
 		if(action == "JSON_chatGetInitialData")
 		{
 			ostringstream	ost, ostFinal, friendsSqlQuery, chatMessageQuery;
@@ -4262,32 +4262,13 @@ int main()
 			}
 			else
 			{
-				int				affected;
+				auto			friends_id = GetValuesFromDB("SELECT `friendID` FROM `users_friends` WHERE `userID`='" + user.GetID() + "';", &db);
 
-				friendsSqlQuery.str("");
-				ost.str("");
-				ost << "SELECT `friendID` FROM `users_friends` WHERE `userID`='" << user.GetID() << "';";
-				affected = db.Query(ost.str());
-				if(affected)
+				if(friends_id.size())
 				{
-					friendsSqlQuery << "SELECT * FROM `users` WHERE `isActivated`='Y' and `isblocked`='N' and `id` IN (";
-					for(auto i = 0; i < affected; i++)
-					{
-						friendsSqlQuery << (i > 0 ? ", " : "") << db.Get(i, "friendID");
-					}
-					friendsSqlQuery << ");";
-
-					{
-						MESSAGE_DEBUG("", action, "query for JSON prepared [" + friendsSqlQuery.str() + "]");
-					}
-
-					userArray = GetUserListInJSONFormat(friendsSqlQuery.str(), &db, &user);
-
-					chatMessageQuery.str("");
-					chatMessageQuery << "SELECT * FROM `chat_messages` WHERE `toID`='" << user.GetID() << "' or `fromID`='" << user.GetID() << "';";
-					messageArray = GetChatMessagesInJSONFormat(chatMessageQuery.str(), &db);
+					userArray = GetUserListInJSONFormat("SELECT * FROM `users` WHERE `isActivated`='Y' and `isblocked`='N' and `id` IN (" + join(friends_id, ",") + ");", &db, &user);
+					messageArray = GetChatMessagesInJSONFormat("SELECT * FROM `chat_messages` WHERE `toID`='" + user.GetID() + "' or `fromID`='" + user.GetID() + "';", &db);
 				}
-
 
 				ostFinal.str("");
 				ostFinal << "\"result\": \"success\"," << std::endl;
@@ -4306,7 +4287,7 @@ int main()
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
-
+*/
 
 		// --- JSON avatar list
 		if(action == "JSON_getAvatarList") 
@@ -4504,7 +4485,7 @@ int main()
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
-
+/*
 		if(action == "AJAX_chatPostMessage")
 		{
 			ostringstream	ost, ostFinal;
@@ -4639,7 +4620,7 @@ int main()
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
-
+*/
 		if(action == "AJAX_chatMarkMessageReadByMessageID")
 		{
 			ostringstream	ost, ostFinal;
@@ -7296,12 +7277,12 @@ int main()
 							ost.str("");
 							ost << "{";
 							ost << "\"result\": \"error\",";
-							ost << "\"description\": \"users_companys.id [" << newsFeedMessageID << "] is not exists\"";
+							ost << "\"description\": \"users_companies.id [" << newsFeedMessageID << "] is not exists\"";
 							ost << "}";
 
 							CLog	log;
 
-							MESSAGE_ERROR("", action, "can't find ID in users_companys table");
+							MESSAGE_ERROR("", action, "can't find ID in users_companies table");
 						}
 					} // --- action == "AJAX_commentOnCompanyInNewsFeed"
 					if(action == "AJAX_commentOnScienceDegreeInNewsFeed")
@@ -8220,7 +8201,10 @@ int main()
 							{
 								MESSAGE_DEBUG("", action, "" + action + ": switching session (" + sessid + ") FROM Guest to user (" + user.GetLogin() + ")");
 
-								db.Query("UPDATE `sessions` SET `user_id`=\"" + user.GetID() + "\", `ip`=\"" + getenv("REMOTE_ADDR") + "\", `expire`=\"" + (rememberMe == "remember-me" ? "0" : to_string(SESSION_LEN * 60)) + "\" WHERE `id`=\"" + sessid + "\";");
+								// FlawFinder: ignore
+								auto ra = getenv("REMOTE_ADDR");
+
+								db.Query("UPDATE `sessions` SET `user_id`=\"" + user.GetID() + "\", `ip`=\"" + ra + "\", `expire`=\"" + (rememberMe == "remember-me" ? "0" : to_string(SESSION_LEN * 60)) + "\" WHERE `id`=\"" + sessid + "\";");
 
 								if(db.isError())
 								{
