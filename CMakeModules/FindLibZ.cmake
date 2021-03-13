@@ -56,7 +56,7 @@ IF ( LIBZ_INCLUDE_DIRS )
     ENDIF ()
 ELSE ()
     message(STATUS "include dirs not found")
-ENDIF ( LIBZ_INCLUDE_DIRS )
+ENDIF ()
 
 MARK_AS_ADVANCED(
     LIBZ_LIBRARY_DIRS

@@ -105,7 +105,9 @@ include(FindPkgConfig)
 pkg_check_modules(LIBMYSQLCLIENT REQUIRED mysqlclient)
 #find_library(LIBMYSQLCLIENT NAMES libmysqlclient.a)
 
-find_package(OpenSSL REQUIRED)
+#find_package(OpenSSL REQUIRED)
+find_package(LibSSL REQUIRED)
+
 find_package(CURL REQUIRED)
 #find_package(Libhpdf REQUIRED)
 #find_package(Libarchive REQUIRED)
@@ -116,29 +118,29 @@ if(IMAGEMAGICK_DISABLE)
     message("Magick++ turned off")
 else(IMAGEMAGICK_DISABLE)
 #    find_package(ImageMagick COMPONENTS Magick++)
-    find_package(ImageMagick REQUIRED)
+    find_package(LibImageMagick REQUIRED)
 endif(IMAGEMAGICK_DISABLE)
 
 if(FFPMPEG_DISABLE)
     message("Videoconverter/ffmpeg turned off")
 else(FFPMPEG_DISABLE)
-    find_package(avutil REQUIRED)
-    find_package(avcodec REQUIRED)
-    find_package(avformat REQUIRED)
+    find_package(LibAVUtil REQUIRED)
+    find_package(LibAVCodec REQUIRED)
+    find_package(LibAVFormat REQUIRED)
 endif(FFPMPEG_DISABLE)
 
 if(MAXMIND_DISABLE)
     message("GeoIP turned off")
 else(MAXMIND_DISABLE)
-    find_package(maxminddb REQUIRED)
+    find_package(LibMaxMindDB REQUIRED)
 endif(MAXMIND_DISABLE)
 
 set(PROJECT_PI_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/pi/include/
     ${PROJECT_BINARY_DIR}/src/pi/include/       # --- rendered config.h, generated table.h
     ${LIBMYSQLCLIENT_INCLUDE_DIRS}
-    ${OPENSSL_INCLUDE_DIR}
-    ${IMAGEMAGICK_INCLUDE_DIR}
+    ${LIBSSL_STATIC_INCLUDE_DIR}
+    ${IMAGEMAGICK_STATIC_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
     ${AVUTIL_INCLUDE_DIR}
     ${AVFORMAT_INCLUDE_DIR}
@@ -149,8 +151,13 @@ set(PROJECT_PI_INCLUDE_DIRECTORIES
 
 set(PROJECT_EXTERNAL_LIBS
     ${LIBMYSQLCLIENT_STATIC_LIBRARIES}
-    ${OPENSSL_CRYPTO_LIBRARIES}
+    
+    # ${OPENSSL_STATIC_CRYPTO_LIBRARIES}
+    ${LIBSSL_STATIC_LIBRARIES}
+
     ${IMAGEMAGICK_LIBRARY}
+    #${IMAGEMAGICK++_STATIC_LIBRARY}
+
     ${CURL_LIBRARIES}
     ${AVUTIL_LIBRARY}
     ${AVFORMAT_LIBRARY}

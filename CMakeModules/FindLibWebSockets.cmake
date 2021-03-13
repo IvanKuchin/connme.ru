@@ -10,9 +10,9 @@
 #
 # This works only on Linux
 
-include(FindPkgConfig)
-find_package(LibSSL REQUIRED)
-find_package(LibZ REQUIRED)
+# include(FindPkgConfig)
+# find_package(LibSSL REQUIRED)
+# find_package(LibZ REQUIRED)
 
 message(STATUS "looking for libwebsockets")
 
@@ -68,7 +68,7 @@ IF ( LIBWEBSOCKETS_INCLUDE_DIRS )
     ENDIF ()
 ELSE ()
     message(STATUS "include dirs not found")
-ENDIF ( LIBWEBSOCKETS_INCLUDE_DIRS )
+ENDIF ()
 
 IF (LIBWEBSOCKETS_FOUND)
     message(STATUS "looking for libwebsockets - done")

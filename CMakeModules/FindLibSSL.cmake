@@ -58,7 +58,7 @@ IF ( LIBSSL_INCLUDE_DIRS )
     ENDIF ()
 ELSE ()
     message(STATUS "include dirs not found")
-ENDIF ( LIBSSL_INCLUDE_DIRS )
+ENDIF ()
 
 MARK_AS_ADVANCED(
     LIBSSL_LIBRARY_DIRS
