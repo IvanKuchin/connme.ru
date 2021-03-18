@@ -1,9 +1,5 @@
 name-template: 'v$RESOLVED_VERSION'
 tag-template: 'v$RESOLVED_VERSION'
-template: |
-  # Changelog ...
-  $CHANGES
-  See details of [all code changes](https://github.com/ivankuchin/connme.ru/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION) since previous release
 categories:
   - title: '🚀 Features'
     labels:
@@ -40,3 +36,23 @@ version-resolver:
       - 'documentation'
       - 'code refinement'
   default: patch
+autolabeler:
+  - label: 'breaking'
+    title:
+      - '/breaking/i'
+  - label: 'enhancement'
+    title:
+      - '/enhancement/i'
+      - '/feature/i'
+  - label: 'bugfix'
+    title:
+      - '/fix/i'
+      - '/bug/i'
+  - label: 'infrastructure'
+    title:
+      - '/infrastructure/i'
+      - '/documentation/i'
+      - '/code refinement/i'
+template: |
+  # Changelog ...
+  $CHANGES
