@@ -22,7 +22,6 @@
 #include "cmail.h"
 #include "cstatistics.h"
 #include "cvideoconverter.h"
-#include "utilities.h"
 #include "utilities_common.h"
 
 #define	MESSAGE_HAVENO_MEDIA			1

@@ -13,18 +13,17 @@ using namespace std;
 class CFile
 {
 	private:
-		char*		content;
-		int			length;
-		string		name;
+		char*		content = NULL;
+		int			length = 0;
+		string		name = "";
 	public:
-					CFile();
-	
-		string		GetName();
-		int			GetSize();
-		char*		GetContent();
+		string		GetName()		const			{ return name; }
+		int			GetSize()		const			{ return length; }
+		char*		GetContent()	const			{ return content; }
 
-		void		SetName(string n);
-		void		SetSize(int s);
+		void		SetName(const string &n)		{ name = n; }
+		void		SetName(string &&n) noexcept	{ name = move(n); }
+		void		SetSize(int s)					{ length = s; }
 		void		SetContent(char *c);
 		void		Set(string n, char* c, int s);
 
@@ -38,8 +37,6 @@ class CFiles
 	private:
 		vector<CFile *>	files;
 	public:
-					CFiles();
-
 		bool		Add(string name, char *content, int size);
 		string		GetName(int i);
 		char*		Get(int i);
