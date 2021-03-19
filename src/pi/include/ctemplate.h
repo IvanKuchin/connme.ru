@@ -12,21 +12,19 @@ class CTemplate
 {
 	private:
 		ostringstream	ost;
-		string		fileName;
-		CVars		*vars;
+		string			fileName = "";
+		CVars			*vars = NULL;
 
-		string		RecvLine(FILE *f);
+		string			RecvLine(FILE *f);
 	public:
-				CTemplate();
-				CTemplate(string file);
-				CTemplate(string file, CVars *v);
+						CTemplate();
+						CTemplate(string file);
+						CTemplate(string file, CVars *v);
 
-		void		SetFile(string file);
-		void		SetVars(CVars *v);
+		void			SetFile(string file);
+		void			SetVars(CVars *v);
 
-		string		Render();
-
-				~CTemplate();
+		string			Render();
 };
 
 #endif

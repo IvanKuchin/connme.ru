@@ -15,7 +15,8 @@ class CStatistics
 	public:
 
 				CStatistics();
-		void	SetLogFile(string param) { logFilename = param; };
+		void	SetLogFile(const string &param)				{ logFilename = param; };
+		void	SetLogFile(string &&param)		noexcept	{ logFilename = move(param); };
 				~CStatistics();
 };
 
