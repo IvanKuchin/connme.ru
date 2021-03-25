@@ -1,5 +1,7 @@
 FROM ubuntu:xenial as libwebsocket
 
+LABEL org.opencontainers.image.source=https://github.com/ivankuchin/connme.ru
+
 RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 			build-essential \
 			ca-certificates \
