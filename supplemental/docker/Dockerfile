@@ -27,15 +27,15 @@ RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 
 FROM ubuntu:xenial
 
-LABEL maintainer="ikuchin"
-LABEL org.opencontainers.image.source=https://github.com/ivankuchin/connme.ru
-
+LABEL maintainer="ivan.kuchin@gmail.com"
+LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/__BUILD_REPO__"
+				     
 # following two commands suppose to be reused from cache
 RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates
 
 COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
 
-RUN git clone --depth 1 https://github.com/IvanKuchin/connme.ru.git /backend
+RUN git clone --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__.git /backend
 WORKDIR /backend
 
 RUN apt-get install --no-install-recommends --no-install-suggests -y software-properties-common
@@ -84,4 +84,3 @@ RUN cd build && cmake .. && make -j4 && make install
 STOPSIGNAL SIGTERM
 
 # CMD ["/root/my_script.sh"]
-
