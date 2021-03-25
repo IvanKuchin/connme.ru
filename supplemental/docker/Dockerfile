@@ -37,8 +37,9 @@ LABEL org.opencontainers.image.source=https://github.com/ivankuchin/connme.ru
 RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates
 
 COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
-RUN git clone -b development --depth 1 https://github.com/IvanKuchin/connme.ru.git
-WORKDIR /connme.ru
+
+RUN git clone --depth 1 https://github.com/IvanKuchin/connme.ru.git /backend
+WORKDIR /backend
 
 RUN apt-get install --no-install-recommends --no-install-suggests -y software-properties-common \
         && add-apt-repository -y ppa:jonathonf/ffmpeg-4 \
