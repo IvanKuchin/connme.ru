@@ -35,9 +35,19 @@ ENV VERSION   0.1
 # RUN echo mysql-server mysql-server/root_password password root | debconf-set-selections
 # RUN echo mysql-server mysql-server/root_password_again password root | debconf-set-selections
 
-# following two commands suppose to be reused from cache
-RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates
+RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates locales
 
+##############################
+# install additional locales #
+##############################
+locale-gen en_US.UTF8
+locale-gen ru_RU.UTF8
+update-locale LC_ALL=en_US.UTF8
+source /etc/default/locale
+
+#########################################
+# libwebsocket copy from prev container #
+#########################################
 COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
 RUN git clone -b development --depth 1 https://github.com/IvanKuchin/connme.ru.git
 WORKDIR /connme.ru
