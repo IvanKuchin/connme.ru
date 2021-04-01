@@ -2,6 +2,7 @@
 
 /* message protocol */
 extern	CMysql						db;
+extern	c_config					config;
 extern	double						dbConnectionInitTimestamp;
 extern  CPresenceCache				presenceCache;
 		CChatRequestRatelimiter		requestRatelimiter; 
@@ -1713,7 +1714,7 @@ bool CheckDBConnectionReset()
 		dbConnectionInitTimestamp = currentTimestamp;
 			
 		db.CloseDB();
-		if(db.Connect() < 0)
+		if(db.Connect(&config) < 0)
 		{
 			result = false;
 			{

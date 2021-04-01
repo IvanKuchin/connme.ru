@@ -2556,13 +2556,13 @@ auto GetHelpdeskBaseUserInfoInJSONFormat(string dbQuery, CMysql *db, CUser *user
 	return result;
 }
 
-auto SendPhoneConfirmationCode(const string &country_code, const string &phone_number, const string &session, CMysql *db, CUser *user) -> string
+auto SendPhoneConfirmationCode(const string &country_code, const string &phone_number, const string &session, c_config * const config, CMysql * const db, CUser * const user) -> string
 {
 	MESSAGE_DEBUG("", "", "start");
 
 	auto	error_message = ""s;
 	auto	confirmation_code = GetRandom(4);
-	c_smsc	smsc(db);
+	c_smsc	smsc(config, db);
 
 	if(country_code.length() && phone_number.length() && session.length())
 	{

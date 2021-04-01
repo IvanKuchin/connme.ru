@@ -4,6 +4,7 @@ int main()
 {
 	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
+	c_config		config(CONFIG_DIR);
 	string			act, id, content;
 	struct timeval	tv;
 
@@ -33,7 +34,7 @@ int main()
 
  
 		CMysql	db;
-		if(db.Connect() < 0)
+		if(db.Connect(&config) < 0)
 		{
 			CLog	log(ADMIN_LOG_FILE_NAME);
 

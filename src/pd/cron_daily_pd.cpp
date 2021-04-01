@@ -515,6 +515,7 @@ auto RemoveYearAgoReminder(CMysql *db)
 int main()
 {
 	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
+	c_config		config(CONFIG_DIR);
 	CMysql			db;
 	struct timeval	tv;
 
@@ -529,7 +530,7 @@ int main()
 	{
 		auto	error_message = ""s;
 
-		if(db.Connect() < 0)
+		if(db.Connect(&config) < 0)
 		{
 			{ MESSAGE_ERROR("", "", "Can not connect to mysql database"); }
 			throw CExceptionHTML("MySql connection");

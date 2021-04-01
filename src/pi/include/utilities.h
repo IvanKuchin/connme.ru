@@ -135,7 +135,7 @@ auto			GetNumberOfLetters(const wstring &src) -> unsigned int;
 auto			GetNumberOfLetters(const  string &src) -> unsigned int;
 
 // --- SMS functions
-auto			SendPhoneConfirmationCode(const string &country_code, const string &phone_number, const string &session, CMysql *db, CUser *user) -> string;
+auto			SendPhoneConfirmationCode(const string &country_code, const string &phone_number, const string &session, c_config * const config_dir, CMysql * const db, CUser * const user) -> string;
 auto			CheckPhoneConfirmationCode(const string &confirmation_code, const string &session, CMysql *, CUser *) -> vector<pair<string, string>>;
 auto			RemovePhoneConfirmationCodes(string sessid, CMysql *) -> string;
 

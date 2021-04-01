@@ -24,6 +24,7 @@
 
 CPresenceCache				presenceCache;
 CMysql						db;
+c_config					config(CONFIG_DIR);
 // --- by default MySQL connection expire in 8 hours idle. To avoid SQL connection drop
 // --- dbConnectionLifetime will reset connection each hour
 double						dbConnectionInitTimestamp = GetSecondsSinceY2k(); 
@@ -385,7 +386,7 @@ int main(int argc, char **argv)
 #endif
 
 
-	if(db.Connect() < 0)
+	if(db.Connect(&config) < 0)
 	{
 		CLog	log(CHAT_LOG_FILE_NAME);
 

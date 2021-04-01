@@ -5,6 +5,7 @@ int main()
 	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
 	CUser			user;
+	c_config		config(CONFIG_DIR);
 	string			action, partnerID;
 	CMysql			db;
 	struct timeval	tv;
@@ -32,7 +33,7 @@ int main()
 			throw CException("Template file was missing");
 		}
 
-		if(db.Connect() < 0)
+		if(db.Connect(&config) < 0)
 		{
 			CLog	log;
 

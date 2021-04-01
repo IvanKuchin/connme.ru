@@ -250,6 +250,7 @@ int main()
 	CStatistics		appStat;  // --- CStatistics must be first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
 	CUser			user;
+	c_config		config(CONFIG_DIR);
 	string			action, partnerID, imageTempSet, messageID;
 	string			messageOwnerType = "";
 	string			messageOwnerID = "";
@@ -281,7 +282,7 @@ int main()
 			throw CException("Template file was missing");
 		}
 
-		if(db.Connect() < 0)
+		if(db.Connect(&config) < 0)
 		{
 			MESSAGE_ERROR("", "", "Can not connect to mysql database");
 			throw CExceptionHTML("MySql connection");
@@ -688,7 +689,7 @@ int main()
 												// --- create new DB-connection, due to parent will close the old one
 												CMysql  db1;		
 
-												if(db1.Connect() < 0)
+												if(db1.Connect(&config) < 0)
 												{
 													MESSAGE_ERROR("", "", "Can not connect to mysql database");
 													throw CExceptionHTML("MySql connection");

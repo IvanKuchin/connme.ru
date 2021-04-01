@@ -284,6 +284,7 @@ int main()
 	CStatistics		appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi			indexPage(EXTERNAL_TEMPLATE);
 	CUser			user;
+	c_config		config(CONFIG_DIR);
 	string			action = "";
 	CMysql			db;
 	struct timespec	tv;
@@ -307,7 +308,7 @@ int main()
 			throw CException("Template file was missing");
 		}
 
-		if(db.Connect() < 0)
+		if(db.Connect(&config) < 0)
 		{
 			MESSAGE_ERROR("", action, "Can not connect to mysql database");
 			throw CExceptionHTML("MySql connection");
@@ -3071,7 +3072,7 @@ int main()
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}
 
-			if(db1.Connect() < 0)
+			if(db1.Connect(&config) < 0)
 			{
 				CLog	log;
 		
@@ -4203,7 +4204,7 @@ int main()
 				indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 			}
 
-			if(db1.Connect() < 0)
+			if(db1.Connect(&config) < 0)
 			{
 				CLog	log;
 		
@@ -8183,10 +8184,11 @@ int main()
 						{
 							if((password != user.GetPasswd()) || (user.GetPasswd() == ""))
 							{
-								if(db.Query("SELECT * FROM `users_passwd` WHERE `userID`=\"" + user.GetID() + "\" and `passwd`=\"" + password + "\";"))
+								auto	passwd_change_timestamp = GetValueFromDB("SELECT `eventTimestamp` FROM `users_passwd` WHERE `userID`=" + quoted(user.GetID()) + " AND `eventTimestamp`>(SELECT `eventTimestamp` FROM `users_passwd` WHERE `passwd`=" + quoted(password) + " and `userID`=" + quoted(user.GetID()) + ") ORDER BY `eventTimestamp` ASC LIMIT 0,1", &db);
+								if(passwd_change_timestamp.length())
 								{
 									// --- earlier password is user for user login
-									error_message.push_back(make_pair("description", "этот пароль был изменен " + GetHumanReadableTimeDifferenceFromNow(db.Get(0, "eventTimestamp"))));
+									error_message.push_back(make_pair("description", "этот пароль был изменен " + GetHumanReadableTimeDifferenceFromNow(passwd_change_timestamp)));
 									MESSAGE_DEBUG("", action, "old password has been used for user [" + user.GetLogin() + "] login");
 								}
 								else

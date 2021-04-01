@@ -38,6 +38,7 @@ set(LOCALE_PROJECT_DIR		${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/locale)
 set(GIT_PROJECT_DIR             ${PROJECT_SOURCE_DIR}/supplemental/git)
 set(PDF_FONT_PROJECT_DIR	${PROJECT_SOURCE_DIR}/supplemental/libpdf-font)
 set(LIBXL_PROJECT_DIR		${PROJECT_SOURCE_DIR}/libxl-3.8.4.0/)
+set(CONFIG_PROJECT_DIR		${PROJECT_SOURCE_DIR}/supplemental/config)
 
 # ---- install variables
 set(ROOTDIR			"/home/httpd/${MAIN_DOMAIN_NAME}")
@@ -55,6 +56,7 @@ set(CHAT_INSTALL_DIR		${LOCAL_INSTALL_DIR}/chat)
 set(GIT_INSTALL_DIR             ${LOCAL_INSTALL_DIR}/git)
 set(PDF_FONT_INSTALL_DIR	${LOCAL_INSTALL_DIR}/libpdf-font)
 set(LIBXL_INSTALL_DIR		${LOCAL_INSTALL_DIR}/libxl)
+set(CONFIG_INSTALL_DIR		${LOCAL_INSTALL_DIR}/config)
 
 # ---- libxl library is not in apt-reporsitory, therefore is not installed on the OS
 # ---- to treat it as regular lib I have to copy it to /usr/local/share..... folder
@@ -75,6 +77,7 @@ add_subdirectory(supplemental/maxmind/)
 add_subdirectory(supplemental/ci-scripts/)
 add_subdirectory(supplemental/libpdf-font/)
 add_subdirectory(supplemental/git/)
+add_subdirectory(supplemental/config/)
 add_subdirectory(po/)
 
 # --- Install time

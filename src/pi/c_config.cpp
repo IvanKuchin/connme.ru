@@ -1,6 +1,6 @@
 #include "c_config.h"
 
-tuple<string, string> c_config::ExtractSingleValue(string line, const vector<string> &params)
+tuple<string, string> c_config::ExtractSingleValue(const string &line, const vector<string> &params)
 {
 	MESSAGE_DEBUG("", "", "start");
 
@@ -24,12 +24,12 @@ tuple<string, string> c_config::ExtractSingleValue(string line, const vector<str
 	return result;
 }
 
-map<string, string>	c_config::Read(const vector<string> &params)
+map<string, string>	c_config::Read(const string &file, const vector<string> &params)
 {
 	MESSAGE_DEBUG("", "", "start");
 
 	map<string, string>		result;
-	ifstream				f(config_file);
+	ifstream				f(file);
 
 	if (f.is_open())
 	{
@@ -46,7 +46,7 @@ map<string, string>	c_config::Read(const vector<string> &params)
 	}
 	else
 	{
-		MESSAGE_ERROR("", "", "can't open " + config_file)
+		MESSAGE_ERROR("", "", "can't open " + file)
 	}
 
 	MESSAGE_DEBUG("", "", "finish (result size: " + to_string(result.size()) + ")");
