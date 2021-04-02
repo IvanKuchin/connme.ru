@@ -12,31 +12,38 @@
 
 using namespace std;
 
+class c_config_cache
+{
+	private:
+		map<string, map<string, string>>	content;
+
+	public:
+		void					Add(const string &file, const map<string, string> &file_content) { content[file] = file_content; };
+		bool					IsInCache(const string &file);
+		bool					IsInCache(const string &file, const vector<string> &entry);
+		map<string, string>		Get(const string &file, const vector<string> &entries);
+};
+
 class c_config
 {
-	protected:
+	private:
+		enum state_enum { boundary, multiline_start };
+
 		string					config_folder				=	""s;
 
-		string					secret_file					=	"secret"s;
-		string					number_of_folders_file		=	"number_of_folders"s;
+		c_config_cache			cache;
 
-		tuple<string, string>	ExtractSingleValue(const string &line, const vector<string> &params);
-		map<string, string>		Read(const string &file, const vector<string> &params);
+		tuple<string, string>	ExtractSingleValue(const string &line);
+		string					RemoveComment(string line);
+		map<string, string>		ReadFileContent(const string &file);
 
 	public:
 								c_config(const string &folder) : config_folder {folder} {};
 
-		map<string, string>		ReadFromSecret(const vector<string> &params)			{ 	return Read(GetConfigFolder() + GetSecretFilename(), params); }
-		map<string, string>		ReadFromNumberOfFolders(const vector<string> &params)	{ 	return Read(GetConfigFolder() + GetNumberOfFoldersFilename(), params); }
+		map<string, string>		GetFromFile(const string &file, const vector<string> &params);
 
 		void					SetConfigFolder(const string &param)					{ config_folder = param; }
 		string					GetConfigFolder()										{ return config_folder; }
-
-		void					SetSecretFilename(const string &param)					{ secret_file = param; }
-		string					GetSecretFilename()										{ return secret_file; }
-
-		void					SetNumberOfFoldersFilename(const string &param)			{ number_of_folders_file = param; }
-		string					GetNumberOfFoldersFilename()							{ return number_of_folders_file; }
 
 };
 
