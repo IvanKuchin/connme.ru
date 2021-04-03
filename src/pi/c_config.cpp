@@ -62,6 +62,14 @@ map<string, string>		c_config_cache::Get(const string &file, const vector<string
 }
 
 
+string	c_config::trim(string line)
+{
+	line.erase(0, line.find_first_not_of(" \t\f\v\n\r"));	   //prefixing spaces
+	line.erase(line.find_last_not_of(" \t\f\v\n\r") + 1);		 //suffixing spaces
+
+	return line;
+}
+
 tuple<string, string> c_config::ExtractSingleValue(const string &line)
 {
 	MESSAGE_DEBUG("", "", "start (" + line + ")");
@@ -73,7 +81,7 @@ tuple<string, string> c_config::ExtractSingleValue(const string &line)
 
 	if(regex_search(line, m, e))
 	{
-		result = make_tuple(m[1], m[2]);
+		result = make_tuple(trim(m[1]), trim(m[2]));
 	}
 
 	MESSAGE_DEBUG("", "", "finish (" + get<0>(result) + ", " + get<1>(result) + ")");
@@ -112,12 +120,14 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 	if(f.is_open())
 	{
 		auto	line = ""s;
-		auto	state = boundary;
+		auto	state = BOUNDARY;
 
 		while( getline (f,line) )
 		{
 			line = RemoveComment(line);
+			line = trim(line);
 			
+			if(state = BOUNDARY)
 			auto	value = ExtractSingleValue(line);
 
 			if(get<0>(value).length())

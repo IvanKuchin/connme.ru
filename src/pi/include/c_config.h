@@ -27,7 +27,7 @@ class c_config_cache
 class c_config
 {
 	private:
-		enum state_enum { boundary, multiline_start };
+		enum state_enum { BOUNDARY, MULTILINE_START };
 
 		string					config_folder				=	""s;
 
@@ -36,6 +36,7 @@ class c_config
 		tuple<string, string>	ExtractSingleValue(const string &line);
 		string					RemoveComment(string line);
 		map<string, string>		ReadFileContent(const string &file);
+		string					trim(string line);
 
 	public:
 								c_config(const string &folder) : config_folder {folder} {};
