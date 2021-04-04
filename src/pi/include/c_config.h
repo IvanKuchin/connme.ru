@@ -33,7 +33,7 @@ class c_config
 		c_config_cache			cache;
 
 		// --- multiline related definitions
-		enum state_enum 		{ KEYVALUE_PAIR, MULTILINE_VALUE };
+		enum state_enum 		{ KEY_VALUE_PAIR, MULTILINE_VALUE };
 		const string			MULTILINE_MARKER = "\'\'\'";
 		bool					IsMultilineMarkerPresent(const string &line);
 		bool		 			IsStartFromMultilineMarker(const string &line);

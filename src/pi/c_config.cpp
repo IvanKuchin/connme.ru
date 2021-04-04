@@ -56,7 +56,7 @@ map<string, string>		c_config_cache::Get(const string &file, const vector<string
 			else if(file_content.find(DEFAULT_KEY) != file_content.end())
 			{
 				result[entry] = file_content.find(DEFAULT_KEY)->second;
-				MESSAGE_DEBUG("", "", "default entry taken from the file(" + file + "): " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxxx" : result[entry]));
+				MESSAGE_DEBUG("", "", "default entry taken from the file(" + file + "): " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxx" : result[entry]));
 			}
 			else
 			{
@@ -163,7 +163,7 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 		auto	line			= ""s;
 		auto	multiline_key	= ""s;
 		auto	multiline_value	= ""s;
-		auto	state			= KEYVALUE_PAIR;
+		auto	state			= KEY_VALUE_PAIR;
 
 
 		while( getline (f,line) )
@@ -172,7 +172,7 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 			
 			if(trim(line).length())
 			{
-				if(state == KEYVALUE_PAIR)
+				if(state == KEY_VALUE_PAIR)
 				{
 					MESSAGE_DEBUG("", "", "key value pair (" + line + ")");
 
@@ -190,7 +190,7 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 							}
 							else
 							{
-								MESSAGE_ERROR("", "", "multiline marker must be located at a beggining of a value (" + get<1>(key_value) + ")");
+								MESSAGE_ERROR("", "", "multiline marker must be located at a beginning of a value (" + get<1>(key_value) + ")");
 								break;
 							}
 						}
@@ -221,7 +221,7 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 							MESSAGE_DEBUG("", "", "multiline value: " + multiline_key + " -> (" + multiline_value + ")");
 							multiline_key = "";
 							multiline_value = "";
-							state = KEYVALUE_PAIR;
+							state = KEY_VALUE_PAIR;
 						}
 						else
 						{
