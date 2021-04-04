@@ -1,6 +1,6 @@
 #include "generalimageuploader.h"	 
 
-static bool ImageSaveAsJpg(const string src, const string dst, string itemType)
+static bool ImageSaveAsJpg(const string src, const string dst, string itemType, c_config *config)
 {
 	MESSAGE_DEBUG("", "", "start (" + src + ", " + dst + ")");
 
@@ -29,17 +29,17 @@ static bool ImageSaveAsJpg(const string src, const string dst, string itemType)
 		if(imageOrientation == Magick::RightBottomOrientation) { image.flop(); image.rotate(90); }
 		if(imageOrientation == Magick::LeftBottomOrientation) image.rotate(-90);
 
-		if((imageGeometry.width() > GetSpecificData_GetMaxWidth(itemType)) || (imageGeometry.height() > GetSpecificData_GetMaxHeight(itemType)))
+		if((imageGeometry.width() > stod_noexcept(config->GetFromFile("image_max_width", itemType))) || (imageGeometry.height() > stod_noexcept(config->GetFromFile("image_max_height", itemType))))
 		{
 			int   newHeight, newWidth;
 			if(imageGeometry.width() >= imageGeometry.height())
 			{
-				newWidth = GetSpecificData_GetMaxWidth(itemType);
+				newWidth = stod_noexcept(config->GetFromFile("image_max_width", itemType));
 				newHeight = newWidth * imageGeometry.height() / imageGeometry.width();
 			}
 			else
 			{
-				newHeight = GetSpecificData_GetMaxHeight(itemType);
+				newHeight = stod_noexcept(config->GetFromFile("image_max_height", itemType));
 				newWidth = newHeight * imageGeometry.width() / imageGeometry.height();
 			}
 
@@ -70,7 +70,7 @@ static bool ImageSaveAsJpg(const string src, const string dst, string itemType)
 #endif
 }
 
-static bool BlindCopy(const string src, const string dst, string itemType)
+static bool BlindCopy(const string src, const string dst, string itemType, c_config *config)
 {
 	MESSAGE_DEBUG("", "", "start (" + src + " -> " + dst + ")");
 
@@ -248,7 +248,7 @@ int main()
 								else if(file_type == "template")	save_func = BlindCopy;
 							}
 
-							if(save_func(originalFilename, preFinalFilename, itemType))
+							if(save_func(originalFilename, preFinalFilename, itemType, &config))
 							{
 
 								MESSAGE_DEBUG("", "", "final filename is " + finalFilename + "");

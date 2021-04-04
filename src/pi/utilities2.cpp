@@ -2047,7 +2047,7 @@ auto	GetValuesFromDB(string sql, CMysql *db) -> vector<string>
 	return result;
 }
 
-static bool CheckImageFileInTempFolder(string src, string dst, string f_type)
+static bool CheckImageFileInTempFolder(string src, string dst, string f_type, c_config *config)
 {
 	bool		result = false;
 
@@ -2078,17 +2078,17 @@ static bool CheckImageFileInTempFolder(string src, string dst, string f_type)
 		if(imageOrientation == Magick::RightBottomOrientation) { image.flop(); image.rotate(90); }
 		if(imageOrientation == Magick::LeftBottomOrientation) image.rotate(-90);
 
-		if((imageGeometry.width() > GetSpecificData_GetMaxWidth(f_type)) || (imageGeometry.height() > GetSpecificData_GetMaxHeight(f_type)))
+		if((imageGeometry.width() > stod_noexcept(config->GetFromFile("image_max_width", f_type))) || (imageGeometry.height() > stod_noexcept(config->GetFromFile("image_max_height", f_type))))
 		{
 			int   newHeight, newWidth;
 			if(imageGeometry.width() >= imageGeometry.height())
 			{
-				newWidth = GetSpecificData_GetMaxWidth(f_type);
+				newWidth = stod_noexcept(config->GetFromFile("image_max_width", f_type));
 				newHeight = newWidth * imageGeometry.height() / imageGeometry.width();
 			}
 			else
 			{
-				newHeight = GetSpecificData_GetMaxHeight(f_type);
+				newHeight = stod_noexcept(config->GetFromFile("image_max_height", f_type));
 				newWidth = newHeight * imageGeometry.width() / imageGeometry.height();
 			}
 
@@ -2175,7 +2175,7 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 
 					if(file_extension == ".jpg")
 					{
-						if(CheckImageFileInTempFolder(originalFilename, preFinalFilename, f_type)) {}
+						if(CheckImageFileInTempFolder(originalFilename, preFinalFilename, f_type, config)) {}
 						else
 						{
 							error_message = gettext("incorrect image file") + ", "s + gettext("try to upload as pdf");

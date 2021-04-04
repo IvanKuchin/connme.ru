@@ -1,18 +1,19 @@
 #include "companylogouploader.h"	 
 
-bool ImageSaveAsJpg (const string src, const string dst)
+static bool ImageSaveAsJpg (const string src, const string dst, c_config *config)
 {
-	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "(" + src + ", " + dst + ")[" + to_string(__LINE__) + "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 #ifndef IMAGEMAGICK_DISABLE
 	// Construct the image object. Separating image construction from the
 	// the read operation ensures that a failure to read the image file
 	// doesn't render the image object useless.
-	try {
+
+	auto	companylogo_max_width	= stod_noexcept(config->GetFromFile("image_max_width", "company"));
+	auto	companylogo_max_height	= stod_noexcept(config->GetFromFile("image_max_height", "company"));
+
+	try 
+	{
 		Magick::Image		   image;
 		Magick::OrientationType imageOrientation;
 		Magick::Geometry		imageGeometry;
@@ -40,17 +41,17 @@ bool ImageSaveAsJpg (const string src, const string dst)
 		if(imageOrientation == Magick::RightBottomOrientation) { image.flop(); image.rotate(90); }
 		if(imageOrientation == Magick::LeftBottomOrientation) image.rotate(-90);
 
-		if((imageGeometry.width() > COMPANYLOGO_MAX_WIDTH) || (imageGeometry.height() > COMPANYLOGO_MAX_HEIGHT))
+		if((imageGeometry.width() > companylogo_max_width) || (imageGeometry.height() > companylogo_max_height))
 		{
 			int   newHeight, newWidth;
 			if(imageGeometry.width() >= imageGeometry.height())
 			{
-				newWidth = COMPANYLOGO_MAX_WIDTH;
+				newWidth = companylogo_max_width;
 				newHeight = newWidth * imageGeometry.height() / imageGeometry.width();
 			}
 			else
 			{
-				newHeight = COMPANYLOGO_MAX_HEIGHT;
+				newHeight = companylogo_max_height;
 				newWidth = newHeight * imageGeometry.width() / imageGeometry.height();
 			}
 
@@ -62,27 +63,21 @@ bool ImageSaveAsJpg (const string src, const string dst)
 	}
 	catch( Magick::Exception &error_ )
 	{
-		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "(" + src + ", " + dst + ")[" + to_string(__LINE__) + "]: exception in read/write operation [" + error_.what() + "]");
-		}
+		MESSAGE_ERROR("", "", "exception in read/write operation [" + error_.what() + "]");
+
 		return false;
 	}
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "(" + src + ", " + dst + ")[" + to_string(__LINE__) + "]: finish (image has been successfully converted to .jpg format)");
-	}
+
+	MESSAGE_DEBUG("", "", "finish (image has been successfully converted to .jpg format)");
+
 	return true;
 #else
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "(" + src + ", " + dst + ")[" + to_string(__LINE__) + "]: simple file coping, because ImageMagick++ is not activated");
-	}
+	MESSAGE_DEBUG("", "", "start (simple file coping, because ImageMagick++ is not activated)");
+
 	CopyFile(src, dst);
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "(" + src + ", " + dst + ")[" + to_string(__LINE__) + "]: finish");
-	}
+
+	MESSAGE_DEBUG("", "", "finish");
+
 	return  true;
 #endif
 }
@@ -246,7 +241,7 @@ int main()
 							fwrite(indexPage.GetFilesHandler()->Get(filesCounter), indexPage.GetFilesHandler()->GetSize(filesCounter), 1, f);
 							fclose(f);
 
-							if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG))
+							if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG, &config))
 							{
 
 								MESSAGE_DEBUG("", "", "chosen filename for avatar [" + file2Check + "]")

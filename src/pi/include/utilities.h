@@ -185,8 +185,8 @@ auto			PrintTime(const struct tm &_tm, string format) -> string;
 // --- function set for image upload/removal
 // auto 			GetSpecificData_GetNumberOfFolders(string itemType) -> int;
 // auto 			GetSpecificData_GetMaxFileSize(string itemType) -> int;
-auto		 	GetSpecificData_GetMaxWidth(string itemType) -> unsigned int;
-auto		 	GetSpecificData_GetMaxHeight(string itemType) -> unsigned int;
+// auto		 	GetSpecificData_GetMaxWidth(string itemType) -> unsigned int;
+// auto		 	GetSpecificData_GetMaxHeight(string itemType) -> unsigned int;
 auto 			GetSpecificData_GetBaseDirectory(string itemType) -> string;
 auto			GetSpecificData_GetFinalFileExtension(string itemType) -> string;
 auto 			GetSpecificData_SelectQueryItemByID(string itemID, string itemType) -> string;

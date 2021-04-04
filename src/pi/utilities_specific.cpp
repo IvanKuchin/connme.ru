@@ -101,7 +101,6 @@ int GetSpecificData_GetMaxFileSize(string itemType)
 	return result;
 }
 
-*/
 
 unsigned int GetSpecificData_GetMaxWidth(string itemType)
 {
@@ -128,33 +127,6 @@ unsigned int GetSpecificData_GetMaxWidth(string itemType)
 
 	return result;
 }
-/*
-unsigned int GetSpecificData_GetMaxWidth(string itemType)
-{
-	int	  result = 0;
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")		result = CERTIFICATIONSLOGO_MAX_WIDTH;
-	else if(itemType == "course")		result = CERTIFICATIONSLOGO_MAX_WIDTH;
-	else if(itemType == "university")	result = UNIVERSITYLOGO_MAX_WIDTH;
-	else if(itemType == "school")		result = SCHOOLLOGO_MAX_WIDTH;
-	else if(itemType == "language")		result = FLAG_MAX_WIDTH;
-	else if(itemType == "book")			result = BOOKCOVER_MAX_WIDTH;
-	else if(itemType == "company")		result = COMPANYLOGO_MAX_WIDTH;
-	else if(itemType == "gift")			result = GIFTIMAGE_MAX_WIDTH;
-	else if(itemType == "event")		result = EVENTIMAGE_MAX_WIDTH;
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
-	
-	return result;
-}
-*/
-
 
 unsigned int GetSpecificData_GetMaxHeight(string itemType)
 {
@@ -182,31 +154,6 @@ unsigned int GetSpecificData_GetMaxHeight(string itemType)
 	return result;
 }
 
-/*
-unsigned int GetSpecificData_GetMaxHeight(string itemType)
-{
-	int	  result = 0;
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")		result = CERTIFICATIONSLOGO_MAX_HEIGHT;
-	else if(itemType == "course")		result = CERTIFICATIONSLOGO_MAX_HEIGHT;
-	else if(itemType == "university")	result = UNIVERSITYLOGO_MAX_HEIGHT;
-	else if(itemType == "school")		result = SCHOOLLOGO_MAX_HEIGHT;
-	else if(itemType == "language")		result = FLAG_MAX_HEIGHT;
-	else if(itemType == "book")			result = BOOKCOVER_MAX_HEIGHT;
-	else if(itemType == "company")		result = COMPANYLOGO_MAX_HEIGHT;
-	else if(itemType == "gift")	  		result = GIFTIMAGE_MAX_HEIGHT;
-	else if(itemType == "event")	  	result = EVENTIMAGE_MAX_HEIGHT;
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
-	
-	return result;
-}
 */
 
 
