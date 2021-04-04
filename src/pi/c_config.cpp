@@ -48,7 +48,20 @@ map<string, string>		c_config_cache::Get(const string &file, const vector<string
 
 		for(auto &entry: entries)
 		{
-			if(file_content.find(entry) != file_content.end()) result[file_content.find(entry)->first] = file_content.find(entry)->second;
+			if(file_content.find(entry) != file_content.end())
+			{
+				result[entry] = file_content.find(entry)->second;
+				MESSAGE_DEBUG("", "", "actual value taken from file(" + file + ") entry: " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxx" : result[entry]));
+			}
+			else if(file_content.find(DEFAULT_KEY) != file_content.end())
+			{
+				result[entry] = file_content.find(DEFAULT_KEY)->second;
+				MESSAGE_DEBUG("", "", "default value taken from file(" + file + ") entry: " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxxx" : result[entry]));
+			}
+			else
+			{
+				MESSAGE_ERROR("", "", "no entry(" + entry + ") found in file(" + file + ")");
+			}
 		}
 	}
 	else
@@ -62,6 +75,9 @@ map<string, string>		c_config_cache::Get(const string &file, const vector<string
 }
 
 
+// =========================================================================================
+
+
 string	c_config::trim(string line)
 {
 	line.erase(0, line.find_first_not_of(" \t\f\v\n\r"));	   //prefixing spaces
@@ -70,18 +86,16 @@ string	c_config::trim(string line)
 	return line;
 }
 
-tuple<string, string> c_config::ExtractSingleValue(const string &line)
+tuple<string, string> c_config::ExtractKeyValue(const string &line)
 {
 	MESSAGE_DEBUG("", "", "start (" + line + ")");
 
-	tuple<string, string>	result;
+	tuple<string, string>	result{""s, ""s};
+	auto					equal_pos	= line.find('=');
 
-	regex	e("^\\s*(.*)\\s*=\\s*\"(.*)\"");
-	smatch	m;
-
-	if(regex_search(line, m, e))
+	if(equal_pos != string::npos)
 	{
-		result = make_tuple(trim(m[1]), trim(m[2]));
+		result = make_tuple(trim(line.substr(0, equal_pos)), trim(line.substr(equal_pos + 1)));
 	}
 
 	MESSAGE_DEBUG("", "", "finish (" + get<0>(result) + ", " + get<1>(result) + ")");
@@ -108,7 +122,34 @@ string				c_config::RemoveComment(string line)
 	return line;
 }
 
+bool c_config::IsMultilineMarkerPresent(const string &line)
+{
+	return (line.find(MULTILINE_MARKER) != string::npos);
+}
 
+bool c_config::IsStartFromMultilineMarker(const string &line)
+{
+	return (line.find(MULTILINE_MARKER) == 0);
+}
+
+bool c_config::IsLineEndsWithMultilineMarker(const string &line)
+{
+	return ((line.rfind(MULTILINE_MARKER) + MULTILINE_MARKER.length()) == line.length());
+}
+
+string c_config::StripMultilineMarker(string line)
+{
+	try
+	{
+		line = line.replace(line.find(MULTILINE_MARKER), MULTILINE_MARKER.length(), "");
+	}
+	catch(...)
+	{
+		MESSAGE_ERROR("", "", "line (" + line + ") doesn't contain MULTILINE_MARKER (" + MULTILINE_MARKER + ")");
+	}
+
+	return line;
+}
 
 map<string, string>	c_config::ReadFileContent(const string &file)
 {
@@ -119,20 +160,88 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 
 	if(f.is_open())
 	{
-		auto	line = ""s;
-		auto	state = BOUNDARY;
+		auto	line			= ""s;
+		auto	multiline_key	= ""s;
+		auto	multiline_value	= ""s;
+		auto	state			= KEYVALUE_PAIR;
+
 
 		while( getline (f,line) )
 		{
 			line = RemoveComment(line);
-			line = trim(line);
 			
-			if(state = BOUNDARY)
-			auto	value = ExtractSingleValue(line);
+			if(trim(line).length())
+			{
+				if(state == KEYVALUE_PAIR)
+				{
+					MESSAGE_DEBUG("", "", "key value pair (" + line + ")");
 
-			if(get<0>(value).length())
-				result[get<0>(value)] = get<1>(value);
+					auto	key_value = ExtractKeyValue(line);
+
+					if(get<0>(key_value).length())
+					{
+						if(IsMultilineMarkerPresent(get<1>(key_value)))
+						{
+							if(IsStartFromMultilineMarker(get<1>(key_value)))
+							{
+								state = MULTILINE_VALUE;
+								multiline_key = get<0>(key_value);
+								multiline_value = StripMultilineMarker(get<1>(key_value));
+							}
+							else
+							{
+								MESSAGE_ERROR("", "", "multiline marker must be located at a beggining of a value (" + get<1>(key_value) + ")");
+								break;
+							}
+						}
+						else
+						{
+							// --- key and value define on a single line, not value could be empty
+							result[get<0>(key_value)] = get<1>(key_value);
+						}
+					}
+					else
+					{
+						MESSAGE_DEBUG("", "", "key is empty in line (" + line + ") -> skip the line");
+					}
+				}
+				else if(state == MULTILINE_VALUE)
+				{
+					MESSAGE_DEBUG("", "", "multiline progressing (" + line + ")");
+
+					// look for multiline value
+					if(IsMultilineMarkerPresent(line))
+					{
+						// --- supposedly end of multiline 
+						if(IsLineEndsWithMultilineMarker(line))
+						{
+							multiline_value += StripMultilineMarker(line);
+							result[multiline_key] = multiline_value;
+
+							MESSAGE_DEBUG("", "", "multiline value: " + multiline_key + " -> (" + multiline_value + ")");
+							multiline_key = "";
+							multiline_value = "";
+							state = KEYVALUE_PAIR;
+						}
+						else
+						{
+							MESSAGE_ERROR("", "", "multiline marker must be located at an end of a line (" + line + ")");
+							break;
+						}
+					}
+					else
+					{
+						multiline_value += line + "\n";
+					}
+				}
+				else
+				{
+					MESSAGE_ERROR("", "", "unknown state");
+					break;
+				}
+			}
 		}
+
 		f.close();
 	}
 	else
@@ -164,6 +273,11 @@ map<string, string>		c_config::GetFromFile(const string &file, const vector<stri
 	return result;
 }
 
+string					c_config::GetFromFile(const string &file, const string &param)
+{
+	vector<string>	vec_param = {param};
+	return GetFromFile(file, vec_param)[param];
+}
 
 ostream& operator<<(ostream& os, const c_config &var)
 {

@@ -332,7 +332,7 @@ int main()
 				throw CExceptionHTML("environment variable error");
 			}
 
-			action = GenerateSession(action, &indexPage, &db, &user);
+			action = GenerateSession(action, &config, &indexPage, &db, &user);
 
 			//------- Cleanup data
 			db.Query("DELETE FROM `captcha` WHERE `timestamp`<=(NOW()-INTERVAL " + to_string(SESSION_LEN) + " MINUTE);");
@@ -5047,7 +5047,7 @@ int main()
 			{
 				MESSAGE_DEBUG("", action, "re-login required");
 
-				LogoutIfGuest(action, &indexPage, &db, &user);
+				LogoutIfGuest(action, &config, &indexPage, &db, &user);
 			}
 			else
 			{
@@ -6953,7 +6953,7 @@ int main()
 			{
 				MESSAGE_DEBUG("", action, "re-login required");
 
-				LogoutIfGuest(action, &indexPage, &db, &user);
+				LogoutIfGuest(action, &config, &indexPage, &db, &user);
 			}
 			else
 			{
@@ -7870,7 +7870,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access login page, redirect to default page");
 
-				indexPage.Redirect("/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10));
 			}
 
 			MESSAGE_DEBUG("", action, "finish");
@@ -8226,11 +8226,11 @@ int main()
 									indexPage.RegisterVariableForce("loginUser", user.GetLogin());
 									indexPage.RegisterVariableForce("menu_main_active", "active");
 
-									MESSAGE_DEBUG("", action, "redirect to \"/" + GetDefaultActionFromUserType(&user, &db) + "?rand=xxxxxx\"");
+									MESSAGE_DEBUG("", action, "redirect to \"/" + config.GetFromFile("default_action", "guest") + "?rand=xxxxxx\"");
 
 									success_message = 	"\"result\": \"success\","
 														"\"description\": \"\","
-														"\"url\": \"/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10) + "\"";
+														"\"url\": \"/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10) + "\"";
 								}
 							}
 						}
@@ -8361,13 +8361,13 @@ int main()
 								indexPage.RegisterVariableForce("loginUser", user.GetLogin());
 								indexPage.RegisterVariableForce("menu_main_active", "active");
 
-								MESSAGE_DEBUG("", action, "redirect to \"/" + GetDefaultActionFromUserType(&user, &db) + "?rand=xxxxxx\"");
+								MESSAGE_DEBUG("", action, "redirect to \"/" + config.GetFromFile("default_action", "guest") + "?rand=xxxxxx\"");
 
 								ostResult.str("");
 								ostResult << "{";
 								ostResult << "\"result\": \"success\",";
 								ostResult << "\"description\": \"\",";
-								ostResult << "\"url\": \"/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" << GetRandom(10) << "\"";
+								ostResult << "\"url\": \"/" + config.GetFromFile("default_action", "guest") + "?rand=" << GetRandom(10) << "\"";
 								ostResult << "}";
 							}
 						} // if(password != user.GetPasswd())
@@ -8650,7 +8650,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access activateNewUser page, redirect to default page");
 
-				indexPage.Redirect("/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10));
 			}
 
 
@@ -13569,7 +13569,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access showmain page, redirect to default page");
 
-				indexPage.Redirect("/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10));
 			}
 		}
 

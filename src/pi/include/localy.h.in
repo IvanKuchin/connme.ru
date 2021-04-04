@@ -31,7 +31,7 @@
 #define IMAGE_TEMP_DIRECTORY						string(IMAGE_DIRECTORY) + string("temp")
 
 #define	CONFIG_DIR									"${CONFIG_DIR}/"
-#define	CONFIG_FNAME								"${CONFIG_DIR}/config"
+#define	CONFIG_SECRET								"secret"
 
 #define	MMDB_fname									"${MAXMIND_INSTALL_DIR}/GeoLite2-City.mmdb"
 
@@ -62,16 +62,10 @@
 #define	MAIL_STDERR									string(LOGDIR) + DOMAIN_NAME + ".mail.stderr"
 #define	SENDMAIL_FILE_NAME							"/usr/sbin/sendmail"
 
-#define	LOGGEDIN_USER_DEFAULT_ACTION				"news_feed"s
-#define	GUEST_USER_DEFAULT_ACTION					"autologin"s
-#define	LOGGEDIN_HELPDESK_DEFAULT_ACTION			"helpdesk_dashboard"s
-
 #define	BREADCRUMBS_STR								" | "
 
 // --- Helpdesk part
 #define HELPDESK_TICKET_ATTACHES_DIRECTORY			string(IMAGEROOTDIR) + string("/html/helpdesk_ticket_attaches/")
-#define	HELPDESK_TICKET_ATTACHES_NUMBER_OF_FOLDERS	2048
-#define	HELPDESK_TICKET_ATTACHES_MAX_FILE_SIZE		10 * 1024 * 1024
 #define	HELPDESK_USER_ROLE							"helpdesk"s
 #define	HELPDESK_STATE_NEW							"new"s
 #define	HELPDESK_STATE_ASSIGNED						"assigned"s
@@ -108,33 +102,23 @@
 #define	AVATAR_MAX_HEIGHT							600
 
 #define RIBBON_URL_FOLDER							"/images/ribbons/"s
-#define	RIBBON_NUMBER_OF_FOLDERS					256
 #define	RIBBON_MAX_FILE_SIZE						1 * 1024 * 1024
 #define	RIBBON_MAX_WIDTH 							800
 #define	RIBBON_MAX_HEIGHT							600
 
-#define	BOOKCOVER_NUMBER_OF_FOLDERS					512
-#define	BOOKCOVER_MAX_FILE_SIZE						10 * 1024 * 1024 // --- 1 MegaByte
 #define	BOOKCOVER_MAX_WIDTH 						480
 #define	BOOKCOVER_MAX_HEIGHT						640
 
-#define	FLAG_NUMBER_OF_FOLDERS						1
-#define	FLAG_MAX_FILE_SIZE							10 * 1024 * 1024 // --- 1 MegaByte
 #define	FLAG_MAX_WIDTH	 							480
 #define	FLAG_MAX_HEIGHT								640
 
-#define	COMPANYLOGO_NUMBER_OF_FOLDERS				512
-#define	COMPANYLOGO_MAX_FILE_SIZE					10 * 1024 * 1024 // --- 1 MegaByte
 #define	COMPANYLOGO_MAX_WIDTH 						800
 #define	COMPANYLOGO_MAX_HEIGHT						600
 
 #define	EVENTIMAGE_NUMBER_OF_FOLDERS				512
-#define	EVENTIMAGE_MAX_FILE_SIZE					10 * 1024 * 1024 // --- 1 MegaByte
 #define	EVENTIMAGE_MAX_WIDTH 						480
 #define	EVENTIMAGE_MAX_HEIGHT						640
 
-#define	GIFTIMAGE_NUMBER_OF_FOLDERS					512
-#define	GIFTIMAGE_MAX_FILE_SIZE						10 * 1024 * 1024 // --- 1 MegaByte
 #define	GIFTIMAGE_MAX_WIDTH 						480
 #define	GIFTIMAGE_MAX_HEIGHT						640
 
@@ -143,18 +127,12 @@
 #define	GROUPLOGO_MAX_WIDTH 						800
 #define	GROUPLOGO_MAX_HEIGHT						600
 
-#define	UNIVERSITYLOGO_NUMBER_OF_FOLDERS			512
-#define	UNIVERSITYLOGO_MAX_FILE_SIZE				10 * 1024 * 1024 // --- 1 MegaByte
 #define	UNIVERSITYLOGO_MAX_WIDTH 					800
 #define	UNIVERSITYLOGO_MAX_HEIGHT					600
 
-#define	SCHOOLLOGO_NUMBER_OF_FOLDERS				512
-#define	SCHOOLLOGO_MAX_FILE_SIZE					10 * 1024 * 1024 // --- 1 MegaByte
 #define	SCHOOLLOGO_MAX_WIDTH 						800
 #define	SCHOOLLOGO_MAX_HEIGHT						600
 
-#define	CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS		512
-#define	CERTIFICATIONSLOGO_MAX_FILE_SIZE			10 * 1024 * 1024 // --- 1 MegaByte
 #define	CERTIFICATIONSLOGO_MAX_WIDTH 				800
 #define	CERTIFICATIONSLOGO_MAX_HEIGHT				600
 

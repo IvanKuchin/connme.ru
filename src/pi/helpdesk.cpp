@@ -317,7 +317,7 @@ static auto Notify_NewTicket_Subscribers(string ticket_id, c_config *config, CMy
 	return error_message;
 }
 
-static auto SaveFilesAndUpdateDB(string ticket_history_id, CCgi *indexPage, CMysql *db)
+static auto SaveFilesAndUpdateDB(string ticket_history_id, c_config *config, CCgi *indexPage, CMysql *db)
 {
 	MESSAGE_DEBUG("", "", "start");
 
@@ -347,10 +347,11 @@ static auto SaveFilesAndUpdateDB(string ticket_history_id, CCgi *indexPage, CMys
 			auto	file_ext		= (ext_pos != string::npos ? file_name_ext.substr(ext_pos, file_name_ext.length() - ext_pos) : ""s);
 			auto	folderID		= 0;
 			auto	filePrefix		= ""s;
+			auto	number_of_folders = stod_noexcept(config->GetFromFile("number_of_folders", itemType));
 
 			do
 			{
-				folderID	= (int)(rand()/(RAND_MAX + 1.0) * GetSpecificData_GetNumberOfFolders(itemType)) + 1;
+				folderID	= (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
 				filePrefix	= GetRandom(20);
 
 				short_filename = to_string(folderID) + "/" + file_name + "_" + filePrefix + file_ext;
@@ -455,8 +456,8 @@ int main(void)
 			}
 
 			//------- Generate session
-			action = GenerateSession(action, &indexPage, &db, &user);
-			action = LogoutIfGuest(action, &indexPage, &db, &user);
+			action = GenerateSession(action, &config, &indexPage, &db, &user);
+			action = LogoutIfGuest(action, &config, &indexPage, &db, &user);
 		}
 	// ------------ end generate common parts
 
@@ -508,7 +509,7 @@ int main(void)
 																		"(" + quoted(to_string(ticket_id)) + ", " + quoted(user.GetID()) + ", " + quoted(severity) + ", " + quoted(HELPDESK_STATE_NEW) + ", " + quoted(description) + ", UNIX_TIMESTAMP())");
 							if(ticket_history_id)
 							{
-								if((error_message = SaveFilesAndUpdateDB(to_string(ticket_history_id), &indexPage, &db)).empty())
+								if((error_message = SaveFilesAndUpdateDB(to_string(ticket_history_id), &config, &indexPage, &db)).empty())
 								{
 									auto	local_error_message = Notify_NewTicket_Subscribers(to_string(ticket_id), &config, &db, &user, &indexPage);
 									if(local_error_message.length())
@@ -626,7 +627,7 @@ int main(void)
 
 								if(ticket_history_id)
 								{
-									if((error_message = SaveFilesAndUpdateDB(to_string(ticket_history_id), &indexPage, &db)).empty())
+									if((error_message = SaveFilesAndUpdateDB(to_string(ticket_history_id), &config, &indexPage, &db)).empty())
 									{
 										auto	local_error_message = Notify_ExistingTicket_Subscribers(ticket_id, &config, &db, &user, &indexPage);
 

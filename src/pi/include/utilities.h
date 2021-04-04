@@ -61,7 +61,7 @@ auto			CheckHTTPParam_Number(const string &srcText) -> string;
 auto	 		CheckHTTPParam_Date(string srcText) -> string;
 auto	 		CheckHTTPParam_Float(const string &srcText) -> string;
 auto			CheckHTTPParam_Email(const string &srcText) -> string;
-auto			GetDefaultActionFromUserType(CUser *, CMysql *) -> string;
+// auto			GetDefaultActionFromUserType(CUser *, CMysql *) -> string;
 auto      		GetSecondsSinceY2k() -> double;
 auto      		GetLocalFormattedTimestamp() -> string;
 auto      		GetTimeDifferenceFromNow(const string timeAgo) -> double;
@@ -183,8 +183,8 @@ auto			PrintDateTime(const struct tm &_tm) -> string;
 auto			PrintTime(const struct tm &_tm, string format) -> string;
 
 // --- function set for image upload/removal
-auto 			GetSpecificData_GetNumberOfFolders(string itemType) -> int;
-auto 			GetSpecificData_GetMaxFileSize(string itemType) -> int;
+// auto 			GetSpecificData_GetNumberOfFolders(string itemType) -> int;
+// auto 			GetSpecificData_GetMaxFileSize(string itemType) -> int;
 auto		 	GetSpecificData_GetMaxWidth(string itemType) -> unsigned int;
 auto		 	GetSpecificData_GetMaxHeight(string itemType) -> unsigned int;
 auto 			GetSpecificData_GetBaseDirectory(string itemType) -> string;

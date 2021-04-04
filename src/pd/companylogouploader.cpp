@@ -150,7 +150,7 @@ int main()
 				throw CExceptionHTML("environment variable error");
 			}
 
-			action = GenerateSession(action, &indexPage, &db, &user);
+			action = GenerateSession(action, &config, &indexPage, &db, &user);
 		}
 		// ------------ end generate common parts
 
@@ -176,9 +176,10 @@ int main()
 						for(int filesCounter = 0; filesCounter < indexPage.GetFilesHandler()->Count(); filesCounter++)
 						{
 							FILE			*f;
-							int			 folderID = (int)(rand()/(RAND_MAX + 1.0) * COMPANYLOGO_NUMBER_OF_FOLDERS) + 1;
-							string		  filePrefix = GetRandom(20);
-							string		  file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
+							auto			number_of_folders = stod_noexcept(config.GetFromFile("number_of_folders", "company"));
+							auto			folderID = (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
+							auto			filePrefix = GetRandom(20);
+							string			file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 							ostringstream   ost;
 
 							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > COMPANYLOGO_MAX_FILE_SIZE) 
@@ -200,7 +201,7 @@ int main()
 								string		  tmp;
 								std::size_t  foundPos;
 
-								folderID = (int)(rand()/(RAND_MAX + 1.0) * COMPANYLOGO_NUMBER_OF_FOLDERS) + 1;
+								folderID = (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
 								filePrefix = GetRandom(20);
 								tmp = indexPage.GetFilesHandler()->GetName(filesCounter);
 

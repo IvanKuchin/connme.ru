@@ -324,7 +324,7 @@ int main()
 			mapResult["result"] = "error";
 			mapResult["sessionPersistence"] = "false";
 			mapResult["userPersistence"] = "false";
-			mapResult["redirect"] = "/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10);
+			mapResult["redirect"] = "/" + config.GetFromFile("default_action", user.GetType()) + "?rand=" + GetRandom(10);
 
 			if(remoteAddr && (!isPersistenceRateLimited(remoteAddr, &db)))
 			{
@@ -430,7 +430,7 @@ int main()
 											db.Query("UPDATE `sessions` SET `previous_sessid`=\"" + sessidPersistence + "\"  WHERE `id`=\"" + indexPage.SessID_Get_FromHTTP() + "\";");
 										}
 
-										mapResult["redirect"] = "/" + GetDefaultActionFromUserType(&user, &db) + "?rand=" + GetRandom(10);
+										mapResult["redirect"] = "/" + config.GetFromFile("default_action", user.GetType()) + "?rand=" + GetRandom(10);
 
 										db.Query("UPDATE `sessions` SET `user_id`=\"" + persistedUserID + "\", expire=\"" + persistedExpire + "\" WHERE `id`=\"" + sessidHTTP + "\";");
 										if(db.isError())

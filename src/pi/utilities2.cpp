@@ -2120,7 +2120,7 @@ static bool CheckImageFileInTempFolder(string src, string dst, string f_type)
 	return result;
 }
 
-static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *files, string file_extension, bool is_check_only)
+static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *files, string file_extension, c_config *config, bool is_check_only)
 {
 	MESSAGE_DEBUG("", "", "start (f_name = " + f_name + ", f_type = " + f_type + ", check_only = " + to_string(is_check_only) + ")");
 
@@ -2141,13 +2141,14 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 			if(files->GetSize(f_name) && (files->GetSize(f_name) <= GetSpecificData_GetMaxFileSize(f_type)))
 			{
 				FILE	*f;
+				auto	number_of_folders = stod_noexcept(config->GetFromFile("number_of_folders", f_type));
 
 				//--- check logo file existing
 				do
 				{
 					std::size_t  	foundPos;
 
-					folderID = (int)(rand()/(RAND_MAX + 1.0) * GetSpecificData_GetNumberOfFolders(f_type)) + 1;
+					folderID = (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
 					filePrefix = GetRandom(20);
 
 					if((foundPos = f_name.rfind(".")) != string::npos) 
@@ -2253,14 +2254,14 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 	return result;
 }
 
-string	CheckFileFromHandler(string f_name, string f_type, CFiles *files, string file_extension) // --- f_type required to check file size specific to file type
+string	CheckFileFromHandler(string f_name, string f_type, CFiles *files, string file_extension, c_config *config) // --- f_type required to check file size specific to file type
 {
-	return(SaveOrCheckFileFromHandler(f_name, f_type, files, file_extension, true));
+	return(SaveOrCheckFileFromHandler(f_name, f_type, files, file_extension, config, true));
 }
 
-string	SaveFileFromHandler(string f_name, string f_type, CFiles *files, string file_extension)
+string	SaveFileFromHandler(string f_name, string f_type, CFiles *files, string file_extension, c_config *config)
 {
-	return(SaveOrCheckFileFromHandler(f_name, f_type, files, file_extension, false));
+	return(SaveOrCheckFileFromHandler(f_name, f_type, files, file_extension, config, false));
 }
 
 bool isFileExists(const std::string& name)

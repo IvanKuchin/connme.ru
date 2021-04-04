@@ -74,8 +74,8 @@ int main(void)
 			}
 
 			//------- Generate session
-			action = GenerateSession(action, &indexPage, &db, &user);
-			action = LogoutIfGuest(action, &indexPage, &db, &user);
+			action = GenerateSession(action, &config, &indexPage, &db, &user);
+			action = LogoutIfGuest(action, &config, &indexPage, &db, &user);
 
 		}
 

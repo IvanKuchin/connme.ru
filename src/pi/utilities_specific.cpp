@@ -22,6 +22,7 @@ static auto __GetMapValueByKey(const map<string, T> &dictionary, string key_valu
 	return result;
 }
 
+/*
 string	GetDefaultActionFromUserType(CUser *user, CMysql *db)
 {
 	MESSAGE_DEBUG("", "", "start");
@@ -39,28 +40,10 @@ string	GetDefaultActionFromUserType(CUser *user, CMysql *db)
 
 	return result;
 }
-/*
-string	GetDefaultActionFromUserType(CUser *user, CMysql *db)
-{
-	MESSAGE_DEBUG("", "", "start");
-	
-	string	result = GUEST_USER_DEFAULT_ACTION;
-
-	if(user->GetType() == "guest")		result = GUEST_USER_DEFAULT_ACTION;
-	else if(user->GetType() == "user")	result = LOGGEDIN_USER_DEFAULT_ACTION;
-	else if(user->GetType() == "helpdesk") result = LOGGEDIN_HELPDESK_DEFAULT_ACTION;
-	else
-	{
-		MESSAGE_ERROR("", "", "unknown user type (" + user->GetType() + ")");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
-
-	return result;
-}
 */
 
 
+/*
 int GetSpecificData_GetNumberOfFolders(string itemType)
 {
 	MESSAGE_DEBUG("", "", "start");
@@ -87,36 +70,10 @@ int GetSpecificData_GetNumberOfFolders(string itemType)
 
 	return result;
 }
-
-/*
-int GetSpecificData_GetNumberOfFolders(string itemType)
-{
-	int	  result = 0;
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")					result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "course")					result = CERTIFICATIONSLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "university")				result = UNIVERSITYLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "school")					result = SCHOOLLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "language")					result = FLAG_NUMBER_OF_FOLDERS;
-	else if(itemType == "book")						result = BOOKCOVER_NUMBER_OF_FOLDERS;
-	else if(itemType == "company")					result = COMPANYLOGO_NUMBER_OF_FOLDERS;
-	else if(itemType == "gift")						result = GIFTIMAGE_NUMBER_OF_FOLDERS;
-	else if(itemType == "event")					result = EVENTIMAGE_NUMBER_OF_FOLDERS;
-	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_NUMBER_OF_FOLDERS;
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
-	
-	return result;
-}
 */
 
 
+/*
 int GetSpecificData_GetMaxFileSize(string itemType)
 {
 	MESSAGE_DEBUG("", "", "start");
@@ -144,32 +101,6 @@ int GetSpecificData_GetMaxFileSize(string itemType)
 	return result;
 }
 
-/*
-int GetSpecificData_GetMaxFileSize(string itemType)
-{
-	int	  result = 0;
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")					result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
-	else if(itemType == "course")					result = CERTIFICATIONSLOGO_MAX_FILE_SIZE;
-	else if(itemType == "university")				result = UNIVERSITYLOGO_MAX_FILE_SIZE;
-	else if(itemType == "school")					result = SCHOOLLOGO_MAX_FILE_SIZE;
-	else if(itemType == "language")					result = FLAG_MAX_FILE_SIZE;
-	else if(itemType == "book")						result = BOOKCOVER_MAX_FILE_SIZE;
-	else if(itemType == "company")					result = COMPANYLOGO_MAX_FILE_SIZE;
-	else if(itemType == "gift")						result = GIFTIMAGE_MAX_FILE_SIZE;
-	else if(itemType == "event")					result = EVENTIMAGE_MAX_FILE_SIZE;
-	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_MAX_FILE_SIZE;
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (result = " + to_string(result) + ")");
-	
-	return result;
-}
 */
 
 unsigned int GetSpecificData_GetMaxWidth(string itemType)

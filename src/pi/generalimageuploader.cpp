@@ -148,7 +148,7 @@ int main()
 				throw CExceptionHTML("environment variable error");
 			}
 
-			action = GenerateSession(action, &indexPage, &db, &user);
+			action = GenerateSession(action, &config, &indexPage, &db, &user);
 		}
 	// ------------ end generate common parts
 
@@ -198,8 +198,9 @@ int main()
 							{
 								auto		  	tmp = indexPage.GetFilesHandler()->GetName(filesCounter);
 								auto		  	foundPos = tmp.rfind(".");
+								auto			number_of_folders = stod_noexcept(config.GetFromFile("number_of_folders", itemType));
 
-								folderID	= (int)(rand()/(RAND_MAX + 1.0) * GetSpecificData_GetNumberOfFolders(itemType)) + 1;
+								folderID	= (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
 								filePrefix	= GetRandom(20);
 
 								if(foundPos != string::npos) 

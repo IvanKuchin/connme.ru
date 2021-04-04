@@ -188,7 +188,8 @@ string c_smsc::_smsc_send_cmd(string cmd, string arg, string files)
 
     auto                result = ""s;
 
-    auto                auth_map        = config->GetFromFile("secret", {"SMSC_LOGIN", "SMSC_PASSWORD"});
+    vector<string>      vector_param    = {"SMSC_LOGIN", "SMSC_PASSWORD"};
+    auto                auth_map        = config->GetFromFile(CONFIG_SECRET, vector_param);
     auto                is_auth_valid   = (auth_map["SMSC_LOGIN"].length() > 0);
     auto                __SMSC_LOGIN    = (is_auth_valid ? auth_map["SMSC_LOGIN"] : "");
     auto                __SMSC_PASSWORD = (is_auth_valid ? auth_map["SMSC_PASSWORD"] : "");
