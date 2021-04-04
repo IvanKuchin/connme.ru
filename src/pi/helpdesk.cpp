@@ -326,9 +326,9 @@ static auto SaveFilesAndUpdateDB(string ticket_history_id, c_config *config, CCg
 
 	for(auto filesCounter = 0; filesCounter < indexPage->GetFilesHandler()->Count(); ++filesCounter)
 	{
-		if(indexPage->GetFilesHandler()->GetSize(filesCounter) > GetSpecificData_GetMaxFileSize(itemType))
+		if(indexPage->GetFilesHandler()->GetSize(filesCounter) > stod_noexcept(config->GetFromFile("max_file_size", itemType)))
 		{
-			error_message = "file [" + indexPage->GetFilesHandler()->GetName(filesCounter) + "] size exceed permitted maximum: " + to_string(indexPage->GetFilesHandler()->GetSize(filesCounter)) + " > " + to_string(GetSpecificData_GetMaxFileSize(itemType));
+			error_message = "file [" + indexPage->GetFilesHandler()->GetName(filesCounter) + "] size exceed permitted maximum: " + to_string(indexPage->GetFilesHandler()->GetSize(filesCounter)) + " > " + config->GetFromFile("max_file_size", itemType);
 			MESSAGE_ERROR("", "", error_message);
 
 			break;

@@ -178,14 +178,14 @@ int main()
 							auto			fileExtension = ""s;
 							auto			save_func = ImageSaveAsJpg;
 
-							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > GetSpecificData_GetMaxFileSize(itemType))
+							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > stod_noexcept(config.GetFromFile("max_file_size", itemType)))
 							{
-								MESSAGE_ERROR("", "", "file [" + indexPage.GetFilesHandler()->GetName(filesCounter) + "] size exceed permitted maximum: " + to_string(indexPage.GetFilesHandler()->GetSize(filesCounter)) + " > " + to_string(GetSpecificData_GetMaxFileSize(itemType)));
+								MESSAGE_ERROR("", "", "file [" + indexPage.GetFilesHandler()->GetName(filesCounter) + "] size exceed permitted maximum: " + to_string(indexPage.GetFilesHandler()->GetSize(filesCounter)) + " > " + config.GetFromFile("max_file_size", itemType));
 
 								ostJSONResult.str("");
 								ostJSONResult << "{";
 								ostJSONResult << "\"result\": \"error\",";
-								ostJSONResult << "\"textStatus\": \"" << gettext("file size") << " " << indexPage.GetFilesHandler()->GetSize(filesCounter) / 1024 << "K " << gettext("exceeds allowed size") << " " << GetSpecificData_GetMaxFileSize(itemType) / 1024 << "K\",";
+								ostJSONResult << "\"textStatus\": \"" << gettext("file size") << " " << indexPage.GetFilesHandler()->GetSize(filesCounter) / 1024 << "K " << gettext("exceeds allowed size") << " " << config.GetFromFile("max_file_size", itemType) << "bytes\",";
 								ostJSONResult << "\"fileName\": \"\" ,";
 								ostJSONResult << "\"jqXHR\": \"\"";
 								ostJSONResult << "}";

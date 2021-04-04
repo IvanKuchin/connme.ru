@@ -176,21 +176,16 @@ int main()
 						for(int filesCounter = 0; filesCounter < indexPage.GetFilesHandler()->Count(); filesCounter++)
 						{
 							FILE			*f;
-							auto			number_of_folders = stod_noexcept(config.GetFromFile("number_of_folders", "company"));
-							auto			folderID = (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
-							auto			filePrefix = GetRandom(20);
+							auto			number_of_folders	= stod_noexcept(config.GetFromFile("number_of_folders", "company"));
+							auto			file_size_limit		= stod_noexcept(config.GetFromFile("max_file_size", "company"));
+							auto			folderID			= (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
+							auto			filePrefix			= GetRandom(20);
 							string			file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 							ostringstream   ost;
 
-							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > COMPANYLOGO_MAX_FILE_SIZE) 
+							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > file_size_limit) 
 							{
-								CLog			log;
-								ostringstream   ost;
-
-								ost.str("");
-								ost << string(__func__) << "[" << to_string(__LINE__) << "]:ERROR: avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << COMPANYLOGO_MAX_FILE_SIZE;
-
-								log.Write(ERROR, ost.str());
+								MESSAGE_ERROR("", "", "avatar file [" + indexPage.GetFilesHandler()->GetName(filesCounter) + "] size exceed permitted maximum: " + to_string(indexPage.GetFilesHandler()->GetSize(filesCounter)) + " > " + to_string(file_size_limit));
 								throw CExceptionHTML("avatar file size exceed", indexPage.GetFilesHandler()->GetName(filesCounter));
 							}
 

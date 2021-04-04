@@ -2138,7 +2138,7 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 	{
 		if(f_type.length())
 		{
-			if(files->GetSize(f_name) && (files->GetSize(f_name) <= GetSpecificData_GetMaxFileSize(f_type)))
+			if(files->GetSize(f_name) && (files->GetSize(f_name) <= stod_noexcept(config->GetFromFile("max_file_size", f_type))))
 			{
 				FILE	*f;
 				auto	number_of_folders = stod_noexcept(config->GetFromFile("number_of_folders", f_type));
@@ -2200,7 +2200,7 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 			}
 			else
 			{
-				error_message = f_name + " size(" + to_string(GetSpecificData_GetMaxFileSize(f_type)) + ") is beyond the limit (1, " + to_string(GetSpecificData_GetMaxFileSize(f_type)) + ")";
+				error_message = f_name + " size(" + to_string(files->GetSize(f_name)) + ") above the limit " + config->GetFromFile("max_file_size", f_type);
 				MESSAGE_ERROR("", "", error_message);
 			}
 		}

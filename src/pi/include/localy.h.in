@@ -30,7 +30,7 @@
 #define IMAGE_FLAGS_DIRECTORY    					string(IMAGE_DIRECTORY) + string("flags")
 #define IMAGE_TEMP_DIRECTORY						string(IMAGE_DIRECTORY) + string("temp")
 
-#define	CONFIG_DIR									"${CONFIG_DIR}/"
+#define	CONFIG_DIR									"${CONFIG_INSTALL_DIR}/"
 #define	CONFIG_SECRET								"secret"
 
 #define	MMDB_fname									"${MAXMIND_INSTALL_DIR}/GeoLite2-City.mmdb"

@@ -51,12 +51,12 @@ map<string, string>		c_config_cache::Get(const string &file, const vector<string
 			if(file_content.find(entry) != file_content.end())
 			{
 				result[entry] = file_content.find(entry)->second;
-				MESSAGE_DEBUG("", "", "actual value taken from file(" + file + ") entry: " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxx" : result[entry]));
+				MESSAGE_DEBUG("", "", "actual entry taken from the file(" + file + "): " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxx" : result[entry]));
 			}
 			else if(file_content.find(DEFAULT_KEY) != file_content.end())
 			{
 				result[entry] = file_content.find(DEFAULT_KEY)->second;
-				MESSAGE_DEBUG("", "", "default value taken from file(" + file + ") entry: " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxxx" : result[entry]));
+				MESSAGE_DEBUG("", "", "default entry taken from the file(" + file + "): " + entry + " = " + (entry.find("PASSWORD") != string::npos ? "xxxxxxxxx" : result[entry]));
 			}
 			else
 			{
