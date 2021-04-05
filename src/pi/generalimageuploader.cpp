@@ -155,8 +155,8 @@ int main()
 
 		if((user.GetID().length()) && (user.GetName() != "Guest"))
 		{
-			string	  itemID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
-			string	  itemType = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("type"));
+			auto	  itemID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
+			auto	  itemType = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("type"));
 
 			if(itemID.length() && itemType.length())
 			{
@@ -224,7 +224,7 @@ int main()
 
 								originalFilename = "/tmp/tmp_" + filePrefix + fileExtension;
 								preFinalFilename = "/tmp/" + filePrefix + ".jpg";
-								finalFilename = GetSpecificData_GetBaseDirectory(itemType) + "/" + to_string(folderID) + "/" + filePrefix + GetSpecificData_GetFinalFileExtension(itemType);
+								finalFilename = config.GetFromFile("image_folders", itemType) + "/" + to_string(folderID) + "/" + filePrefix + GetSpecificData_GetFinalFileExtension(itemType);
 
 							} while(isFileExists(finalFilename) || isFileExists(originalFilename) || isFileExists(preFinalFilename));
 
@@ -256,7 +256,7 @@ int main()
 								// --- Don't forget to remove previous logo
 								if(db.Query(GetSpecificData_SelectQueryItemByID(itemID, itemType)))
 								{
-									auto  currLogo = GetSpecificData_GetBaseDirectory(itemType) + (GetSpecificData_GetDBCoverPhotoFolderString(itemType).length() ? "/"s + db.Get(0, GetSpecificData_GetDBCoverPhotoFolderString(itemType)) : "") + "/" + db.Get(0, GetSpecificData_GetDBCoverPhotoFilenameString(itemType));
+									auto  currLogo = config.GetFromFile("image_folders", itemType) + (config.GetFromFile("db_field_name_photo_folder", itemType).length() ? "/"s + db.Get(0, config.GetFromFile("db_field_name_photo_folder", itemType)) : "") + "/" + db.Get(0, config.GetFromFile("db_field_name_photo_filename", itemType));
 
 									if(isFileExists(currLogo)) 
 									{
@@ -280,14 +280,14 @@ int main()
 									ostJSONResult << "\"textStatus\": \"\",";
 									ostJSONResult << "\"fileName\": \"" << indexPage.GetFilesHandler()->GetName(filesCounter) << "\" ,";
 									ostJSONResult << "\"jqXHR\": \"\",";
-									if(GetSpecificData_GetDBCoverPhotoFolderString(itemType).length())
+									if(config.GetFromFile("db_field_name_photo_folder", itemType).length())
 									{
-										ostJSONResult << "\"" + GetSpecificData_GetDBCoverPhotoFolderString(itemType) + "\": \"" << folderID << "\",";
-										ostJSONResult << "\"" + GetSpecificData_GetDBCoverPhotoFilenameString(itemType) + "\": \"" << filePrefix << GetSpecificData_GetFinalFileExtension(itemType) << "\"";
+										ostJSONResult << "\"" + config.GetFromFile("db_field_name_photo_folder", itemType) + "\": \"" << folderID << "\",";
+										ostJSONResult << "\"" + config.GetFromFile("db_field_name_photo_filename", itemType) + "\": \"" << filePrefix << GetSpecificData_GetFinalFileExtension(itemType) << "\"";
 									}
 									else
 									{
-										ostJSONResult << "\"" + GetSpecificData_GetDBCoverPhotoFilenameString(itemType) + "\": \"" << folderID << "/" << filePrefix << GetSpecificData_GetFinalFileExtension(itemType) << "\"";
+										ostJSONResult << "\"" + config.GetFromFile("db_field_name_photo_filename", itemType) + "\": \"" << folderID << "/" << filePrefix << GetSpecificData_GetFinalFileExtension(itemType) << "\"";
 									}
 									ostJSONResult << "}";
 									if(filesCounter == (indexPage.GetFilesHandler()->Count() - 1)) ostJSONResult << "]";

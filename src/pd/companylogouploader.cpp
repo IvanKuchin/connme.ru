@@ -187,7 +187,6 @@ int main()
 							//--- check avatar file existing
 							do
 							{
-								ostringstream   ost;
 								string		  tmp;
 								std::size_t  foundPos;
 
@@ -204,28 +203,15 @@ int main()
 									fileExtension = ".jpg";
 								}
 
-								ost.str("");
-								ost << IMAGE_COMPANIES_DIRECTORY << "/" << folderID << "/" << filePrefix << ".jpg";
-								file2Check = ost.str();
+								file2Check = config.GetFromFile("image_folders", "company") + "/" + to_string(folderID) + "/" + filePrefix + ".jpg";
+								tmpFile2Check = "/tmp/tmp_" + filePrefix + fileExtension;
+								tmpImageJPG = "/tmp/" + filePrefix + ".jpg";
 
-								ost.str("");
-								ost << "/tmp/tmp_" << filePrefix << fileExtension;
-								tmpFile2Check = ost.str();
-
-								ost.str("");
-								ost << "/tmp/" << filePrefix << ".jpg";
-								tmpImageJPG = ost.str();
 							} while(isFileExists(file2Check) || isFileExists(tmpFile2Check) || isFileExists(tmpImageJPG));
 
 
+							MESSAGE_DEBUG("", "", "Save file to /tmp for checking of image validity [" + tmpFile2Check + "]");
 
-							{
-								CLog	log;
-								ostringstream   ost;
-
-								ost << __func__ << "[" << __LINE__ << "]: Save file to /tmp for checking of image validity [" << tmpFile2Check << "]";
-								log.Write(DEBUG, ost.str());
-							}
 
 							// --- Save file to "/tmp/" for checking of image validity
 							f = fopen(tmpFile2Check.c_str(), "w");
@@ -249,7 +235,7 @@ int main()
 								// --- remove previous logo
 								if(db.Query("select `logo_folder`, `logo_filename` from `company` where `id`=\"" + companyID + "\";"))
 								{
-									string  currLogo = string(IMAGE_COMPANIES_DIRECTORY) + "/" + db.Get(0, "logo_folder") + "/" + db.Get(0, "logo_filename");
+									auto  currLogo = config.GetFromFile("image_folders", "company") + "/" + db.Get(0, "logo_folder") + "/" + db.Get(0, "logo_filename");
 
 									if(isFileExists(currLogo)) 
 									{

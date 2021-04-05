@@ -2161,7 +2161,7 @@ static string SaveOrCheckFileFromHandler(string f_name, string f_type, CFiles *f
 
 					originalFilename = "/tmp/tmp_" + filePrefix + fileExtension;
 					preFinalFilename = "/tmp/" + filePrefix + fileExtension;
-					finalFilename = GetSpecificData_GetBaseDirectory(f_type) + "/" + to_string(folderID) + "/" + filePrefix + fileExtension;
+					finalFilename = config->GetFromFile("image_folders", f_type) + "/" + to_string(folderID) + "/" + filePrefix + fileExtension;
 				} while(isFileExists(finalFilename) || isFileExists(originalFilename) || isFileExists(preFinalFilename));
 
 				MESSAGE_DEBUG("", "", "Save file to /tmp for checking of image validity [" + originalFilename + "]");

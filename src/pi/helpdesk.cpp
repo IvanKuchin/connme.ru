@@ -355,7 +355,7 @@ static auto SaveFilesAndUpdateDB(string ticket_history_id, c_config *config, CCg
 				filePrefix	= GetRandom(20);
 
 				short_filename = to_string(folderID) + "/" + file_name + "_" + filePrefix + file_ext;
-				finalFilename = GetSpecificData_GetBaseDirectory(itemType) + "/" + short_filename;
+				finalFilename = config->GetFromFile("image_folders", itemType) + "/" + short_filename;
 
 			} while(isFileExists(finalFilename));
 

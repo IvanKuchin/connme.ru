@@ -1683,7 +1683,7 @@ void	RemoveMessageImages(string sqlWhereStatement, CMysql *db)
 // --- input params:
 // --- 1) SQL WHERE statement
 // --- 2) db reference
-void	RemoveBookCover(string sqlWhereStatement, CMysql *db)
+void	RemoveBookCover(string sqlWhereStatement, c_config *config, CMysql *db)
 {
 	int			 affected;
 	ostringstream   ost;
@@ -1705,8 +1705,7 @@ void	RemoveBookCover(string sqlWhereStatement, CMysql *db)
 
 			if(mediaType == "image" || mediaType == "video")
 			{
-
-				if(mediaType == "image") filename = IMAGE_BOOKS_DIRECTORY;
+				if(mediaType == "image") filename = config->GetFromFile("image_folders", "book");
 
 				filename +=  "/";
 				filename +=  db->Get(i, "coverPhotoFolder");
@@ -1755,7 +1754,7 @@ void	RemoveBookCover(string sqlWhereStatement, CMysql *db)
 // --- 1) id
 // --- 2) type
 // --- 3) db reference
-bool	RemoveSpecifiedCover(string itemID, string itemType, CMysql *db)
+bool	RemoveSpecifiedCover(string itemID, string itemType, c_config *config, CMysql *db)
 {
 	int			 affected;
 	bool			result = true;
@@ -1776,12 +1775,12 @@ bool	RemoveSpecifiedCover(string itemID, string itemType, CMysql *db)
 			if(mediaType == "image" || mediaType == "video")
 			{
 
-				if(mediaType == "image") filename = GetSpecificData_GetBaseDirectory(itemType);
+				if(mediaType == "image") filename = config->GetFromFile("image_folders", itemType);
 
 				filename +=  "/";
-				filename +=  db->Get(i, GetSpecificData_GetDBCoverPhotoFolderString(itemType).c_str());
+				filename +=  db->Get(i, config->GetFromFile("db_field_name_photo_folder", itemType));
 				filename +=  "/";
-				filename +=  db->Get(i, GetSpecificData_GetDBCoverPhotoFilenameString(itemType).c_str());
+				filename +=  db->Get(i, config->GetFromFile("db_field_name_photo_filename", itemType));
 
 				{
 					CLog	log;

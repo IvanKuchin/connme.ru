@@ -19,15 +19,7 @@
 #define	IMAGE_AVATAR_DIRECTORY						string(IMAGE_DIRECTORY) + string("avatars")
 #define	IMAGE_RIBBON_DIRECTORY						string(IMAGE_DIRECTORY) + string("ribbons")
 #define	IMAGE_CHAT_DIRECTORY						string(IMAGE_DIRECTORY) + string("chat")
-#define	IMAGE_COMPANIES_DIRECTORY					string(IMAGE_DIRECTORY) + string("companies")
 #define	IMAGE_GROUPS_DIRECTORY						string(IMAGE_DIRECTORY) + string("groups")
-#define	IMAGE_EVENTS_DIRECTORY						string(IMAGE_DIRECTORY) + string("events")
-#define	IMAGE_UNIVERSITIES_DIRECTORY				string(IMAGE_DIRECTORY) + string("universities")
-#define	IMAGE_SCHOOLS_DIRECTORY						string(IMAGE_DIRECTORY) + string("schools")
-#define	IMAGE_CERTIFICATIONS_DIRECTORY				string(IMAGE_DIRECTORY) + string("certifications")
-#define IMAGE_BOOKS_DIRECTORY    					string(IMAGE_DIRECTORY) + string("books")
-#define IMAGE_GIFTS_DIRECTORY    					string(IMAGE_DIRECTORY) + string("gifts")
-#define IMAGE_FLAGS_DIRECTORY    					string(IMAGE_DIRECTORY) + string("flags")
 #define IMAGE_TEMP_DIRECTORY						string(IMAGE_DIRECTORY) + string("temp")
 
 #define	CONFIG_DIR									"${CONFIG_INSTALL_DIR}/"
@@ -65,7 +57,6 @@
 #define	BREADCRUMBS_STR								" | "
 
 // --- Helpdesk part
-#define HELPDESK_TICKET_ATTACHES_DIRECTORY			string(IMAGEROOTDIR) + string("/html/helpdesk_ticket_attaches/")
 #define	HELPDESK_USER_ROLE							"helpdesk"s
 #define	HELPDESK_STATE_NEW							"new"s
 #define	HELPDESK_STATE_ASSIGNED						"assigned"s

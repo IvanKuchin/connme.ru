@@ -1076,7 +1076,7 @@ int main()
 			ostResult.str("");
 			if(itemID.length() && itemType.length())
 			{
-				if(RemoveSpecifiedCover(itemID, itemType, &db)) ostResult << "{\"result\":\"success\"}";
+				if(RemoveSpecifiedCover(itemID, itemType, &config, &db)) ostResult << "{\"result\":\"success\"}";
 				else ostResult << "{\"result\":\"error\",\"description\":\"ERROR removing specified cover\"}";
 			}
 			else
@@ -1120,7 +1120,7 @@ int main()
 					}
 					else
 					{
-						RemoveSpecifiedCover(itemID, "certification", &db);
+						RemoveSpecifiedCover(itemID, "certification", &config, &db);
 						db.Query("delete from `certification_tracks` where `id`=\"" + itemID + "\";");
 						ostResult << "{\"result\":\"success\"}";
 					}
@@ -1173,7 +1173,7 @@ int main()
 					}
 					else
 					{
-						RemoveSpecifiedCover(itemID, "course", &db);
+						RemoveSpecifiedCover(itemID, "course", &config, &db);
 						db.Query("delete from `certification_tracks` where `id`=\"" + itemID + "\";");
 						ostResult << "{\"result\":\"success\"}";
 					}
@@ -1226,7 +1226,7 @@ int main()
 					}
 					else
 					{
-						RemoveSpecifiedCover(itemID, "university", &db);
+						RemoveSpecifiedCover(itemID, "university", &config, &db);
 						db.Query("delete from `university` where `id`=\"" + itemID + "\";");
 						ostResult << "{\"result\":\"success\"}";
 					}
@@ -1278,7 +1278,7 @@ int main()
 					}
 					else
 					{
-						RemoveSpecifiedCover(itemID, "school", &db);
+						RemoveSpecifiedCover(itemID, "school", &config, &db);
 						db.Query("delete from `school` where `id`=\"" + itemID + "\";");
 						ostResult << "{\"result\":\"success\"}";
 					}
@@ -1331,7 +1331,7 @@ int main()
 					}
 					else
 					{
-						RemoveSpecifiedCover(itemID, "language", &db);
+						RemoveSpecifiedCover(itemID, "language", &config, &db);
 						db.Query("delete from `language` where `id`=\"" + itemID + "\";");
 						ostResult << "{\"result\":\"success\"}";
 					}
@@ -1388,7 +1388,7 @@ int main()
 					else
 					{
 						string 	whereStatement = "`id`=\"" + bookID + "\"";
-						RemoveBookCover(whereStatement, &db);
+						RemoveBookCover(whereStatement, &config, &db);
 						db.Query("delete from `book` where `id`=\"" + bookID + "\";");
 						ostResult << "{\"result\":\"success\"}";
 					}

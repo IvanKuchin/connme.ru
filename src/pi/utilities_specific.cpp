@@ -154,9 +154,6 @@ unsigned int GetSpecificData_GetMaxHeight(string itemType)
 	return result;
 }
 
-*/
-
-
 string GetSpecificData_GetBaseDirectory(string itemType)
 {
 	MESSAGE_DEBUG("", "", "start");
@@ -183,32 +180,6 @@ string GetSpecificData_GetBaseDirectory(string itemType)
 
 	return result;
 }
-/*
-string GetSpecificData_GetBaseDirectory(string itemType)
-{
-	string	  result = "";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")					result = IMAGE_CERTIFICATIONS_DIRECTORY;
-	else if(itemType == "course")					result = IMAGE_CERTIFICATIONS_DIRECTORY;
-	else if(itemType == "university")				result = IMAGE_UNIVERSITIES_DIRECTORY;
-	else if(itemType == "school")					result = IMAGE_SCHOOLS_DIRECTORY;
-	else if(itemType == "language")					result = IMAGE_FLAGS_DIRECTORY;
-	else if(itemType == "book")						result = IMAGE_BOOKS_DIRECTORY;
-	else if(itemType == "company")					result = IMAGE_COMPANIES_DIRECTORY;
-	else if(itemType == "gift")						result = IMAGE_GIFTS_DIRECTORY;
-	else if(itemType == "event")					result = IMAGE_EVENTS_DIRECTORY;
-	else if(itemType == "helpdesk_ticket_attach")	result = HELPDESK_TICKET_ATTACHES_DIRECTORY;
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (" + result + ")");
-	
-	return result;
-}
 */
 
 string GetSpecificData_SelectQueryItemByID(string itemID, string itemType)
@@ -233,6 +204,56 @@ string GetSpecificData_SelectQueryItemByID(string itemID, string itemType)
 
 	MESSAGE_DEBUG("", "", "finish (" + result + ")");
 	
+	return result;
+}
+
+static string GetSpecificData_GetDBCoverPhotoFolderString(string itemType)
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	map<string, string>	dictionary = 
+	{
+		{ "certification"					, "logo_folder" },
+		{ "course"							, "logo_folder" },
+		{ "university"						, "logo_folder" },
+		{ "school"							, "logo_folder" },
+		{ "language"						, "logo_folder" },
+		{ "book"							, "coverPhotoFolder" },
+		{ "company"							, "logo_folder" },
+		{ "company_profile_logo"			, "logo_folder" },
+		{ "gift"							, "logo_folder" },
+		{ "event"							, "logo_folder" },
+	};
+
+	auto	  result = __GetMapValueByKey(dictionary, itemType);
+
+	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
+
+	return result;
+}
+
+static string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	map<string, string>	dictionary = 
+	{
+		{ "certification"				, "logo_filename" },
+		{ "course"						, "logo_filename" },
+		{ "university"					, "logo_filename" },
+		{ "school"						, "logo_filename" },
+		{ "language"					, "logo_filename" },
+		{ "book"						, "coverPhotoFilename" },
+		{ "company"						, "logo_filename" },
+		{ "company_profile_logo"		, "logo_filename" },
+		{ "gift"						, "logo_filename" },
+		{ "event"						, "logo_filename" },
+	};
+
+	auto	  result = __GetMapValueByKey(dictionary, itemType);
+
+	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
+
 	return result;
 }
 
@@ -278,111 +299,6 @@ string GetSpecificData_UpdateQueryItemByID(string itemID, string itemType, strin
 	return result;
 }
 
-
-string GetSpecificData_GetDBCoverPhotoFolderString(string itemType)
-{
-	MESSAGE_DEBUG("", "", "start");
-
-	map<string, string>	dictionary = 
-	{
-		{ "certification"					, "logo_folder" },
-		{ "course"							, "logo_folder" },
-		{ "university"						, "logo_folder" },
-		{ "school"							, "logo_folder" },
-		{ "language"						, "logo_folder" },
-		{ "book"							, "coverPhotoFolder" },
-		{ "company"							, "logo_folder" },
-		{ "company_profile_logo"			, "logo_folder" },
-		{ "gift"							, "logo_folder" },
-		{ "event"							, "logo_folder" },
-	};
-
-	auto	  result = __GetMapValueByKey(dictionary, itemType);
-
-	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
-
-	return result;
-}
-/*
-string GetSpecificData_GetDBCoverPhotoFolderString(string itemType)
-{
-	string	  result = "";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")	 	result = "logo_folder";
-	else if(itemType == "course")	   	result = "logo_folder";
-	else if(itemType == "university")   result = "logo_folder";
-	else if(itemType == "school")	   	result = "logo_folder";
-	else if(itemType == "language")	 	result = "logo_folder";
-	else if(itemType == "book")		 	result = "coverPhotoFolder";
-	else if(itemType == "company")		result = "logo_folder";
-	else if(itemType == "gift")	  		result = "logo_folder";
-	else if(itemType == "event")	  	result = "logo_folder";
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (" + result + ")");
-	
-	return result;
-}
-*/
-
-string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
-{
-	MESSAGE_DEBUG("", "", "start");
-
-	map<string, string>	dictionary = 
-	{
-		{ "certification"				, "logo_filename" },
-		{ "course"						, "logo_filename" },
-		{ "university"					, "logo_filename" },
-		{ "school"						, "logo_filename" },
-		{ "language"					, "logo_filename" },
-		{ "book"						, "coverPhotoFilename" },
-		{ "company"						, "logo_filename" },
-		{ "company_profile_logo"		, "logo_filename" },
-		{ "gift"						, "logo_filename" },
-		{ "event"						, "logo_filename" },
-	};
-
-	auto	  result = __GetMapValueByKey(dictionary, itemType);
-
-	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
-
-	return result;
-}
-/*
-string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
-{
-	string	  result = "";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "certification")		result = "logo_filename";
-	else if(itemType == "course")		result = "logo_filename";
-	else if(itemType == "university")	result = "logo_filename";
-	else if(itemType == "school")		result = "logo_filename";
-	else if(itemType == "language")		result = "logo_filename";
-	else if(itemType == "book")			result = "coverPhotoFilename";
-	else if(itemType == "company")		result = "logo_filename";
-	else if(itemType == "gift")			result = "logo_filename";
-	else if(itemType == "event")		result = "logo_filename";
-	else
-	{
-		MESSAGE_ERROR("", "", "itemType [" + itemType + "] unknown");
-	}
-
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (result: " + result + ")");
-	}
-	
-	return result;
-}
-*/
 string GetSpecificData_GetFinalFileExtension(string itemType)
 {
 	MESSAGE_DEBUG("", "", "start");
@@ -410,27 +326,6 @@ string GetSpecificData_GetFinalFileExtension(string itemType)
 }
 
 /*
-string GetSpecificData_GetFinalFileExtension(string itemType)
-{
-	string	  result = ".jpg";
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "template_sow")						result = ".txt";
-	else if(itemType == "template_psow")				result = ".txt";
-	else if(itemType == "template_costcenter")			result = ".txt";
-	else if(itemType == "template_company")				result = ".txt";
-	else if(itemType == "template_agreement_company")	result = ".txt";
-	else if(itemType == "template_agreement_sow")		result = ".txt";
-	else
-	{
-		MESSAGE_DEBUG("", "", "default extension(" + result + ") taken");
-	}
-
-	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
-
-	return result;
-}
 */
 
 
@@ -463,23 +358,6 @@ string GetSpecificData_GetDataTypeByItemType(const string &itemType)
 	return result;
 }
 /*
-string GetSpecificData_GetDataTypeByItemType(const string &itemType)
-{
-	auto	result = "image"s;
-
-	MESSAGE_DEBUG("", "", "start");
-
-	if(itemType == "template_sow")					result = "template";
-	if(itemType == "template_psow")					result = "template";
-	if(itemType == "template_costcenter")			result = "template";
-	if(itemType == "template_company")				result = "template";
-	if(itemType == "template_agreement_company")	result = "template";
-	if(itemType == "template_agreement_sow")		result = "template";
-
-	MESSAGE_DEBUG("", "", "finish (result = " + result + ")");
-
-	return result;
-}
 */
 
 // --- Does the owner user allowed to change it ?
