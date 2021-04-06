@@ -77,6 +77,67 @@ map<string, string>		c_config_cache::Get(const string &file, const vector<string
 
 // =========================================================================================
 
+bool c_config_tag::isFound()
+{
+	MESSAGE_DEBUG("", "", "start (" + line + ")");
+
+	auto		result = false;
+
+	if((end_pos = line.find(">>")) != string::npos)
+	{
+		if((start_pos = line.rfind("<<", end_pos)) != string::npos)
+		{
+			auto	tag_content	= line.substr(start_pos + 2, end_pos - (start_pos + 2));
+
+			if(tag_content.find(VAR_EXPR) == 0)
+			{
+				var			= tag_content.substr(string(VAR_EXPR).length());
+				tag_type	= VAR;
+				result		= true;
+
+				MESSAGE_DEBUG("", "", "tag var: " + GetVar());
+			}
+			else if(tag_content.find(CONFIG_EXPR) == 0)
+			{
+				auto	config_content		= tag_content.substr(string(CONFIG_EXPR).length());
+				auto	tag_separator_pos	= config_content.find(TAG_SEPARATOR);
+
+				if(tag_separator_pos == string::npos)
+				{
+					MESSAGE_ERROR("", "", "wrong config tag syntax, must be <<config:file_name:entry_name>>");
+				}
+				else
+				{
+					file		= config_content.substr(0, tag_separator_pos);
+					var			= config_content.substr(tag_separator_pos + 1);
+					tag_type	= CONFIG;
+					result		= true;
+				}
+
+				MESSAGE_DEBUG("", "", "tag config: " + GetFile() + ":" + GetVar());
+			}
+			else
+			{
+				MESSAGE_ERROR("", "", "unknown tag type: " + tag_content);
+			}
+		}
+		else
+		{
+			MESSAGE_DEBUG("", "", "opening tag marker not found");
+		}
+	}
+	else
+	{
+		MESSAGE_DEBUG("", "", "closing tag marker not found");
+	}
+
+	MESSAGE_DEBUG("", "", "finish (" + to_string(result) + ")");
+
+	return result;
+}
+
+// =========================================================================================
+
 
 string	c_config::trim(string line)
 {
@@ -102,6 +163,7 @@ tuple<string, string> c_config::ExtractKeyValue(const string &line)
 
 	return result;
 }
+
 /*
 string				c_config::GetKeyValue(ifstream &f)
 {
@@ -254,7 +316,90 @@ map<string, string>	c_config::ReadFileContent(const string &file)
 	return result;
 }
 
-map<string, string>		c_config::GetFromFile(const string &file, const vector<string> &params)
+bool					c_config::isVarChecksValid(const c_config_tag &tag, const map<string, string> &vars)
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	result		= false;
+	auto	var_name	= tag.GetVar();
+
+	if(var_name.length())
+	{
+		if(vars.find(var_name) != vars.end())
+		{
+			result = true;
+		}
+		else
+		{
+			MESSAGE_ERROR("", "", "var(" + var_name + ") not defined in provided data");
+		}
+	}
+	else
+	{
+		MESSAGE_ERROR("", "", "var name is empty");
+	}
+
+
+	MESSAGE_DEBUG("", "", "finish (" + to_string(result) + ")");
+
+	return result;
+}
+
+string 					c_config::RenderVarInLine(string line, const c_config_tag &tag, const string &var_value)
+{
+	MESSAGE_DEBUG("", "", "start (" + line + ")");
+
+	auto	result = line.replace(tag.GetStartPos(), tag.GetEndPos() - tag.GetStartPos() + 2, var_value);
+
+	MESSAGE_DEBUG("", "", "finish (" + result + ")");
+
+	return result;
+}
+
+map<string, string>		c_config::Render(map<string, string> result, const map<string, string> &vars)
+{
+	MESSAGE_DEBUG("", "", "start (" + to_string(result.size()) + ")");
+
+	for(auto &it: result)
+	{
+		auto			line	= it.second;
+		
+		for(c_config_tag tag(line); tag.isFound(); tag.UpdateData(line))
+		{
+			if(tag.isTypeVar())
+			{
+				if(isVarChecksValid(tag, vars))
+				{
+					line = RenderVarInLine(line, tag, vars.at(tag.GetVar()));
+				}
+				else
+				{
+					MESSAGE_ERROR("", "", "fail to render variable");
+					break; // --- to avoid infinite loop
+				}
+			}
+			else if(tag.isTypeConfig())
+			{
+				MESSAGE_DEBUG("", "", "config not implemented");
+				break;
+			}
+			else
+			{
+				MESSAGE_ERROR("", "", "unknown tag type");
+				break; // --- to avoid infinite loop
+			}
+		}
+
+		// --- change line to rendered line in the return map
+		result[it.first] = line;
+	}
+
+	MESSAGE_DEBUG("", "", "finish (" + to_string(result.size()) + ")");
+
+	return result;
+}
+
+map<string, string>		c_config::GetFromFile(const string &file, const vector<string> &keys, const map<string, string> &vars)
 {
 	MESSAGE_DEBUG("", "", "start");
 
@@ -266,17 +411,24 @@ map<string, string>		c_config::GetFromFile(const string &file, const vector<stri
 		cache.Add(file, file_content);
 	}
 
-	result = cache.Get(file, params);
+	result = cache.Get(file, keys);
+	result = Render(result, vars);
 
 	MESSAGE_DEBUG("", "", "finish (result size: " + to_string(result.size()) + ")");
 
 	return result;
 }
 
-string					c_config::GetFromFile(const string &file, const string &param)
+map<string, string>		c_config::GetFromFile(const string &file, const vector<string> &keys)
 {
-	vector<string>	vec_param = {param};
-	return GetFromFile(file, vec_param)[param];
+	map <string, string> vars;
+	return GetFromFile(file, keys, vars);
+}
+
+string					c_config::GetFromFile(const string &file, const string &keys)
+{
+	vector<string>	vec_param = {keys};
+	return GetFromFile(file, vec_param)[keys];
 }
 
 ostream& operator<<(ostream& os, const c_config &var)

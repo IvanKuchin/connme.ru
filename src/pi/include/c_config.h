@@ -25,6 +25,40 @@ class c_config_cache
 		map<string, string>		Get(const string &file, const vector<string> &entries);
 };
 
+class c_config_tag
+{
+	private:
+
+		enum {VAR, CONFIG}		tag_type;
+		string					VAR_EXPR		= "var:";
+		string					CONFIG_EXPR		= "config:";
+		string					TAG_SEPARATOR	= ":";
+
+		string					line			= "";
+
+		string::size_type		start_pos		= string::npos;
+		string::size_type		end_pos			= string::npos;
+
+		string					file			= "";
+		string					var				= "";
+
+	public:
+
+								c_config_tag(const string &param) : line{param} {}; 
+
+		void					UpdateData(const string &param) { line = param; };
+
+		bool					isFound();
+		bool					isTypeVar()	const	{ return tag_type == VAR; };
+		bool					isTypeConfig() const{ return tag_type == CONFIG; };
+
+		string::size_type		GetStartPos() const	{ return start_pos; };
+		string::size_type		GetEndPos()	const	{ return end_pos; };
+
+		string					GetFile() const		{ return file; };
+		string					GetVar() const		{ return var; };
+};
+
 class c_config
 {
 	private:
@@ -43,14 +77,19 @@ class c_config
 		// --- support class methods
 		tuple<string, string>	ExtractKeyValue(const string &line);
 		string					RemoveComment(string line);
+		map<string, string>		Render(map<string, string> result, const map<string, string> &vars);
 		map<string, string>		ReadFileContent(const string &file);
 		string					trim(string line);
+
+		bool					isVarChecksValid(const c_config_tag &tag, const map<string, string> &vars);
+		string 					RenderVarInLine(string line, const c_config_tag &tag, const string &var_value);
 
 	public:
 								c_config(const string &folder) : config_folder {folder} {};
 
-		map<string, string>		GetFromFile(const string &file, const vector<string> &params);
-		string					GetFromFile(const string &file, const string &params);
+		map<string, string>		GetFromFile(const string &file, const vector<string> &keys, const map<string, string> &vars);
+		map<string, string>		GetFromFile(const string &file, const vector<string> &keys);
+		string					GetFromFile(const string &file, const string &keys);
 
 		void					SetConfigFolder(const string &param)					{ config_folder = param; }
 		string					GetConfigFolder()										{ return config_folder; }
