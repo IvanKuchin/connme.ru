@@ -1485,10 +1485,10 @@ int main()
 			auto			success_message = ""s;
 			auto			error_message = ""s;
 
-			vector<string>		keys		= {"certification"};
-			map<string, string> vars		= {{"itemType", "certification"}, {"itemID", "1234567890"}, {"folderName", "ffffolder#1"}, {"fileName", "file.ext"}};
-			auto				config_line	= config.GetFromFile("db_update_logo_by_id", keys, vars);
-			MESSAGE_DEBUG("", action, config_line["certification"]);
+			vector<string>		keys		= {"book"};
+			map<string, string> vars		= {{"itemType", "book"}, {"itemID", "1234567890"}, {"folderName", ""}, {"fileName", ""}};
+			auto				config_line	= config.GetFromFile("db_update_logo_by_id", keys, vars)["book"];
+			MESSAGE_DEBUG("", action, config_line);
 
 			success_message += quoted("faq"s) + ":[" + GetFAQInJSONFormat("SELECT * FROM `faq` WHERE `role`=" + quoted(user.GetType()) + ";", &db, &user) + "]";
 

@@ -82,6 +82,7 @@ class c_config
 		string					trim(string line);
 
 		bool					isVarChecksValid(const c_config_tag &tag, const map<string, string> &vars);
+		bool					isConfigChecksValid(const c_config_tag &tag);
 		string 					RenderVarInLine(string line, const c_config_tag &tag, const string &var_value);
 
 	public:

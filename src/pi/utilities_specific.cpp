@@ -182,7 +182,7 @@ string GetSpecificData_GetBaseDirectory(string itemType)
 }
 */
 
-string GetSpecificData_SelectQueryItemByID(string itemID, string itemType)
+static string GetSpecificData_SelectQueryItemByID(string itemID, string itemType)
 {
 	string	  result = "";
 
@@ -257,6 +257,7 @@ static string GetSpecificData_GetDBCoverPhotoFilenameString(string itemType)
 	return result;
 }
 
+/*
 string GetSpecificData_UpdateQueryItemByID(string itemID, string itemType, string folderID, string fileName)
 {
 	string		result = "";
@@ -325,10 +326,6 @@ string GetSpecificData_GetFinalFileExtension(string itemType)
 	return result;
 }
 
-/*
-*/
-
-
 string GetSpecificData_GetDataTypeByItemType(const string &itemType)
 {
 	map<string, string>	dictionary = 
@@ -357,8 +354,6 @@ string GetSpecificData_GetDataTypeByItemType(const string &itemType)
 
 	return result;
 }
-/*
-*/
 
 // --- Does the owner user allowed to change it ?
 // --- For example:
@@ -444,3 +439,4 @@ auto GetSpecificData_AllowedToChange(string itemID, string itemType, CMysql *db,
 	return error_message;
 }
 
+*/

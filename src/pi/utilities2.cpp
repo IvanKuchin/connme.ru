@@ -2557,6 +2557,39 @@ auto GetHelpdeskBaseUserInfoInJSONFormat(string dbQuery, CMysql *db, CUser *user
 	return result;
 }
 
+auto isItemAllowedToChange(string itemID, string itemType, c_config *config, CMysql *db, CUser *user) -> string
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto				error_message	= ""s;
+
+	if(config && db && user)
+	{
+		map<string, string>	vars			= {{"itemID", itemID}, {"itemType", itemType}, {"user_id", user->GetID()}};
+		auto				db_query		= config->GetFromFile("db_is_item_allowed_to_change", {itemType}, vars)[itemType];
+		auto				affected		= db->Query(db_query);
+
+		if(affected)
+		{
+			// --- good to go
+		}
+		else
+		{
+			error_message = gettext("already exists");
+			// --- GUI should not provide possibility to change item. If error appears then fix the GUI.
+			MESSAGE_ERROR("", "", error_message);
+		}
+	}
+	else
+	{
+		error_message = gettext("mandatory parameter missed");
+	}
+
+	MESSAGE_DEBUG("", "", "finish (error_message: " + error_message + ")");
+	
+	return error_message;
+}
+
 auto SendPhoneConfirmationCode(const string &country_code, const string &phone_number, const string &session, c_config * const config, CMysql * const db, CUser * const user) -> string
 {
 	MESSAGE_DEBUG("", "", "start");

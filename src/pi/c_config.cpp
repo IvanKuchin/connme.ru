@@ -345,6 +345,34 @@ bool					c_config::isVarChecksValid(const c_config_tag &tag, const map<string, s
 	return result;
 }
 
+bool					c_config::isConfigChecksValid(const c_config_tag &tag)
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto	result		= false;
+
+	if(tag.GetFile().length())
+	{
+		if(tag.GetVar().length())
+		{
+			result = true;
+		}
+		else
+		{
+			MESSAGE_ERROR("", "", tag.GetFile() + ":\"\" var name is empty");
+		}
+	}
+	else
+	{
+		MESSAGE_ERROR("", "", "file name is empty");
+	}
+
+
+	MESSAGE_DEBUG("", "", "finish (" + to_string(result) + ")");
+
+	return result;
+}
+
 string 					c_config::RenderVarInLine(string line, const c_config_tag &tag, const string &var_value)
 {
 	MESSAGE_DEBUG("", "", "start (" + line + ")");
@@ -374,14 +402,24 @@ map<string, string>		c_config::Render(map<string, string> result, const map<stri
 				}
 				else
 				{
-					MESSAGE_ERROR("", "", "fail to render variable");
+					MESSAGE_ERROR("", "", "var checks has failed");
 					break; // --- to avoid infinite loop
 				}
 			}
 			else if(tag.isTypeConfig())
 			{
-				MESSAGE_DEBUG("", "", "config not implemented");
-				break;
+				if(isConfigChecksValid(tag))
+				{
+					vector<string>	keys			= { tag.GetVar() };
+					auto			key_value_pair	= GetFromFile(tag.GetFile(), keys, vars);
+
+					line = RenderVarInLine(line, tag, key_value_pair.at(tag.GetVar()));
+				}
+				else
+				{
+					MESSAGE_ERROR("", "", "config checks has failed");
+					break; // --- to avoid infinite loop
+				}
 			}
 			else
 			{

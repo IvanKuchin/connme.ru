@@ -1764,7 +1764,15 @@ bool	RemoveSpecifiedCover(string itemID, string itemType, c_config *config, CMys
 		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) +  "]: start (itemID = " + itemID + ", itemType = " + itemType + ")");
 	}
 
-	affected = db->Query(GetSpecificData_SelectQueryItemByID(itemID, itemType));
+	// --- scoping
+	{
+		map<string, string> vars		= {{"itemType", itemType}, {"itemID", itemID}};
+		auto				db_query	= config->GetFromFile("db_select_all_by_id", {itemType}, vars)[itemType];
+
+		affected = db->Query(db_query);
+		// affected = db->Query(GetSpecificData_SelectQueryItemByID(itemID, itemType));
+	}
+
 	if(affected)
 	{
 		for(auto i = 0; i < affected; i++)
@@ -1811,7 +1819,15 @@ bool	RemoveSpecifiedCover(string itemID, string itemType, c_config *config, CMys
 
 		}
 		// --- cleanup DB with images pre-populated for posted message
-		db->Query(GetSpecificData_UpdateQueryItemByID(itemID, itemType, "", ""));
+
+		// --- scoping
+		{
+			map<string, string> vars		= {{"itemType", itemType}, {"itemID", itemID}, {"folderName", ""}, {"fileName", ""}};
+			auto				db_query	= config->GetFromFile("db_update_logo_by_id", {itemType}, vars)[itemType];
+
+			db->Query(db_query);
+			// db->Query(GetSpecificData_UpdateQueryItemByID(itemID, itemType, "", ""));
+		}
 	}
 
 	{
