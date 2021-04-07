@@ -31,6 +31,7 @@
 using namespace std;
 
 auto			crash_handler(int sig)														-> void;
+auto			GetSHA512(const string &src)												-> string;
 auto			wide_to_multibyte(std::wstring const& s)									-> string;
 auto			multibyte_to_wide(std::string const& s)										-> wstring;
 auto      		rtrim(string& str)															-> string;
