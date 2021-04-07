@@ -84,22 +84,22 @@ auto			GetPasswordCharacteristicsList(CMysql *)									-> string;
 auto			isAllowed_NoSession_Action(string action)									-> bool;
 
 
-auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
-string			GetGeoLocalityIDByCityAndRegion(string regionName, string cityName, CMysql *);
-bool        	AllowMessageInNewsFeed(CUser *me, const string messageOwnerID, const string messageAccessRights, vector<string> *messageFriendList);
-bool        	isPersistenceRateLimited(string REMOTE_ADDR, CMysql *);
-bool			isFilenameImage(const string &filename);
-bool			isFilenameVideo(const string &filename);
-void        	CopyFile(const string src, const string dst);
-string      	GetCompanyDuplicates(CMysql *);
-string      	GetPicturesWithEmptySet(CMysql *);
-string      	GetPicturesWithUnknownMessage(CMysql *);
-string      	GetPicturesWithUnknownUser(CMysql *);
-string      	GetRecommendationAdverse(CMysql *);
-string      	GetUserAvatarByUserID(string userID, CMysql *);
-void        	RemoveMessageImages(string sqlWhereStatement, CMysql *);
-void    		RemoveBookCover(string sqlWhereStatement, c_config *, CMysql *);
-vector<string>	GetUserTagsFromText(string srcMessage);
+auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *)			-> string;
+auto			GetGeoLocalityIDByCityAndRegion(string regionName, string cityName, CMysql *) -> string;
+auto			AllowMessageInNewsFeed(CUser *me, const string messageOwnerID, const string messageAccessRights, vector<string> *messageFriendList) -> bool;
+auto			isPersistenceRateLimited(string REMOTE_ADDR, CMysql *)						-> bool;
+auto			isFilenameImage(const string &filename)										-> bool;
+auto			isFilenameVideo(const string &filename)										-> bool;
+auto			CopyFile(const string src, const string dst)								-> void;
+auto			GetCompanyDuplicates(CMysql *)												-> string;
+auto			GetPicturesWithEmptySet(CMysql *)											-> string;
+auto			GetPicturesWithUnknownMessage(CMysql *)										-> string;
+auto			GetPicturesWithUnknownUser(CMysql *)										-> string;
+auto			GetRecommendationAdverse(CMysql *)											-> string;
+auto			GetUserAvatarByUserID(string userID, CMysql *)								-> string;
+auto			RemoveMessageImages(string sqlWhereStatement, CMysql *)						-> void;
+auto			RemoveBookCover(string sqlWhereStatement, c_config *, CMysql *)				-> void;
+auto			GetUserTagsFromText(string srcMessage)										-> vector<string>;
 auto    		RemoveSpecifiedCover(string itemID, string itemType, c_config *, CMysql *)	-> bool;
 auto        	CheckUserEmailExisting(string userNameToCheck, CMysql *)					-> bool;
 auto			RedirStdoutToFile(string fname)												-> bool;
@@ -200,9 +200,9 @@ auto			isItemAllowedToChange(string itemID, string itemType, c_config *, CMysql 
 
 
 // --- UTF8 encoding/decoding
-auto         	convert_utf8_to_windows1251(const char* utf8, char* windows1251, size_t n) -> int;
-auto			utf8_to_cp1251(const string &) -> string;
-auto 			convert_cp1251_to_utf8(const char *in, char *out, int size) -> bool;
+auto         	convert_utf8_to_windows1251(const char* utf8, char* windows1251, size_t n)	-> int;
+auto			utf8_to_cp1251(const string &)												-> string;
+auto 			convert_cp1251_to_utf8(const char *in, char *out, int size)					-> bool;
 
 // --- base64 encoding/decoding
 static const std::string base64_chars = 
@@ -211,9 +211,9 @@ static const std::string base64_chars =
              "0123456789+/";
 typedef unsigned char BYTE;
 
-bool 			is_base64(BYTE c);
-string 			base64_encode(BYTE const* buf, unsigned int bufLen) ;
-string 			base64_decode(std::string const& encoded_string) ;
+auto 			is_base64(BYTE c)										-> bool;
+auto 			base64_encode(BYTE const* buf, unsigned int bufLen) 	-> string;
+auto 			base64_decode(std::string const& encoded_string) 		-> string;
 
 struct ExifInfo 
 {
@@ -272,11 +272,12 @@ struct ExifInfo
 	string  YResolution;
 };
 
-string		ParseGPSLongitude(const string longitudeStr);
-string		ParseGPSLatitude(const string latitudeStr);
-string		ParseGPSAltitude(const string altitudeStr);
-string		ParseGPSSpeed(const string speedStr);
+auto		ParseGPSLongitude(const string longitudeStr)	-> string;
+auto		ParseGPSLatitude(const string latitudeStr)		-> string;
+auto		ParseGPSAltitude(const string altitudeStr)		-> string;
+auto		ParseGPSSpeed(const string speedStr)			-> string;
 
-auto		GetDomain() -> string;
+auto		GetDomain()										-> string;
+auto		isDemoDomain()									-> bool;
 
 #endif
