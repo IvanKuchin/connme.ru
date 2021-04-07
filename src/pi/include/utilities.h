@@ -86,7 +86,6 @@ auto			isAllowed_NoSession_Action(string action) -> bool;
 
 auto      		GetHelpdeskBaseUserInfoInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
-string 			GetOpenVacanciesInJSONFormat(string companyID, CMysql *, CUser * = NULL);
 string			GetGeoLocalityIDByCityAndRegion(string regionName, string cityName, CMysql *);
 bool        	AllowMessageInNewsFeed(CUser *me, const string messageOwnerID, const string messageAccessRights, vector<string> *messageFriendList);
 bool        	isPersistenceRateLimited(string REMOTE_ADDR, CMysql *);

@@ -1485,11 +1485,6 @@ int main()
 			auto			success_message = ""s;
 			auto			error_message = ""s;
 
-			vector<string>		keys		= {"book"};
-			map<string, string> vars		= {{"itemType", "book"}, {"itemID", "1234567890"}, {"folderName", ""}, {"fileName", ""}};
-			auto				config_line	= config.GetFromFile("db_update_logo_by_id", keys, vars)["book"];
-			MESSAGE_DEBUG("", action, config_line);
-
 			success_message += quoted("faq"s) + ":[" + GetFAQInJSONFormat("SELECT * FROM `faq` WHERE `role`=" + quoted(user.GetType()) + ";", &db, &user) + "]";
 
 			AJAX_ResponseTemplate(&indexPage, success_message, error_message);

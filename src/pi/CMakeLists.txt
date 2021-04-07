@@ -35,9 +35,7 @@ set(JOINT_LIBRARY_SRCs
     c_smsc.cpp
     utilities1.cpp
     utilities2.cpp
-    utilities3.cpp
     utilities_common.cpp
-    utilities_specific.cpp
     c_cache_obj.cpp
     c_date_spelling.cpp
     )

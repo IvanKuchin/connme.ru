@@ -61,6 +61,7 @@ auto 			GetBookRatingUsersList(string bookID, CUser *, CMysql *) -> string;
 auto 	     	GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned long actionID, CMysql *, CUser *) -> string;
 auto    	  	GetUserNotificationInJSONFormat(string sqlRequest, CMysql *, CUser *) -> string;
 auto 			GetCandidatesListAppliedToVacancyInJSONFormat(string dbQuery, CMysql *) -> string;
+auto 			GetOpenVacanciesInJSONFormat(string companyID, CMysql *, CUser * = NULL) -> string;
 
 auto			RotateImage(string filename, int degree) -> string;
 auto			FlipImageVertical(string filename) -> string;
