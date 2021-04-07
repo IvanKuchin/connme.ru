@@ -3,6 +3,7 @@
 
 #include <string>
 
+
 #define CURRENT_VERSION "${My_VERSION_MAJOR}.${My_VERSION_MINOR}"
 #define ROOTDIR "${ROOTDIR}"
 #define IMAGEROOTDIR "${IMAGEROOTDIR}"
