@@ -6,5 +6,8 @@ language		= logo_filename
 book			= coverPhotoFilename
 company			= logo_filename
 company_profile_logo	= logo_filename
+group			= logo_filename
+ribbon			= image
+
 gift			= logo_filename
 event			= logo_filename

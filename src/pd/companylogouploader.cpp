@@ -2,7 +2,7 @@
 
 static bool ImageSaveAsJpg (const string src, const string dst, c_config *config)
 {
-	MESSAGE_DEBUG("", "", "start");
+	MESSAGE_DEBUG("", "", "start (" + src + ", " + dst + ")");
 
 #ifndef IMAGEMAGICK_DISABLE
 	// Construct the image object. Separating image construction from the

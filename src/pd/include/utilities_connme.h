@@ -5,6 +5,7 @@
 #include "utilities.h"
 #include "utilities_sql_queries.h"
 
+#define 		RIBBON_URL_FOLDER				"/images/ribbons/"s
 
 // --- User language expertise functions
 // ------- do NOT yse this function

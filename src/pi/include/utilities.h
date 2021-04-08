@@ -81,7 +81,7 @@ auto      		AutodetectSexByName(string name, CMysql *)									-> string;
 auto			GetPasswordNounsList(CMysql *)												-> string;
 auto			GetPasswordAdjectivesList(CMysql *)											-> string;
 auto			GetPasswordCharacteristicsList(CMysql *)									-> string;
-auto			isAllowed_NoSession_Action(string action)									-> bool;
+auto			isAllowed_Guest_Action(string action, c_config *)						-> bool;
 
 
 auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *)			-> string;

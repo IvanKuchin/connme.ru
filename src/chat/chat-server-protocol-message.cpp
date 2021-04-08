@@ -269,7 +269,7 @@ bool ImageSaveAsJpg (const string src, const string dst, struct ExifInfo *exifIn
 string SaveAndCheckPreImageToTmpLocation(const string &fileContent)
 {
 	// FILE			*f;
-	int				folderID = (int)(rand()/(RAND_MAX + 1.0) * FEEDIMAGE_NUMBER_OF_FOLDERS) + 1;
+	int				folderID = (int)(rand()/(RAND_MAX + 1.0) * CHAT_IMAGE_NUMBER_OF_FOLDERS) + 1;
 	string			filePrefix = GetRandom(20);
 	string			finalFile, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 	string			httpImageLocation = "";
@@ -297,7 +297,7 @@ string SaveAndCheckPreImageToTmpLocation(const string &fileContent)
 		fileExtension = ".jpg";
 
 		ost.str("");
-		ost << IMAGE_CHAT_DIRECTORY << "/" << folderID << "/" << filePrefix << ".jpg";
+		ost << CHAT_IMAGE_DIRECTORY << "/" << folderID << "/" << filePrefix << ".jpg";
 		finalFile = ost.str();
 
 		ost.str("");

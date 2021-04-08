@@ -17,6 +17,8 @@
  * may be proprietary.  So unlike the library itself, they are licensed
  * Public Domain.
  */
+#ifndef __CHAT__SERVER__H__
+#define __CHAT__SERVER__H__
 
 #if defined(_WIN32) && defined(EXTERNAL_POLL)
 #define WINVER 0x0600
@@ -37,14 +39,17 @@
 #include <string.h>
 #include <Magick++.h>
 
+#include "libwebsockets.h"
+
+#include "chat-server-const.h"
+#include "chat-server-presencecache.h"
+#include "chat-server-singlemessage.h"
+
 #include "cexception.h"
 #include "cuser.h"
 #include "cmysql.h"
-#include "chat-server-presencecache.h"
-#include "chat-server-singlemessage.h"
 #include "localy.h"
 
-#include "libwebsockets.h"
 
 #ifdef _WIN32
 #include <io.h>
@@ -167,3 +172,6 @@ callback_lws_status(struct lws *wsi, enum lws_callback_reasons reason,
 
 extern void
 dump_handshake_info(struct lws *wsi);
+
+
+#endif

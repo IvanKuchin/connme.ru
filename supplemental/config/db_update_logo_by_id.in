@@ -5,5 +5,8 @@ school		= UPDATE `school`		SET `<<config:db_field_name_photo_folder:<<var:itemTy
 language	= UPDATE `language`		SET `<<config:db_field_name_photo_folder:<<var:itemType>>>>`= "<<var:folderName>>", `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";
 book		= UPDATE `book`			SET `<<config:db_field_name_photo_folder:<<var:itemType>>>>`= "<<var:folderName>>", `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";
 company		= UPDATE `company`		SET `<<config:db_field_name_photo_folder:<<var:itemType>>>>`= "<<var:folderName>>", `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";
+group		= UPDATE `groups`		SET `<<config:db_field_name_photo_folder:<<var:itemType>>>>`= "<<var:folderName>>", `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";
+ribbon		= UPDATE `ribbons`		SET `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";
+
 gift		= UPDATE `gifts`		SET `<<config:db_field_name_photo_folder:<<var:itemType>>>>`= "<<var:folderName>>", `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";
 event		= UPDATE `events`		SET `<<config:db_field_name_photo_folder:<<var:itemType>>>>`= "<<var:folderName>>", `<<config:db_field_name_photo_filename:<<var:itemType>>>>`="<<var:fileName>>" WHERE `id`="<<var:itemID>>";

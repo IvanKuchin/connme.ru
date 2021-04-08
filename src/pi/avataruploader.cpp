@@ -1,15 +1,8 @@
 #include "avataruploader.h"	 
 
-bool ImageSaveAsJpg (const string src, const string dst)
+static bool ImageSaveAsJpg(const string src, const string dst, c_config *config)
 {
-	{
-		CLog	log;
-		ostringstream   ost;
-
-		ost.str("");
-		ost << "ImageSaveAsJpg (" << src << ", " << dst << "): enter";
-		log.Write(DEBUG, ost.str());
-	}
+	MESSAGE_DEBUG("", "", "start (" + src + ", " + dst + ")");
 
 #ifndef IMAGEMAGICK_DISABLE
 	// Construct the image object. Separating image construction from the
@@ -19,6 +12,9 @@ bool ImageSaveAsJpg (const string src, const string dst)
 		Magick::Image		   image;
 		Magick::OrientationType imageOrientation;
 		Magick::Geometry		imageGeometry;
+
+		auto	avatar_max_width	= stod_noexcept(config->GetFromFile("image_max_width", "avatar"));
+		auto	avatar_max_height	= stod_noexcept(config->GetFromFile("image_max_height", "avatar"));
 
 		// Read a file into image object
 		image.read( src );
@@ -43,17 +39,17 @@ bool ImageSaveAsJpg (const string src, const string dst)
 		if(imageOrientation == Magick::RightBottomOrientation) { image.flop(); image.rotate(90); }
 		if(imageOrientation == Magick::LeftBottomOrientation) image.rotate(-90);
 
-		if((imageGeometry.width() > AVATAR_MAX_WIDTH) || (imageGeometry.height() > AVATAR_MAX_HEIGHT))
+		if((imageGeometry.width() > avatar_max_width) || (imageGeometry.height() > avatar_max_height))
 		{
 			int   newHeight, newWidth;
 			if(imageGeometry.width() >= imageGeometry.height())
 			{
-				newWidth = AVATAR_MAX_WIDTH;
+				newWidth = avatar_max_width;
 				newHeight = newWidth * imageGeometry.height() / imageGeometry.width();
 			}
 			else
 			{
-				newHeight = AVATAR_MAX_HEIGHT;
+				newHeight = avatar_max_height;
 				newWidth = newHeight * imageGeometry.width() / imageGeometry.height();
 			}
 
@@ -174,7 +170,9 @@ int main()
 			for(int filesCounter = 0; filesCounter < indexPage.GetFilesHandler()->Count(); filesCounter++)
 			{
 				FILE			*f;
-				int				folderID = (int)(rand()/(RAND_MAX + 1.0) * AVATAR_NUMBER_OF_FOLDERS) + 1;
+				auto			number_of_folders	= stod_noexcept(config.GetFromFile("number_of_folders", "avatar"));
+				auto			file_size_limit		= stod_noexcept(config.GetFromFile("max_file_size", "avatar"));
+				int				folderID = (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
 				string			filePrefix = GetRandom(20);
 				string			file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 				ostringstream   ost;
@@ -192,13 +190,13 @@ int main()
 						log.Write(DEBUG, ost.str());
 					}
 
-					if(indexPage.GetFilesHandler()->GetSize(filesCounter) > AVATAR_MAX_FILE_SIZE) 
+					if(indexPage.GetFilesHandler()->GetSize(filesCounter) > file_size_limit) 
 					{
 						CLog			log;
 						ostringstream	ost;
 
 						ost.str("");
-						ost << string(__func__) + ": ERROR avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << AVATAR_MAX_FILE_SIZE;
+						ost << string(__func__) + ": ERROR avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << file_size_limit;
 
 						log.Write(ERROR, ost.str());
 						throw CExceptionHTML("avatar file size exceed", indexPage.GetFilesHandler()->GetName(filesCounter));
@@ -211,7 +209,7 @@ int main()
 						string		  tmp;
 						std::size_t  foundPos;
 
-						folderID = (int)(rand()/(RAND_MAX + 1.0) * AVATAR_NUMBER_OF_FOLDERS) + 1;
+						folderID = (int)(rand()/(RAND_MAX + 1.0) * number_of_folders) + 1;
 						filePrefix = GetRandom(20);
 						tmp = indexPage.GetFilesHandler()->GetName(filesCounter);
 
@@ -261,7 +259,7 @@ int main()
 					fwrite(indexPage.GetFilesHandler()->Get(filesCounter), indexPage.GetFilesHandler()->GetSize(filesCounter), 1, f);
 					fclose(f);
 
-					if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG))
+					if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG, &config))
 					{
 
 						MESSAGE_DEBUG("", "", "chosen filename for avatar [" + file2Check + "]");

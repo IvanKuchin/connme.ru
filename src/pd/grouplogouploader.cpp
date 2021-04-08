@@ -1,6 +1,6 @@
 #include "grouplogouploader.h"	 
 
-bool ImageSaveAsJpg (const string src, const string dst)
+bool ImageSaveAsJpg (const string src, const string dst, c_config *config)
 {
 	{
 		CLog	log;
@@ -16,6 +16,9 @@ bool ImageSaveAsJpg (const string src, const string dst)
 		Magick::Image		   image;
 		Magick::OrientationType imageOrientation;
 		Magick::Geometry		imageGeometry;
+
+		auto					grouplogo_max_width	= stod_noexcept(config->GetFromFile("image_max_width", "group"));
+		auto					grouplogo_max_height = stod_noexcept(config->GetFromFile("image_max_height", "group"));
 
 		// Read a file into image object
 		image.read( src );
@@ -40,17 +43,17 @@ bool ImageSaveAsJpg (const string src, const string dst)
 		if(imageOrientation == Magick::RightBottomOrientation) { image.flop(); image.rotate(90); }
 		if(imageOrientation == Magick::LeftBottomOrientation) image.rotate(-90);
 
-		if((imageGeometry.width() > GROUPLOGO_MAX_WIDTH) || (imageGeometry.height() > GROUPLOGO_MAX_HEIGHT))
+		if((imageGeometry.width() > grouplogo_max_width) || (imageGeometry.height() > grouplogo_max_height))
 		{
 			int   newHeight, newWidth;
 			if(imageGeometry.width() >= imageGeometry.height())
 			{
-				newWidth = GROUPLOGO_MAX_WIDTH;
+				newWidth = grouplogo_max_width;
 				newHeight = newWidth * imageGeometry.height() / imageGeometry.width();
 			}
 			else
 			{
-				newHeight = GROUPLOGO_MAX_HEIGHT;
+				newHeight = grouplogo_max_height;
 				newWidth = newHeight * imageGeometry.width() / imageGeometry.height();
 			}
 
@@ -176,18 +179,18 @@ int main()
 						for(int filesCounter = 0; filesCounter < indexPage.GetFilesHandler()->Count(); filesCounter++)
 						{
 							FILE			*f;
-							int			 folderID = (int)(rand()/(RAND_MAX + 1.0) * GROUPLOGO_NUMBER_OF_FOLDERS) + 1;
+							int			 folderID = (int)(rand()/(RAND_MAX + 1.0) * stod_noexcept(config.GetFromFile("number_of_folders", "group"))) + 1;
 							string		  filePrefix = GetRandom(20);
 							string		  file2Check, tmpFile2Check, tmpImageJPG, fileName, fileExtension;
 							ostringstream   ost;
 
-							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > GROUPLOGO_MAX_FILE_SIZE) 
+							if(indexPage.GetFilesHandler()->GetSize(filesCounter) > stod_noexcept(config.GetFromFile("max_file_size", "group"))) 
 							{
 								CLog			log;
 								ostringstream   ost;
 
 								ost.str("");
-								ost << string(__func__) << "[" << to_string(__LINE__) << "]:ERROR: avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << GROUPLOGO_MAX_FILE_SIZE;
+								ost << string(__func__) << "[" << to_string(__LINE__) << "]:ERROR: avatar file [" << indexPage.GetFilesHandler()->GetName(filesCounter) << "] size exceed permitted maximum: " << indexPage.GetFilesHandler()->GetSize(filesCounter) << " > " << stod_noexcept(config.GetFromFile("max_file_size", "group"));
 
 								log.Write(ERROR, ost.str());
 								throw CExceptionHTML("avatar file size exceed", indexPage.GetFilesHandler()->GetName(filesCounter));
@@ -200,7 +203,7 @@ int main()
 								string		  tmp;
 								std::size_t  foundPos;
 
-								folderID = (int)(rand()/(RAND_MAX + 1.0) * GROUPLOGO_NUMBER_OF_FOLDERS) + 1;
+								folderID = (int)(rand()/(RAND_MAX + 1.0) * stod_noexcept(config.GetFromFile("number_of_folders", "group"))) + 1;
 								filePrefix = GetRandom(20);
 								tmp = indexPage.GetFilesHandler()->GetName(filesCounter);
 
@@ -250,7 +253,7 @@ int main()
 							fwrite(indexPage.GetFilesHandler()->Get(filesCounter), indexPage.GetFilesHandler()->GetSize(filesCounter), 1, f);
 							fclose(f);
 
-							if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG))
+							if(ImageSaveAsJpg(tmpFile2Check, tmpImageJPG, &config))
 							{
 
 								MESSAGE_DEBUG("", "", "chosen filename for avatar [" + file2Check + "]")

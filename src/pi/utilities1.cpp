@@ -1963,12 +1963,12 @@ bool RedirStderrToFile(string fname)
 	return  result;
 }
 
-auto isAllowed_NoSession_Action(string action) -> bool
+auto isAllowed_Guest_Action(string action, c_config *config) -> bool
 {
-	auto			result = false;
-	vector<string>	allowed_nosession_actions = ALLOWED_NO_SESSION_ACTION;
-
 	MESSAGE_DEBUG("", "", "start (action " + action + ")");
+
+	auto			result = false;
+	vector<string>	allowed_nosession_actions = split(config->GetFromFile("guest_allowed_actions", "__default__"), ',');
 
 	for(auto &allowed_nosession_action : allowed_nosession_actions)
 	{

@@ -210,7 +210,7 @@ auto GenerateSession(string action, c_config *config, CCgi *indexPage, CMysql *d
 		}
 
 /*
-		if(isAllowed_NoSession_Action(action))
+		if(isAllowed_Guest_Action(action))
 		{
 			// --- guest user access,
 			// --- 1) user wall, if exact link known
@@ -222,7 +222,7 @@ auto GenerateSession(string action, c_config *config, CCgi *indexPage, CMysql *d
 */
 		if(__LoadUserAndSetVariables("Guest", indexPage, db, user).empty())
 		{
-			if(isAllowed_NoSession_Action(action))
+			if(isAllowed_Guest_Action(action, config))
 			{
 				// --- guest user access,
 				// --- 1) user wall, if exact link known

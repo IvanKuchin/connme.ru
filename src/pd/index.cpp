@@ -1,7 +1,7 @@
 #include "index.h"
 
 // --- check that src image is actually image, resize it and save to dst
-bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct ExifInfo &exifInfo)
+bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct ExifInfo &exifInfo, c_config *config)
 {
 	MESSAGE_DEBUG("", "", "start (src = " + src + ", dst = " + dst + ")");
 
@@ -13,6 +13,9 @@ bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct Exif
 		Magick::Image		   image;
 		Magick::OrientationType imageOrientation;
 		Magick::Geometry		imageGeometry;
+
+		auto					image_max_width	= stod_noexcept(config->GetFromFile("image_max_width", "feed"));
+		auto					image_max_height = stod_noexcept(config->GetFromFile("image_max_height", "feed"));		
 
 		// Read a file into image object
 		image.read( src );
@@ -30,17 +33,17 @@ bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct Exif
 		if(imageOrientation == Magick::RightBottomOrientation) { image.flop(); image.rotate(90); }
 		if(imageOrientation == Magick::LeftBottomOrientation) image.rotate(-90);
 
-		if((imageGeometry.width() > FEED_IMAGE_MAX_WIDTH) || (imageGeometry.height() > FEED_IMAGE_MAX_HEIGHT))
+		if((imageGeometry.width() > image_max_width) || (imageGeometry.height() > image_max_height))
 		{
 			int   newHeight, newWidth;
 			if(imageGeometry.width() >= imageGeometry.height())
 			{
-				newWidth = FEED_IMAGE_MAX_WIDTH;
+				newWidth = image_max_width;
 				newHeight = newWidth * imageGeometry.height() / imageGeometry.width();
 			}
 			else
 			{
-				newHeight = FEED_IMAGE_MAX_HEIGHT;
+				newHeight = image_max_height;
 				newWidth = newHeight * imageGeometry.width() / imageGeometry.height();
 			}
 
@@ -657,9 +660,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -778,9 +779,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -839,9 +838,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -913,9 +910,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1035,9 +1030,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1105,9 +1098,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1175,9 +1166,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1251,9 +1240,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1319,9 +1306,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1413,9 +1398,7 @@ int main()
 				{
 					ostringstream   ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1507,9 +1490,7 @@ int main()
 				{
 					ostringstream   ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1599,9 +1580,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -1678,9 +1657,7 @@ int main()
 				{
 					ostringstream	ost;
 
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
 				}
@@ -2067,37 +2044,33 @@ int main()
 					MESSAGE_ERROR("", action, "imageTempSet is empty");
 
 					ostFinal.str("");
-					ostFinal << "{" << std::endl;
-					ostFinal << "\"result\" : \"error\"," << std::endl;
-					ostFinal << "\"description\" : \"проблема с выбором imageTempSet\"" << std::endl;
-					ostFinal << "}" << std::endl;
+					ostFinal << "{"
+								"\"result\" : \"error\","
+								"\"description\" : \"проблема с выбором imageTempSet\""
+								"}";
 				}
 				else
 				{
 					MESSAGE_DEBUG("", action, "url is empty OR too long OR imageTempSet is empty");
 
 					ostFinal.str("");
-					ostFinal << "{" << std::endl;
-					ostFinal << "\"result\" : \"error\"," << std::endl;
-					ostFinal << "\"description\" : \"ссылка пустая или слишком длинная\"" << std::endl;
-					ostFinal << "}" << std::endl;
+					ostFinal << "{"
+								"\"result\" : \"error\","
+								"\"description\" : \"ссылка пустая или слишком длинная\""
+								"}";
 				}
 			}
 			else
 			{
 				if(user.GetLogin() == "Guest")
 				{
-					ostringstream	ost;
-
-					{
-						MESSAGE_DEBUG("", action, "re-login required");
-					}
+					MESSAGE_DEBUG("", action, "re-login required");
 
 					ostFinal.str("");
-					ostFinal << "{" << std::endl;
-					ostFinal << "\"result\" : \"error\"," << std::endl;
-					ostFinal << "\"description\" : \"Ваша сессия истекла. Необходимо выйти и повторно зайти.\"" << std::endl;
-					ostFinal << "}" << std::endl;
+					ostFinal << "{"
+								"\"result\" : \"error\","
+								"\"description\" : \"Ваша сессия истекла. Необходимо выйти и повторно зайти.\""
+								"}";
 				}
 
 
@@ -2162,7 +2135,7 @@ int main()
 							ost << "/tmp/" << html.GetPreviewImagePrefix() << ".jpg";
 							tmpImageJPG = ost.str();
 
-							if(ImageSaveAsJpgToFeedFolder(tmpFile2Check, tmpImageJPG, exifInfo))
+							if(ImageSaveAsJpgToFeedFolder(tmpFile2Check, tmpImageJPG, exifInfo, &config))
 							{
 
 								MESSAGE_DEBUG("", action, "chosen filename for feed image [" + finalFile + "]");
@@ -7870,7 +7843,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access login page, redirect to default page");
 
-				indexPage.Redirect("/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + config.GetFromFile("default_action", user.GetType()) + "?rand=" + GetRandom(10));
 			}
 
 			MESSAGE_DEBUG("", action, "finish");
@@ -8226,11 +8199,11 @@ int main()
 									indexPage.RegisterVariableForce("loginUser", user.GetLogin());
 									indexPage.RegisterVariableForce("menu_main_active", "active");
 
-									MESSAGE_DEBUG("", action, "redirect to \"/" + config.GetFromFile("default_action", "guest") + "?rand=xxxxxx\"");
+									MESSAGE_DEBUG("", action, "redirect to \"/" + config.GetFromFile("default_action", user.GetType()) + "?rand=xxxxxx\"");
 
 									success_message = 	"\"result\": \"success\","
 														"\"description\": \"\","
-														"\"url\": \"/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10) + "\"";
+														"\"url\": \"/" + config.GetFromFile("default_action", user.GetType()) + "?rand=" + GetRandom(10) + "\"";
 								}
 							}
 						}
@@ -8650,7 +8623,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access activateNewUser page, redirect to default page");
 
-				indexPage.Redirect("/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + config.GetFromFile("default_action", user.GetType()) + "?rand=" + GetRandom(10));
 			}
 
 
@@ -13569,7 +13542,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "(not an error, severity should be monitor) registered user(" + user.GetLogin() + ") attempts to access showmain page, redirect to default page");
 
-				indexPage.Redirect("/" + config.GetFromFile("default_action", "guest") + "?rand=" + GetRandom(10));
+				indexPage.Redirect("/" + config.GetFromFile("default_action", user.GetType()) + "?rand=" + GetRandom(10));
 			}
 		}
 
