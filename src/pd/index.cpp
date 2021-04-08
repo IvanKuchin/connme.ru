@@ -11256,14 +11256,12 @@ int main()
 
 		if(action == "forget")
 		{
-			ostringstream	ost;
-			string		login;
-			CMailLocal	mail;
-
 			MESSAGE_DEBUG("", action, "start");
 
+			ostringstream	ost;
+			CMailLocal		mail;
+			auto			login = RemoveQuotas(indexPage.GetVarsHandler()->Get("login"));
 
-			login = RemoveQuotas(indexPage.GetVarsHandler()->Get("login"));
 			if(login.length() > 0)
 			{
 				int		affected;
