@@ -490,8 +490,6 @@ int main()
 
 			if(strPageToGet.empty()) strPageToGet = "0";
 
-			MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
-
 			try{
 				currPage = stoi(strPageToGet);
 			} catch(...) {
@@ -503,6 +501,8 @@ int main()
 			} catch(...) {
 				newsOnSinglePage = NEWS_ON_SINGLE_PAGE;
 			}
+
+			MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
 
 			if(user.GetLogin() == "Guest")
 			{
@@ -518,17 +518,10 @@ int main()
 									"WHERE `users_friends`.`userID`='" + user.GetID() + "' and `users_friends`.`state`=\"confirmed\" and `users`.`isactivated`=\"Y\" and `users`.`isblocked`=\"N\";";
 				auto			vectorFriendList		= GetValuesFromDB(sql_query, &db);
 								vectorFriendList.push_back(user.GetID());
-				// auto			strFriendList			= join(vectorFriendList, ",");
-
+								
 				auto			companies_vector		= GetValuesFromDB("SELECT `id` FROM `company` WHERE `isBlocked`=\"N\" AND `id` IN (SELECT `entity_id` FROM `users_subscriptions` WHERE `user_id`=\"" + user.GetID() + "\" AND `entity_type`=\"company\");", &db);
-				// auto			strCompaniesList		= join(companies_vector, ",");
-
 				auto			groups_vector			= GetValuesFromDB("SELECT `id` FROM `groups` WHERE `isBlocked`=\"N\" AND `id` IN (SELECT `entity_id` FROM `users_subscriptions` WHERE `user_id`=\"" + user.GetID() + "\" AND `entity_type`=\"group\");", &db);
-				// auto			strGroupsList			= join(groups_vector, ",");
-
 				auto			companies_i_own_vector	= GetValuesFromDB("SELECT `id` FROM `company` WHERE `isBlocked`=\"N\" AND `admin_userID`=\"" + user.GetID() + "\";", &db);
-				// auto			companies_i_own_list	= join(companies_i_own_vector, ",");
-
 				auto			where_query				= 
 															"((`feed`.`userId` in (" + join(vectorFriendList, ",") + ")) AND (`feed`.`srcType` = \"user\") AND (`feed`.`dstType` = \"\"))"
 															+ (companies_vector.size() ? " OR ((`feed`.`userId` in (" + join(companies_vector, ",") + ")) AND (`feed`.`srcType` = \"company\"))" : "")
@@ -538,84 +531,7 @@ int main()
 									"\"my_companies\":[" + join(companies_i_own_vector, ",") + "],"
 									"\"feed\":[" + GetNewsFeedInJSONFormat(where_query, currPage, newsOnSinglePage, &user, &db) + "]"
 									;
-
-/*
-				// auto			affected = db.Query(sql_query);
-				for(auto i = 0; i < affected; i++)
-					vectorFriendList.push_back(db.Get(i, "friendID"));
-
-				ost.str("");
-				for(auto it = vectorFriendList.begin(); it != vectorFriendList.end(); ++it)
-				{
-					if(it != vectorFriendList.begin()) ost << ",";
-					ost << *it;
-				}
-				strFriendList = ost.str();
-
-				if(strFriendList.length() > 0) strFriendList += ",";
-				strFriendList += user.GetID();
-
-
-				// --- building subscription company list
-				{
-					auto	affected = db.Query("SELECT `id` FROM `company` WHERE `isBlocked`=\"N\" AND `id` IN (SELECT `entity_id` FROM `users_subscriptions` WHERE `user_id`=\"" + user.GetID() + "\" AND `entity_type`=\"company\");");
-
-					strCompaniesList = "";
-					for(auto i = 0; i < affected; i++)
-					{
-						if(strCompaniesList.length()) strCompaniesList += ",";
-						strCompaniesList += db.Get(i, "id");
-					}
-				}
-
-				// --- building subscription group list
-				{
-					auto	affected = db.Query("SELECT `id` FROM `groups` WHERE `isBlocked`=\"N\" AND `id` IN (SELECT `entity_id` FROM `users_subscriptions` WHERE `user_id`=\"" + user.GetID() + "\" AND `entity_type`=\"group\");");
-
-					strGroupsList = "";
-					for(auto i = 0; i < affected; i++)
-					{
-						if(strGroupsList.length()) strGroupsList += ",";
-						strGroupsList += db.Get(i, "id");
-					}
-				}
-
-				// --- building company owning list
-				{
-
-					auto	affected = db.Query("SELECT `id` FROM `company` WHERE `isBlocked`=\"N\" AND `admin_userID`=\"" + user.GetID() + "\";");
-
-
-					for(auto i = 0; i < affected; i++)
-					{
-						if(companies_i_own_list.length()) companies_i_own_list += ",";
-						companies_i_own_list += db.Get(i, "id");
-					}
-				}
-
-				whereQuery = "((`feed`.`userId` in (" + strFriendList + ")) AND (`feed`.`srcType` = \"user\") AND (`feed`.`dstType` = \"\"))";
-
-				if(strCompaniesList.length()) 
-					where_query += " OR ((`feed`.`userId` in (" + strCompaniesList + ")) AND (`feed`.`srcType` = \"company\"))";
-
-				if(strGroupsList.length())
-					where_query += " OR ((`feed`.`dstID` in (" + strGroupsList + ")) AND (`feed`.`dstType` = \"group\"))";
-
-				indexPage.RegisterVariableForce("result", "{"
-															"\"status\":\"success\","
-															"\"my_companies\":[" + join(companies_i_own_vector, ",") + "],"
-															"\"feed\":[" + GetNewsFeedInJSONFormat(where_query, currPage, newsOnSinglePage, &user, &db) + "]"
-															"}");
-*/
 			}
-/*
-			if(!indexPage.SetTemplate("json_response.htmlt"))
-			{
-				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
-				throw CExceptionHTML("user not activated");
-			}
-*/
-
 			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 		}
 

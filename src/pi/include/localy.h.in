@@ -41,9 +41,6 @@
 #define	DEFAULT_LANGUAGE							"ru"
 #define	TEMPLATE_PATH								string(ROOTDIR) + string("/cgi-bin/templates/")
 
-#define	THREADS_PER_PAGE							20
-#define	PHOTO_PER_PAGE								20
-#define	MAX_PHOTO									3
 #define	NEWS_ON_SINGLE_PAGE							30
 #define	FRIENDS_ON_SINGLE_PAGE						30
 
