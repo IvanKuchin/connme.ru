@@ -1,5 +1,7 @@
+avatar			= ${IMAGEROOTDIR}/html/images/avatars
 certification		= ${IMAGEROOTDIR}/html/images/certifications
 course			= ${IMAGEROOTDIR}/html/images/certifications
+group			= ${IMAGEROOTDIR}/html/images/groups
 university		= ${IMAGEROOTDIR}/html/images/universities
 school			= ${IMAGEROOTDIR}/html/images/schools
 language		= ${IMAGEROOTDIR}/html/images/flags

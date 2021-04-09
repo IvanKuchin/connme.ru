@@ -2175,17 +2175,9 @@ int main()
 			{
 				if(db.Get(0, "userid") == user.GetID())
 				{
-					string filename;
+					auto	filename = config.GetFromFile("image_folders", "avatar") + "/avatars"+ db.Get(0, "folder") + "/" + db.Get(0, "filename");
 
-					filename += IMAGE_AVATAR_DIRECTORY;
-					filename += "/avatars";
-					filename += db.Get(0, "folder");
-					filename += "/";
-					filename += db.Get(0, "filename");
-
-					{
-						MESSAGE_DEBUG("", action, "removing avatar [id=" + avatarID + "] belongs to user " + user.GetLogin() + " [filename=" + filename + "]");
-					}
+					MESSAGE_DEBUG("", action, "removing avatar [id=" + avatarID + "] belongs to user " + user.GetLogin() + " [filename=" + filename + "]");
 
 					ost.str("");
 					ost << "DELETE FROM `users_avatars` WHERE `id`=\"" << avatarID << "\";";

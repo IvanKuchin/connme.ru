@@ -222,17 +222,10 @@ int main()
 							fileExtension = ".jpg";
 						}
 
-						ost.str("");
-						ost << IMAGE_AVATAR_DIRECTORY << "/avatars" << folderID << "/" << filePrefix << ".jpg";
-						file2Check = ost.str();
+						file2Check = config.GetFromFile("image_folders", "avatar") + "/avatars" + to_string(folderID) + "/" + filePrefix + ".jpg";
+						tmpFile2Check = "/tmp/tmp_" + filePrefix + fileExtension;
+						tmpImageJPG = "/tmp/" + filePrefix + ".jpg";
 
-						ost.str("");
-						ost << "/tmp/tmp_" << filePrefix << fileExtension;
-						tmpFile2Check = ost.str();
-
-						ost.str("");
-						ost << "/tmp/" << filePrefix << ".jpg";
-						tmpImageJPG = ost.str();
 					} while(isFileExists(file2Check) || isFileExists(tmpFile2Check) || isFileExists(tmpImageJPG));
 
 
@@ -267,7 +260,7 @@ int main()
 						// --- remove previous logo
 						if(db.Query("SELECT * FROM `users_avatars` WHERE `userid`=\"" + user.GetID() + "\" AND `isActive`=\"1\";"))
 						{
-							auto	currLogo = string(IMAGE_AVATAR_DIRECTORY) + "/" + db.Get(0, "folder") + "/" + db.Get(0, "filename");
+							auto	currLogo = config.GetFromFile("image_folders", "avatar") + "/" + db.Get(0, "folder") + "/" + db.Get(0, "filename");
 							auto	id = db.Get(0, "id");
 
 							if(isFileExists(currLogo)) 

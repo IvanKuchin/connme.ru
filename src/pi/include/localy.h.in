@@ -15,8 +15,6 @@
 #define IMAGE_DIRECTORY								string(IMAGEROOTDIR) + string("/html/images/")
 #define IMAGE_CAPTCHA_DIRECTORY   					string(IMAGE_DIRECTORY) + string("captcha/")
 #define IMAGE_FEED_DIRECTORY 	  					string(IMAGE_DIRECTORY) + string("feed")
-#define	IMAGE_AVATAR_DIRECTORY						string(IMAGE_DIRECTORY) + string("avatars")
-#define	IMAGE_GROUPS_DIRECTORY						string(IMAGE_DIRECTORY) + string("groups")
 #define IMAGE_TEMP_DIRECTORY						string(IMAGE_DIRECTORY) + string("temp")
 
 #define	CONFIG_DIR									"${CONFIG_INSTALL_DIR}/"
