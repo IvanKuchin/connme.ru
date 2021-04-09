@@ -72,11 +72,9 @@ string	CCgi::FindLanguageByIP(string ip)
 bool CCgi::isAcceptedLanguage(string lang)
 {
 	struct	stat	buf;
-	ostringstream	ost;
+	auto			lang_folder	= TEMPLATE_PATH + lang + "/";
 
-	ost << TEMPLATE_PATH << lang << "/";
-
-	if(stat(ost.str().c_str(), &buf) == 0)
+	if(stat(lang_folder.c_str(), &buf) == 0)
 		return true;
 	else
 		return false;

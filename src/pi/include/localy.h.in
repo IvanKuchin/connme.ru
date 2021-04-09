@@ -11,7 +11,6 @@
 #cmakedefine MAXMIND_DISABLE
 #cmakedefine FFPMPEG_DISABLE
 
-#define FONTS_DIRECTORY								string(ROOTDIR) + string("/html/fonts/")
 #define VIDEO_FEED_DIRECTORY 	  					string(IMAGEROOTDIR) + string("/html/video/feed")
 #define IMAGE_DIRECTORY								string(IMAGEROOTDIR) + string("/html/images/")
 #define IMAGE_CAPTCHA_DIRECTORY   					string(IMAGE_DIRECTORY) + string("captcha/")
