@@ -26,7 +26,6 @@
 #define	MMDB_fname									"${MAXMIND_INSTALL_DIR}/GeoLite2-City.mmdb"
 
 #define FS_SEPARATOR								"/"s	// --- file system separator
-#define BROWSER_FILE_PREFIX							"/"		// --- for instance "\\server\folder" or "http://www.file.serever/com"
 
 #define	DOMAIN_NAME									"${MAIN_DOMAIN_NAME}"s
 
