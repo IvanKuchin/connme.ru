@@ -81,9 +81,10 @@ auto      		AutodetectSexByName(string name, CMysql *)									-> string;
 auto			GetPasswordNounsList(CMysql *)												-> string;
 auto			GetPasswordAdjectivesList(CMysql *)											-> string;
 auto			GetPasswordCharacteristicsList(CMysql *)									-> string;
-auto			isAllowed_Guest_Action(string action, c_config *)						-> bool;
+auto			isAllowed_Guest_Action(string action, c_config *)							-> bool;
 
 
+auto			GetZipInJSONFormat(string zip_id, CMysql *, CUser *)						-> string;
 auto      		GetGeoCountryListInJSONFormat(string dbQuery, CMysql *, CUser *)			-> string;
 auto			GetGeoLocalityIDByCityAndRegion(string regionName, string cityName, CMysql *) -> string;
 auto			AllowMessageInNewsFeed(CUser *me, const string messageOwnerID, const string messageAccessRights, vector<string> *messageFriendList) -> bool;
