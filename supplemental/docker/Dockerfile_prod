@@ -13,7 +13,7 @@ RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 		&& mkdir build \
 		&& cd build \
 		&& cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
-		&& make -j4 install \
+		&& make install \
 
 		&& apt remove --purge -y \
 			build-essential \
@@ -89,7 +89,7 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 # build from source #
 ##################### 
 RUN mkdir build
-RUN cd build && cmake .. && make -j4 && make install
+RUN cd build && cmake .. && make -j2 && make install
 
 ################
 # run QA tests #
