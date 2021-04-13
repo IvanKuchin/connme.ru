@@ -22,16 +22,14 @@ int main()
 {
 	CStatistics			appStat;  // --- CStatistics must be a first statement to measure end2end param's
 	CCgi				indexPage(EXTERNAL_TEMPLATE);
-	CUser				user;
 	c_config			config(CONFIG_DIR);
+	CUser				user;
 	auto				action = ""s;
 	CMysql				db;
 	struct timeval		tv;
 	map<string,string>	mapResult;
 
-	{
-		MESSAGE_DEBUG("", action, __FILE__);
-	}
+	MESSAGE_DEBUG("", action, __FILE__);
 
 	signal(SIGSEGV, crash_handler);
 
