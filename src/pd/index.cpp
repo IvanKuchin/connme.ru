@@ -18,7 +18,7 @@ bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct Exif
 		auto					image_max_height = stod_noexcept(config->GetFromFile("image_max_height", "feed"));		
 
 		// Read a file into image object
-		image.read( src );
+		image.read( src );    /* Flawfinder: ignore */
 
 		imageGeometry = image.size();
 		imageOrientation = image.orientation();
@@ -220,7 +220,7 @@ string GenerateImage(string randStr)
 			{
 				bool 		fileFlagExist;
 
-				imageMaster.read(fileName);
+				imageMaster.read(fileName);    /* Flawfinder: ignore */
 				imageDest = imageMaster;
 				imageDest.fontPointsize(14);
 				imageDest.addNoise(Magick::GaussianNoise);
@@ -239,7 +239,7 @@ string GenerateImage(string randStr)
 					fileResult += ".gif";
 					fileResultFull = IMAGE_CAPTCHA_DIRECTORY;
 					fileResultFull += fileResult;
-					int fh = open(fileResultFull.c_str(), O_RDONLY);
+					auto fh = open(fileResultFull.c_str(), O_RDONLY);    /* Flawfinder: ignore */
 					if(fh < 0) 
 					{
 						fileFlagExist = false;
@@ -284,7 +284,7 @@ int main()
 	signal(SIGSEGV, crash_handler); 
 
 	timespec_get(&tv, TIME_UTC);
-	srand(tv.tv_nsec ^ tv.tv_sec);
+	srand(tv.tv_nsec ^ tv.tv_sec);    /* Flawfinder: ignore */
 
 	try
 	{
@@ -2725,7 +2725,7 @@ int main()
 						{
 							vectorFriendList1.push_back(stoi(db.Get(i, "friendID")));
 
-							if(atoi(user2.c_str()) == stoi(db.Get(i, "friendID")))
+							if(user2 == db.Get(i, "friendID"))
 							{
 								handshakeUserStatus = "directFriends";
 							}
@@ -4776,7 +4776,7 @@ int main()
 			}
 			else
 			{
-				long int		companyID = atol(indexPage.GetVarsHandler()->Get("companyID").c_str());
+				auto		companyID = stol(indexPage.GetVarsHandler()->Get("companyID"));
 				ostringstream	ost;
 
 				ost.str("");
@@ -5012,7 +5012,7 @@ int main()
 				auto			companyName			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("companyName"));
 				auto			occupationStart		= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("occupationStart"));
 				auto			occupationFinish	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("occupationFinish"));
-				auto			currentCompany		= atol(indexPage.GetVarsHandler()->Get("currentCompany").c_str());
+				auto			currentCompany		= stol(indexPage.GetVarsHandler()->Get("currentCompany"));
 				auto			responsibilities	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("responsibilities"));
 				ostringstream	ost;
 
@@ -5759,7 +5759,7 @@ int main()
 				auto			periodFinish	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("periodFinish"));
 				ostringstream	ost;
 
-				if(locality.length() && title.length() && periodStart.length() && periodFinish.length() && (atoi(periodStart.c_str()) <= atoi(periodFinish.c_str())))
+				if(locality.length() && title.length() && periodStart.length() && periodFinish.length() && (stoi(periodStart) <= stoi(periodFinish)))
 				{
 					unsigned long		localityID = 0, schoolInternalID = 0;
 					string			  school_logo_folder = "";
@@ -5882,16 +5882,14 @@ int main()
 				auto			periodFinish	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("periodFinish"));
 				ostringstream	ost;
 
-				if(region.length() && title.length() && degree.length() && periodStart.length() && periodFinish.length() && (atoi(periodStart.c_str()) <= atoi(periodFinish.c_str())))
+				if(region.length() && title.length() && degree.length() && periodStart.length() && periodFinish.length() && (stoi(periodStart) <= stoi(periodFinish)))
 				{
 					unsigned long		regionID = 0, universityInternalID = 0;
-					string			  university_logo_folder = "";
-					string			  university_logo_filename = "";
-					int					affected;
+					auto				university_logo_folder = ""s;
+					auto				university_logo_filename = ""s;
+					auto				affected = db.Query("SELECT * FROM `geo_region` WHERE `title`=\"" + region + "\";");
 
-					ost.str("");
-					ost << "SELECT * FROM `geo_region` WHERE `title`=\"" << region << "\";";
-					if((affected = db.Query(ost.str())) > 0)
+					if(affected > 0)
 					{
 						regionID = stol(db.Get(0, "id"));
 
@@ -5901,9 +5899,7 @@ int main()
 					{
 						MESSAGE_DEBUG("", "", "region [" + region + "] needed to be added to DB");
 
-						ost.str("");
-						ost << "INSERT INTO `geo_region` (`title`) VALUES (\"" << region << "\");";
-						regionID = db.InsertQuery(ost.str());
+						regionID = db.InsertQuery("INSERT INTO `geo_region` (`title`) VALUES (\"" + region + "\");");
 					}
 
 					ost.str("");
@@ -6621,7 +6617,7 @@ int main()
 			}
 
 			friendID = indexPage.GetVarsHandler()->Get("userid");
-			if(friendID.length() && atol(friendID.c_str()))
+			if(friendID.length() && stol(friendID))
 			{
 				if(friendID != user.GetID())
 				{
@@ -6630,7 +6626,7 @@ int main()
 					ost << "SELECT `id` FROM `users_watched` WHERE `watched_userID`=\"" << friendID << "\" and `watching_userID`=\"" << user.GetID() << "\";";
 					if(db.Query(ost.str()))
 					{
-						string		profile_watched_id = db.Get(0, "id");
+						auto		profile_watched_id = db.Get(0, "id");
 
 						ost.str("");
 						ost << "update `users_watched` set `eventTimestamp`=UNIX_TIMESTAMP() WHERE `id`='" << profile_watched_id << "';";
@@ -7287,7 +7283,7 @@ int main()
 								MESSAGE_DEBUG("", action, "" + action + ": switching session (" + sessid + ") FROM Guest to user (" + user.GetLogin() + ")");
 
 								// FlawFinder: ignore
-								auto ra = getenv("REMOTE_ADDR");
+								auto ra = getenv("REMOTE_ADDR");    /* Flawfinder: ignore */
 
 								db.Query("UPDATE `sessions` SET `user_id`=\"" + user.GetID() + "\", `ip`=\"" + ra + "\", `expire`=\"" + (rememberMe == "remember-me" ? "0" : to_string(SESSION_LEN * 60)) + "\" WHERE `id`=\"" + sessid + "\";");
 
@@ -7543,7 +7539,7 @@ int main()
 									MESSAGE_DEBUG("", action, "check captcha success");
 								}
 
-								remoteIP = getenv("REMOTE_ADDR");
+								remoteIP = getenv("REMOTE_ADDR");    /* Flawfinder: ignore */
 
 								affected = db.Query("DELETE FROM `captcha` WHERE `purpose`='regNewUser' and `code`=\"" + regSecurityCode + "\" and `session`=\"" + sessid + "\";");
 								if(affected != 0)
@@ -7556,7 +7552,7 @@ int main()
 								userTemporary.SetEmail(regEmail);
 								userTemporary.SetPasswd(regPassword);
 								userTemporary.SetType("user");
-								userTemporary.SetIP(getenv("REMOTE_ADDR"));
+								userTemporary.SetIP(getenv("REMOTE_ADDR"));    /* Flawfinder: ignore */
 								userTemporary.SetLng(indexPage.GetLanguage());
 								userTemporary.SetDB(&db);
 								userTemporary.Create();
@@ -7694,11 +7690,11 @@ int main()
 
 								// --- 2delete if login works till Nov 1
 								// ost1.str("");
-								// ost1 << "update `users` set `last_online`=NOW(), `ip`='" << getenv("REMOTE_ADDR") << "' WHERE `login`='" << user.GetLogin() << "';";
+								// ost1 << "update `users` set `last_online`=NOW(), `ip`='" << getenv("REMOTE_ADDR") << "' WHERE `login`='" << user.GetLogin() << "';";    /* Flawfinder: ignore */
 								// db.Query(ost1.str());
 
 								ost1.str("");
-								ost1 << "update `sessions` set `user_id`='" << user.GetID() << "', `ip`='" << getenv("REMOTE_ADDR") << "', `expire`=" << (rememberMe == "remember-me" ? 0 : SESSION_LEN * 60) << " WHERE `id`='" << sessid << "';";
+								ost1 << "update `sessions` set `user_id`='" << user.GetID() << "', `ip`='" << getenv("REMOTE_ADDR") << "', `expire`=" << (rememberMe == "remember-me" ? 0 : SESSION_LEN * 60) << " WHERE `id`='" << sessid << "';";    /* Flawfinder: ignore */
 								db.Query(ost1.str());
 
 								if(rememberMe == "remember-me") 
@@ -10223,7 +10219,7 @@ int main()
 
 				if(db.Query("SELECT * FROM `users_school` WHERE `user_id`=\"" + user.GetID() + "\" and `id`=\"" + userSchoolID + "\";"))
 				{
-					if(atoi(occupationStart.c_str()) <= stoi(db.Get(0, "occupation_finish")))
+					if(stoi(occupationStart) <= stoi(db.Get(0, "occupation_finish")))
 					{
 
 						ost.str("");
@@ -10335,7 +10331,7 @@ int main()
 				ost << "SELECT * FROM `users_school` WHERE `user_id`=\"" << user.GetID() << "\" and `id`=\"" << userSchoolID << "\";";
 				if(db.Query(ost.str()))
 				{
-					if(stoi(db.Get(0, "occupation_start")) <= atoi(occupationFinish.c_str()))
+					if(stoi(db.Get(0, "occupation_start")) <= stoi(occupationFinish))
 					{
 
 						ost.str("");
@@ -10431,7 +10427,7 @@ int main()
 				ost << "SELECT * FROM `users_university` WHERE `user_id`=\"" << user.GetID() << "\" and `id`=\"" << userUniversityID << "\";";
 				if(db.Query(ost.str()))
 				{
-					if(atoi(occupationStart.c_str()) <= stoi(db.Get(0, "occupation_finish")))
+					if(stoi(occupationStart) <= stoi(db.Get(0, "occupation_finish")))
 					{
 
 						ost.str("");
@@ -10528,7 +10524,7 @@ int main()
 				ost << "SELECT * FROM `users_university` WHERE `user_id`=\"" << user.GetID() << "\" and `id`=\"" << userUniversityID << "\";";
 				if(db.Query(ost.str()))
 				{
-					if(stoi(db.Get(0, "occupation_start")) <= atoi(occupationFinish.c_str()))
+					if(stoi(db.Get(0, "occupation_start")) <= stoi(occupationFinish))
 					{
 
 						ost.str("");
@@ -11188,7 +11184,7 @@ int main()
 				{
 					indexPage.RegisterVariableForce("login", db.Get(0, "users_login"));
 					indexPage.RegisterVariableForce("passwd", db.Get(0, "users_passwd_passwd"));
-					indexPage.RegisterVariableForce("ip", getenv("REMOTE_ADDR"));
+					indexPage.RegisterVariableForce("ip", getenv("REMOTE_ADDR"));    /* Flawfinder: ignore */
 					mail.Send(db.Get(0, "users_email"), "forget", indexPage.GetVarsHandler(), &db);
 				}
 			}

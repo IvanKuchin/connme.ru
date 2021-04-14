@@ -749,26 +749,23 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 			{
 				if(setOfUserID.find(stol(itemsList[i].userID)) == setOfUserID.end())
 				{
-					string				userLogin, userName, userNameLast, userSex, userBirthday, userBirthdayAccess, userCurrentEmployment, userCurrentCity, avatarPath;
-					string				userAppliedVacanciesRender;
-					string				userLastOnline, numberUreadMessages, userLastOnlineSecondSinceY2k;
-					string				userFriendship;
+					string				numberUreadMessages, userFriendship, userCurrentEmployment, avatarPath;
 					ostringstream		ost1;
 					int					affected1;
-					auto				isMe					= user && (userID == user->GetID());
+					auto				isMe = user && (userID == user->GetID());
 
-					userLogin = itemsList[i].userLogin;
-					userName = itemsList[i].userName;
-					userNameLast = itemsList[i].userNameLast;
-					userSex = itemsList[i].userSex;
-					userBirthday = itemsList[i].userBirthday;
-					userBirthdayAccess = itemsList[i].userBirthdayAccess;
-					userAppliedVacanciesRender = itemsList[i].userAppliedVacanciesRender;
-					userCurrentCity = itemsList[i].userCurrentCity;
-					userLastOnline = itemsList[i].userLastOnline;
-					userLastOnlineSecondSinceY2k = itemsList[i].userLastOnlineSecondSinceY2k;
+					auto				userLogin = itemsList[i].userLogin;
+					auto				userName = itemsList[i].userName;
+					auto				userNameLast = itemsList[i].userNameLast;
+					auto				userSex = itemsList[i].userSex;
+					auto				userBirthday = itemsList[i].userBirthday;
+					auto				userBirthdayAccess = itemsList[i].userBirthdayAccess;
+					auto				userAppliedVacanciesRender = itemsList[i].userAppliedVacanciesRender;
+					auto				userCurrentCity = itemsList[i].userCurrentCity;
+					auto				userLastOnline = itemsList[i].userLastOnline;
+					auto				userLastOnlineSecondSinceY2k = itemsList[i].userLastOnlineSecondSinceY2k;
 
-					setOfUserID.insert(atol(userID.c_str()));
+					setOfUserID.insert(stol(userID));
 
 					// --- Defining title and company of user
 					ost1.str("");

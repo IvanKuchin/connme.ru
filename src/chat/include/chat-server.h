@@ -74,7 +74,7 @@ extern volatile int force_exit;
 extern struct lws_context *context;
 extern const char *resource_path;
 #if defined(LWS_OPENSSL_SUPPORT) && defined(LWS_HAVE_SSL_CTX_set1_param)
-extern char crl_path[1024];
+extern char crl_path[1024];    /* Flawfinder: ignore */
 #endif
 
 extern void test_server_lock(int care);
@@ -86,7 +86,7 @@ extern void test_server_unlock(int care);
 
 struct per_session_data__http {
 	lws_filefd_type fd;
-	char post_string[256];
+	char post_string[256];    /* Flawfinder: ignore */
 #ifdef LWS_WITH_CGI
 	struct lws_cgi_args args;
 #endif
@@ -108,7 +108,7 @@ struct per_session_data__message {
 	struct lws 		*wsi;
 	CUser			*user;
 	CSingleMessage	*messageList[CHAT_MAX_MESSAGE_QUEUE];
-	char			sessID[1024];
+	char			sessID[1024];    /* Flawfinder: ignore */
 	int				ringBufferHead;
 	int				ringBufferTail;
 
@@ -122,8 +122,8 @@ struct per_session_data__message {
 
 	// --- status purpose only
 	struct timeval	tv_established;
-	char 			ip[270];
-	char 			user_agent[512];
+	char 			ip[270];    /* Flawfinder: ignore */
+	char 			user_agent[512];    /* Flawfinder: ignore */
 
 	// --- close flag (can be used only from admin console, CNX rate-limiting or "stuck" connections [without user assigned])
 	// --- flag checking in LWS_CALLBACK_SERVER_WRITEABLE and in case=true connection must be closed
@@ -151,8 +151,8 @@ struct per_session_data__lws_status {
 	struct per_session_data__lws_status *list;
 	// int last;
 	struct timeval tv_established;
-	char ip[270];
-	char user_agent[512];
+	char ip[270];    /* Flawfinder: ignore */
+	char user_agent[512];    /* Flawfinder: ignore */
 	// const char *pos;
 	// int len;
 };

@@ -519,12 +519,12 @@ int main()
 	CMysql			db;
 	struct timeval	tv;
 
-	{ MESSAGE_DEBUG("", "", "" + __FILE__); }
+	MESSAGE_DEBUG("", "", "" + __FILE__);
 
 	signal(SIGSEGV, crash_handler);
 
 	gettimeofday(&tv, NULL);
-	srand(tv.tv_sec * tv.tv_usec * 100000);
+	srand(tv.tv_sec * tv.tv_usec * 100000);    /* Flawfinder: ignore */
 
 	try
 	{
