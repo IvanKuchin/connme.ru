@@ -35,16 +35,14 @@ set(JOINT_LIBRARY_SRCs
     c_smsc.cpp
     utilities1.cpp
     utilities2.cpp
-    utilities3.cpp
     utilities_common.cpp
-    utilities_specific.cpp
     c_cache_obj.cpp
     c_date_spelling.cpp
     )
 # ---- list of independent libraries
 set(INDEPENDENT_LIBRARIES_SRC
-#    c_archive.cpp
-#    c_price_spelling.cpp
+    c_archive.cpp
+    c_price_spelling.cpp
     )
 
 # --- MACROSes start ---
@@ -103,16 +101,13 @@ endmacro()
 include(FindPkgConfig)
 
 pkg_check_modules(LIBMYSQLCLIENT REQUIRED mysqlclient)
-#find_library(LIBMYSQLCLIENT NAMES libmysqlclient.a)
+find_library(LIBMYSQLCLIENT NAMES mysqlclient)
 
-#find_package(OpenSSL REQUIRED)
-find_package(LibSSL REQUIRED)
+find_package(OpenSSL REQUIRED)
+#find_package(LibSSL REQUIRED)
 
 find_package(CURL REQUIRED)
-#find_package(Libhpdf REQUIRED)
-#find_package(Libarchive REQUIRED)
-#find_package(Libxl REQUIRED)
-
+find_package(LibArchive REQUIRED)
 
 if(IMAGEMAGICK_DISABLE)
     message("Magick++ turned off")
@@ -139,8 +134,8 @@ set(PROJECT_PI_INCLUDE_DIRECTORIES
     ${PROJECT_SOURCE_DIR}/src/pi/include/
     ${PROJECT_BINARY_DIR}/src/pi/include/       # --- rendered config.h, generated table.h
     ${LIBMYSQLCLIENT_INCLUDE_DIRS}
-    ${LIBSSL_STATIC_INCLUDE_DIR}
-    ${IMAGEMAGICK_STATIC_INCLUDE_DIR}
+    ${OPENSSL_INCLUDE_DIR}
+    ${IMAGEMAGICK_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
     ${AVUTIL_INCLUDE_DIR}
     ${AVFORMAT_INCLUDE_DIR}
@@ -150,14 +145,9 @@ set(PROJECT_PI_INCLUDE_DIRECTORIES
     )
 
 set(PROJECT_EXTERNAL_LIBS
-    ${LIBMYSQLCLIENT_STATIC_LIBRARIES}
-    
-    # ${OPENSSL_STATIC_CRYPTO_LIBRARIES}
-    ${LIBSSL_STATIC_LIBRARIES}
-
+    ${LIBMYSQLCLIENT_LIBRARIES}
+    ${OPENSSL_CRYPTO_LIBRARIES}
     ${IMAGEMAGICK_LIBRARY}
-    #${IMAGEMAGICK++_STATIC_LIBRARY}
-
     ${CURL_LIBRARIES}
     ${AVUTIL_LIBRARY}
     ${AVFORMAT_LIBRARY}

@@ -659,3 +659,5 @@ libssl
 libz
 linux
 Wkhtml
+multiline
+Flawfinder
