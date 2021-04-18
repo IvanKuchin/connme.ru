@@ -44,6 +44,12 @@ jobs:
     # Load all steps #
     ##################
     steps:
+      ##########################
+      # Checkout the code base #
+      ##########################
+      - name: Checkout Code
+        uses: actions/checkout@v2.3.4
+
      #############################
      # Init deployment variables #
      #############################
@@ -72,12 +78,6 @@ jobs:
           BUILD_REPO: ${{ steps.set_variables.outputs.BUILD_REPO }}
           BUILD_BRANCH: ${{ steps.set_variables.outputs.BUILD_BRANCH }}
           DOCKER_NET: ${{ steps.set_variables.outputs.DOCKER_NET }}
-
-      ##########################
-      # Checkout the code base #
-      ##########################
-      - name: Checkout Code
-        uses: actions/checkout@v2.3.4
 
       ####################################
       # Replace variables in Dockerfiles #
