@@ -37,10 +37,10 @@ RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y 
 ##############################
 # install additional locales #
 ##############################
-locale-gen en_US.UTF8
-locale-gen ru_RU.UTF8
-update-locale LC_ALL=en_US.UTF8
-source /etc/default/locale
+RUN locale-gen en_US.utf8
+RUN locale-gen ru_RU.utf8
+RUN update-locale LC_ALL=en_US.UTF8
+RUN . /etc/default/locale
 
 #########################################
 # libwebsocket copy from prev container #

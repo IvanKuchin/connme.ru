@@ -16,8 +16,9 @@ name: Release deployment
 # Start the job on all push to master #
 #######################################
 on:
-  release:
-    types: ['published']
+  push:
+  pull_request:
+    branches: ['master']
 
 ###############
 # Set the Job #
@@ -34,17 +35,6 @@ jobs:
     # Load all steps #
     ##################
     steps:
-      ##########################
-      # Start deployment       #
-      ##########################
-      - name: start deployment
-        uses: bobheadxi/deployments@v0.4.3
-        id: deployment
-        with:
-          step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env: release
-
      #############################
      # Init deployment variables #
      #############################
@@ -79,31 +69,13 @@ jobs:
       - name: Setup BuildX
         uses: docker/setup-buildx-action@v1
 
-      ###############################
-      # Login to DockerHub registry #
-      ###############################
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      ######################################
-      # Login to GitHub Container registry #
-      ######################################
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GCR_USERNAME }}
-          password: ${{ secrets.GCR_TOKEN }}
-
       ####################################
       # Replace variables in Dockerfiles #
       ####################################
       - name: Replace variables in Dockerfiles
         run: |
           find ./supplemental/docker/ -name Dockerfile* | xargs -I % sed -i -e 's/__BUILD_REPO__/${{ steps.set_variables.outputs.BUILD_REPO }}/' %
+
       ###########################################
       # Build and Push containers to registries #
       ###########################################
@@ -112,26 +84,18 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./supplemental/docker/prod/Dockerfile
+          file: ./supplemental/docker/qa/Dockerfile
           build-args: |
             BUILD_DATE=${{ env.BUILD_DATE }}
             BUILD_REVISION=${{ github.sha }}
             BUILD_VERSION=${{ github.sha }}
-          push: true
+            DB_NAME=test
+            DB_LOGIN=root
+            DB_PASSWORD=root
+            DB_HOST=localhost
+          push: false
           tags: |
             ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}:${{ steps.set_variables.outputs.BUILD_RELEASE }}
             ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
             ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}:latest
             
-      ##########################
-      # Stop deployment        #
-      ##########################
-      - name: update deployment status
-        uses: bobheadxi/deployments@v0.4.3
-        if: always()
-        with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: ${{ job.status }}
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-
