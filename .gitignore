@@ -1,6 +1,8 @@
+# pi-code will be taken from another repo
+src/pi
+
 # Git commit id
 git_commit_id
-src/pi/
 
 # Prerequisites
 *.d
