@@ -44,10 +44,9 @@ RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y 
 ##########################
 COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
 
-# RUN git clone --branch __BUILD_BRANCH__ --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__.git /backend
 COPY . /backend
 WORKDIR /backend
-RUN git clone --depth 1 https://github.com/IvanKuchin/test_pi.git ./src/pi
+RUN git clone --depth 1 https://github.com/IvanKuchin/backend_pi.git ./src/pi
 
 RUN apt-get install --no-install-recommends --no-install-suggests -y software-properties-common
 RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4
