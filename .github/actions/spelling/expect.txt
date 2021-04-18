@@ -661,3 +661,4 @@ linux
 Wkhtml
 multiline
 Flawfinder
+ratelimited
