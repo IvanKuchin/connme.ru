@@ -60,7 +60,7 @@ jobs:
           echo ::set-output name=BUILD_RELEASE_MAJOR::`echo ${GITHUB_REF%%.*} | awk -F/ '{ print v$3; }'`
           echo ::set-output name=BUILD_DATE::`date -u +'%Y-%m-%dT%H:%M:%SZ'`
           echo ::set-output name=BUILD_REPO::$(echo ${GITHUB_REPOSITORY} | awk -F/ '{ print $2; }')
-          echo ::set-output name=BUILD_BRANCH::`git branch`
+          echo ::set-output name=BUILD_BRANCH::`git branch | grep \* | awk -F\  '{ print $2; }'`
           echo ::set-output name=DOCKER_NET::`docker network ls --filter name=github --format "{{.Name}}"`
       - name: print deploymnet variables
         run: |
