@@ -36,6 +36,7 @@ set(MAXMIND_PROJECT_DIR		${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/maxmind
 set(CI_SCRIPT_PROJECT_DIR	${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/ci-scripts)
 set(LOCALE_PROJECT_DIR		${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/locale)
 set(CONFIG_PROJECT_DIR		${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/config)
+set(CHAT_PROJECT_DIR		${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/chat)
 set(GIT_PROJECT_DIR             ${PROJECT_SOURCE_DIR}/supplemental/git)
 set(PDF_FONT_PROJECT_DIR	${PROJECT_SOURCE_DIR}/supplemental/libpdf-font)
 set(LIBXL_PROJECT_DIR		${PROJECT_SOURCE_DIR}/libxl-3.8.4.0/)
@@ -77,6 +78,7 @@ add_subdirectory(supplemental/ci-scripts/)
 add_subdirectory(supplemental/libpdf-font/)
 add_subdirectory(supplemental/git/)
 add_subdirectory(supplemental/config/)
+add_subdirectory(supplemental/etc/init.d/)
 add_subdirectory(po/)
 
 # --- Install time
