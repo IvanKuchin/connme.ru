@@ -78,7 +78,7 @@ add_subdirectory(supplemental/ci-scripts/)
 add_subdirectory(supplemental/libpdf-font/)
 add_subdirectory(supplemental/git/)
 add_subdirectory(supplemental/config/)
-add_subdirectory(supplemental/etc/init.d/)
+add_subdirectory(supplemental/init.d/)
 add_subdirectory(po/)
 
 # --- Install time
