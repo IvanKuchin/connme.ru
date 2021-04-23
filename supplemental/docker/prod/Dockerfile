@@ -32,15 +32,16 @@ LABEL maintainer="ivan.kuchin@gmail.com"
 LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/__BUILD_REPO__"
 				     
 # following two commands suppose to be reused from cache
-RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates locales
+RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates
 
 ##############################
 # install additional locales #
 ##############################
-RUN locale-gen en_US.utf8
+RUN apt-get install --no-install-recommends --no-install-suggests -y locales gettext
 RUN locale-gen ru_RU.utf8
-RUN update-locale LC_ALL=en_US.UTF8
-RUN . /etc/default/locale
+RUN locale-gen en_US.utf8
+RUN update-locale
+RUN export LC_ALL=en_US.utf8
 
 #########################################
 # libwebsocket copy from prev container #
@@ -51,8 +52,10 @@ RUN . /etc/default/locale
 ##########################
 COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
 
-RUN git clone --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__.git /backend
+COPY . /backend
 WORKDIR /backend
+RUN git clone --depth 1 https://github.com/IvanKuchin/backend_pi.git ./src/pi
+RUN git clone --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__-ui.git /home/httpd/www
 
 RUN apt-get install --no-install-recommends --no-install-suggests -y software-properties-common
 RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4
@@ -76,15 +79,6 @@ RUN apt-get install --no-install-recommends --no-install-suggests -y \
         rapidjson-dev \
         pkg-config
 
-#####################
-# locale generation #
-#####################
-RUN apt-get install --no-install-recommends --no-install-suggests -y locales
-RUN locale-gen ru_RU.utf8
-RUN locale-gen en_US.utf8
-RUN update-locale
-RUN export LC_ALL=en_US.utf8
-
 #############################
 # libwkhtmltox installation #
 #############################
@@ -104,23 +98,12 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 RUN mkdir build
 RUN cd build && cmake .. && make -j2 && make install
 
-################
-# run QA tests #
-################
-# RUN cd build && ctest --output-on-failure
-
-################################
-## DB is a separate container ##
-################################
-# RUN echo mysql-server mysql-server/root_password password root | debconf-set-selections
-# RUN echo mysql-server mysql-server/root_password_again password root | debconf-set-selections
-
-# RUN apt-get install --no-install-recommends --no-install-suggests -y mysql-server
-
-# COPY my_script.sh /root/
-# COPY sql /root/
-# COPY pre.sql /root/
-# RUN  chmod +x /root/my_script.sh
+###################
+# install apache2 #
+###################
+EXPOSE 80
+RUN apt-get install --no-install-recommends --no-install-suggests -y apache2
+RUN a2enmod cgi
 
 ############################################################
 ## forward request and error logs to docker log collector ##
@@ -130,4 +113,4 @@ RUN cd build && cmake .. && make -j2 && make install
 
 STOPSIGNAL SIGTERM
 
-# CMD ["ctest"]
+CMD ["apachectl", "-D", "FOREGROUND"]
