@@ -22,7 +22,7 @@ cat -v ${LOG_DIR}backend.* | grep "ERROR" | grep `date '+%b\s%d'`
 echo --------------- log: emojy detector
 cat -v ${LOG_DIR}backend.log | grep "emojy detected" | grep `date '+%b\s%d'`
 
-echo --------------- ${MAIN_DOMAIN_NAME}: general punctuation detector
+echo --------------- general punctuation detector
 cat -v ${LOG_DIR}backend.log | grep "general punctuation detected" | grep `date '+%b\s%d'`
 
 echo --------------- log: lost pictures in DB [setID = 0]
