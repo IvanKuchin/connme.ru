@@ -96,7 +96,16 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 # build from source #
 ##################### 
 RUN mkdir build
-RUN cd build && cmake .. && make -j2 && make install
+RUN cd build && \
+    cmake \
+        -DMAIN_SUBDOMAIN=www \
+        -DIMAGE_SUBDOMAIN=images \
+        -DROOTDIR=/home/httpd/www \
+        -DIMAGEROOTDIR=/home/httpd/images \
+        -DLOCAL_INSTALL_DIR=/usr/local/share/www \
+        .. && \
+    make -j2 && \
+    make install
 
 ###################
 # install apache2 #
