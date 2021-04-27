@@ -3,7 +3,7 @@
 
 // --- chat definitions
 #define	CHAT_MAX_MESSAGE_QUEUE						512 - 1 // --- (-1) required to get all "1" in binary representation
-#define	CHAT_LOG_FILE_NAME							string(LOGDIR) + DOMAIN_NAME + ".chat"
+#define	CHAT_LOG_FILE_NAME							string(LOGDIR) + "chat.log"
 #define	CHAT_MAX_PACKET_SIZE						4096
 #define CHAT_PRESENCE_CACHE_LIFETIME				60
 #define	CHAT_MESSAGES_PER_PAGE						20
