@@ -110,9 +110,16 @@ RUN cd build && \
 ###################
 # install apache2 #
 ###################
-EXPOSE 80
-RUN apt-get install --no-install-recommends --no-install-suggests -y apache2
+RUN git clone --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__-ui.git /home/httpd/www
+RUN mkdir /home/httpd/www/logs/
+RUN cp -R /home/httpd/www/supplemental/apache2 /etc
+
 RUN a2enmod cgi
+RUN a2dissite `ls /etc/apache2/sites-enabled/`
+RUN a2ensite *www
+RUN a2enmod expires
+
+EXPOSE 80
 
 ############################################################
 ## forward request and error logs to docker log collector ##
