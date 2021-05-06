@@ -8,14 +8,8 @@
 #include <utility>		// --- pair 
 #include <set>			// --- Use "set" to build set of bestMessages to re-post
 
-#include "ccgi.h"
 #include "cmysql.h"
-#include "cuser.h"
-#include "cmail.h"
 #include "cstatistics.h"
-#include "utilities.h"
-#include "clog.h"
-#include "localy.h"
 
 // --- Distances
 #define	SINGLE_MESSAGE_DISTANCE						0.1 // --- about 30 km

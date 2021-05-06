@@ -26,13 +26,36 @@ RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
 ############################################################################################
 
 
-FROM ubuntu:xenial
+FROM ubuntu:xenial as app
+
+ARG BUILD_REPO
+ARG MAIN_SUBDOMAIN=www
+ARG IMAGE_SUBDOMAIN=images
+ARG ROOTDIR=/home/httpd/www
+ARG IMAGEROOTDIR=/home/httpd/images
+ARG LOCAL_INSTALL_DIR=/usr/local/share/www
 
 LABEL maintainer="ivan.kuchin@gmail.com"
-LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/__BUILD_REPO__"
-				     
-# following two commands suppose to be reused from cache
+LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/${BUILD_REPO}"
+
+###########################################
+# check if all mandatory args are defined #
+###########################################
+RUN [ -z "$BUILD_REPO" ] && echo "BUILD_REPO is required" && exit 1 || true
+RUN echo repository is $BUILD_REPO
+
+###########################
+# install basic utilities #
+###########################
 RUN apt update &&  apt install --no-install-recommends --no-install-suggests -y git ca-certificates
+
+####################
+# install timezone #
+####################
+RUN apt-get install --no-install-recommends --no-install-suggests -y tzdata
+RUN cp /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+RUN echo "Europe/Moscow" > /etc/timezone
+RUN date
 
 ##############################
 # install additional locales #
@@ -98,28 +121,47 @@ RUN git rev-parse HEAD > ./supplemental/git/git_commit_id
 RUN mkdir build
 RUN cd build && \
     cmake \
-        -DMAIN_SUBDOMAIN=www \
-        -DIMAGE_SUBDOMAIN=images \
-        -DROOTDIR=/home/httpd/www \
-        -DIMAGEROOTDIR=/home/httpd/images \
-        -DLOCAL_INSTALL_DIR=/usr/local/share/www \
+        -DMAIN_SUBDOMAIN=${MAIN_SUBDOMAIN} \
+        -DIMAGE_SUBDOMAIN=${IMAGE_SUBDOMAIN} \
+        -DROOTDIR=${ROOTDIR} \
+        -DIMAGEROOTDIR=${IMAGEROOTDIR} \
+        -DLOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR} \
         .. && \
-    make -j2 && \
-    make install
+    make -j2
 
 ###################
 # install apache2 #
 ###################
-RUN git clone --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__-ui.git /home/httpd/www
-RUN mkdir /home/httpd/www/logs/
-RUN cp -R /home/httpd/www/supplemental/apache2 /etc
+RUN apt-get install --no-install-recommends --no-install-suggests -y apache2
+
+#####################
+# configure apache2 #
+#####################
+RUN git clone --depth 1 https://github.com/IvanKuchin/${BUILD_REPO}-ui.git ${ROOTDIR}
+RUN mkdir ${ROOTDIR}/logs/
+RUN cp -R ${ROOTDIR}/supplemental/apache2 /etc
 
 RUN a2enmod cgi
+RUN a2enmod rewrite
 RUN a2dissite `ls /etc/apache2/sites-enabled/`
 RUN a2ensite *www
 RUN a2enmod expires
 
 EXPOSE 80
+
+####################################################################
+# install from source                                              #
+# moved to a separate step to avoid error in cloning UI repository #
+####################################################################
+RUN cd build && make install
+
+####################################################################
+# change folders to proper owner                                   #
+####################################################################
+RUN chown -R www-data:www-data ${ROOTDIR}
+RUN mkdir -p /home/httpd/images
+RUN chown -R www-data:www-data ${IMAGEROOTDIR}
+RUN chown -R www-data:www-data ${LOCAL_INSTALL_DIR}
 
 ############################################################
 ## forward request and error logs to docker log collector ##
@@ -130,3 +172,34 @@ EXPOSE 80
 STOPSIGNAL SIGTERM
 
 CMD ["apachectl", "-D", "FOREGROUND"]
+
+############################################################################################
+
+
+FROM app as cron
+
+ARG BUILD_REPO
+ARG MAIN_SUBDOMAIN
+ARG IMAGE_SUBDOMAIN
+ARG ROOTDIR
+ARG IMAGEROOTDIR
+ARG LOCAL_INSTALL_DIR
+
+LABEL maintainer="ivan.kuchin@gmail.com"
+LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/${BUILD_REPO}"
+
+##############################
+# install and configure cron #
+##############################
+RUN apt-get install --no-install-recommends --no-install-suggests -y wget
+COPY --from=app ${LOCAL_INSTALL_DIR}/cron/cron_config /etc/cron.d/www
+RUN chmod 644 /etc/cron.d/www
+
+########################
+# create log directory #
+########################
+RUN mkdir ${LOCAL_INSTALL_DIR}/log/
+RUN chown www-data:www-data ${LOCAL_INSTALL_DIR}/log/
+
+CMD ["cron", "-f"]
+
