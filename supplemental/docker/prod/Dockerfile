@@ -1,32 +1,24 @@
 FROM ubuntu:xenial as libwebsocket
 
 RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
-			build-essential \
-			ca-certificates \
-			cmake \
-			git \
-			libssl-dev \
-			pkg-config \
+	    build-essential \
+	    ca-certificates \
+	    cmake \
+	    git \
+	    libssl-dev \
+	    pkg-config
 
-		&& git clone -b v2.2.0 --depth 1 https://github.com/warmcat/libwebsockets.git \
-		&& cd /libwebsockets \
-		&& mkdir build \
-		&& cd build \
-		&& cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
-		&& make install \
-
-		&& apt remove --purge -y \
-			build-essential \
-			cmake \
-			git \
-		&& apt autoremove -y \
-		&& apt clean
-
+RUN git clone -b v2.2.0 --depth 1 https://github.com/warmcat/libwebsockets.git /libwebsockets
+WORKDIR /libwebsockets
+RUN mkdir build
+RUN cd build \
+    && cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
+    && make install
 
 ############################################################################################
 
 
-FROM ubuntu:xenial as app
+FROM ubuntu:xenial as base
 
 ARG BUILD_REPO
 ARG MAIN_SUBDOMAIN=www
@@ -130,6 +122,29 @@ RUN cd build && \
         .. && \
     make -j2
 
+############################################################################################
+
+
+FROM base as app
+
+ARG BUILD_REPO
+ARG MAIN_SUBDOMAIN
+ARG IMAGE_SUBDOMAIN
+ARG ROOTDIR
+ARG IMAGEROOTDIR
+ARG LOCAL_INSTALL_DIR
+
+#######################
+# install mail sender #
+#######################
+RUN apt-get install --no-install-recommends --no-install-suggests -y ssmtp
+
+#########################
+# configure mail sender #
+#########################
+
+
+
 ###################
 # install apache2 #
 ###################
@@ -174,6 +189,7 @@ STOPSIGNAL SIGTERM
 
 CMD ["apachectl", "-D", "FOREGROUND"]
 
+
 ############################################################################################
 
 
@@ -186,22 +202,12 @@ ARG ROOTDIR
 ARG IMAGEROOTDIR
 ARG LOCAL_INSTALL_DIR
 
-LABEL maintainer="ivan.kuchin@gmail.com"
-LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/${BUILD_REPO}"
-
 ##############################
 # install and configure cron #
 ##############################
-RUN apt-get install --no-install-recommends --no-install-suggests -y wget
-COPY --from=app ${LOCAL_INSTALL_DIR}/cron/cron_config /etc/cron.d/www
+RUN apt-get install --no-install-recommends --no-install-suggests -y cron
+RUN cp ${LOCAL_INSTALL_DIR}/cron/cron_config /etc/cron.d/www
 RUN chmod 644 /etc/cron.d/www
 RUN chown root:root /etc/cron.d/www
 
-########################
-# create log directory #
-########################
-RUN mkdir ${LOCAL_INSTALL_DIR}/log/
-RUN chown www-data:www-data ${LOCAL_INSTALL_DIR}/log/
-
 CMD ["cron", "-f"]
-
