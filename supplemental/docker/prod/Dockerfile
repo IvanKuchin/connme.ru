@@ -1,32 +1,24 @@
 FROM ubuntu:xenial as libwebsocket
 
 RUN apt update && apt install --no-install-recommends --no-install-suggests -y \
-			build-essential \
-			ca-certificates \
-			cmake \
-			git \
-			libssl-dev \
-			pkg-config \
+	    build-essential \
+	    ca-certificates \
+	    cmake \
+	    git \
+	    libssl-dev \
+	    pkg-config
 
-		&& git clone -b v2.2.0 --depth 1 https://github.com/warmcat/libwebsockets.git \
-		&& cd /libwebsockets \
-		&& mkdir build \
-		&& cd build \
-		&& cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
-		&& make install \
-
-		&& apt remove --purge -y \
-			build-essential \
-			cmake \
-			git \
-		&& apt autoremove -y \
-		&& apt clean
-
+RUN git clone -b v2.2.0 --depth 1 https://github.com/warmcat/libwebsockets.git /libwebsockets
+WORKDIR /libwebsockets
+RUN mkdir build
+RUN cd build \
+    && cmake -DLWS_WITHOUT_DAEMONIZE:BOOL=FALSE -DLWS_WITH_STATIC=1 -DLWS_WITH_SHARED=1 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/share/libwebsockets/ .. \
+    && make install
 
 ############################################################################################
 
 
-FROM ubuntu:xenial as app
+FROM ubuntu:xenial as base
 
 ARG BUILD_REPO
 ARG MAIN_SUBDOMAIN=www
@@ -66,20 +58,14 @@ RUN locale-gen en_US.utf8
 RUN update-locale
 RUN export LC_ALL=en_US.utf8
 
-#########################################
-# libwebsocket copy from prev container #
-#########################################
-
 ##########################
 # copy from libwebsocket #
 ##########################
 COPY --from=libwebsocket /usr/local/share/libwebsockets/ /usr/local/share/libwebsockets/
 
-COPY . /backend
-WORKDIR /backend
-RUN git clone --depth 1 https://github.com/IvanKuchin/backend_pi.git ./src/pi
-RUN git clone --depth 1 https://github.com/IvanKuchin/__BUILD_REPO__-ui.git /home/httpd/www
-
+########################
+# install dependencies #
+########################
 RUN apt-get install --no-install-recommends --no-install-suggests -y software-properties-common
 RUN add-apt-repository -y ppa:jonathonf/ffmpeg-4
 RUN apt update
@@ -110,6 +96,13 @@ RUN wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkh
 RUN dpkg -i  wkhtmltox_0.12.5-1.trusty_amd64.deb || true     # trick to force dpkg return successfull return code
 RUN apt install -f --no-install-recommends --no-install-suggests -y
 
+############
+# pull src #
+############
+COPY . /backend
+WORKDIR /backend
+RUN git clone --depth 1 https://github.com/IvanKuchin/backend_pi.git ./src/pi
+
 ##################
 # save commit id #
 ##################
@@ -128,6 +121,29 @@ RUN cd build && \
         -DLOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR} \
         .. && \
     make -j2
+
+############################################################################################
+
+
+FROM base as app
+
+ARG BUILD_REPO
+ARG MAIN_SUBDOMAIN
+ARG IMAGE_SUBDOMAIN
+ARG ROOTDIR
+ARG IMAGEROOTDIR
+ARG LOCAL_INSTALL_DIR
+
+#######################
+# install mail sender #
+#######################
+RUN apt-get install --no-install-recommends --no-install-suggests -y ssmtp
+
+#########################
+# configure mail sender #
+#########################
+
+
 
 ###################
 # install apache2 #
@@ -173,6 +189,7 @@ STOPSIGNAL SIGTERM
 
 CMD ["apachectl", "-D", "FOREGROUND"]
 
+
 ############################################################################################
 
 
@@ -185,21 +202,12 @@ ARG ROOTDIR
 ARG IMAGEROOTDIR
 ARG LOCAL_INSTALL_DIR
 
-LABEL maintainer="ivan.kuchin@gmail.com"
-LABEL org.opencontainers.image.source="https://github.com/IvanKuchin/${BUILD_REPO}"
-
 ##############################
 # install and configure cron #
 ##############################
-RUN apt-get install --no-install-recommends --no-install-suggests -y wget
-COPY --from=app ${LOCAL_INSTALL_DIR}/cron/cron_config /etc/cron.d/www
+RUN apt-get install --no-install-recommends --no-install-suggests -y cron
+RUN cp ${LOCAL_INSTALL_DIR}/cron/cron_config /etc/cron.d/www
 RUN chmod 644 /etc/cron.d/www
-
-########################
-# create log directory #
-########################
-RUN mkdir ${LOCAL_INSTALL_DIR}/log/
-RUN chown www-data:www-data ${LOCAL_INSTALL_DIR}/log/
+RUN chown root:root /etc/cron.d/www
 
 CMD ["cron", "-f"]
-

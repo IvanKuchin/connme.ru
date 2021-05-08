@@ -1,3 +1,8 @@
+# --- general directories set
+set(CHAT_PROJECT_DIR          ${PROJECT_BINARY_DIR}/share/${MAIN_DOMAIN_NAME}/chat)
+set(CHAT_INSTALL_DIR          ${LOCAL_INSTALL_DIR}/chat)
+
+# --- target
 set(EXECUTABLE_CGIs
     chat-server
     )
@@ -27,6 +32,7 @@ macro(set_chat_lib_properties target_lib proj_src proj_inc_list proj_lib_list)
 endmacro()
 
 # --- MACROSes finish ---
+
 
 # --- Packages and libraries control
 include(FindPkgConfig)
