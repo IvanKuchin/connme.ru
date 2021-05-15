@@ -30,6 +30,11 @@ jobs:
     runs-on: ubuntu-latest
     # Only run this on the main repo
     # if: github.repository == 'github/super-linter'
+
+    strategy:
+      matrix:
+        container: [app, cron, chat]
+
     ##################
     # Load all steps #
     ##################
@@ -119,30 +124,12 @@ jobs:
             BUILD_REVISION=${{ github.sha }}
             BUILD_VERSION=${{ github.sha }}
             BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-          target: app
+          target: ${{ matrix.container }}
           push: true
           tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}_app:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}_app:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}_app:latest
-
-      - name: Build and push
-        if: success()
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./supplemental/docker/prod/Dockerfile
-          build-args: |
-            BUILD_DATE=${{ env.BUILD_DATE }}
-            BUILD_REVISION=${{ github.sha }}
-            BUILD_VERSION=${{ github.sha }}
-            BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-          target: cron
-          push: true
-          tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}_cron:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}_cron:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}_cron:latest
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-${{ matrix.container }}:${{ steps.set_variables.outputs.BUILD_RELEASE }}
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-${{ matrix.container }}:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-${{ matrix.container }}:latest
 
       ##########################
       # Stop deployment        #

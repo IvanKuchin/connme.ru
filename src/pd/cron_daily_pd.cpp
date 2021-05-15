@@ -505,7 +505,7 @@ auto RemoveYearAgoReminder(CMysql *db)
 
 	MESSAGE_DEBUG("", "", "start");
 
-	db->Query("DELETE FROM `feed` WHERE `actionTypeId` = \"12\" AND eventTimestamp < DATE_SUB(NOW(), INTERVAL 1 MONTH);");
+	db->Query("DELETE FROM `feed` WHERE `actionTypeId` = \"12\" AND eventTimestamp < DATE_SUB(NOW(), INTERVAL 1 WEEK);");
 
 	MESSAGE_DEBUG("", "", "finish");
 
