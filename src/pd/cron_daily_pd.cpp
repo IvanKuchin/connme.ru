@@ -556,7 +556,7 @@ int main()
 
 		MESSAGE_DEBUG("", "", "catch CExceptionHTML: DEBUG exception reason: [" + c.GetReason() + "]");
 
-		return(0);
+		return(-1);
 	}
 	catch(CException &c)
 	{
