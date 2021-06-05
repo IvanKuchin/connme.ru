@@ -57,47 +57,6 @@ int main()
 
 		MESSAGE_DEBUG("", "", "pre-condition if(action == \"" + action + "\")");
 
-		if(action == "groups_i_own_list")
-		{
-			ostringstream	ost;
-			string			strPageToGet, strFriendsOnSinglePage;
-
-			MESSAGE_DEBUG("", action, "start");
-
-			if(user.GetLogin() == "Guest")
-			{
-				ostringstream	ost;
-
-				MESSAGE_DEBUG("", action, " re-login required");
-
-				ost.str("");
-				ost << "/?rand=" << GetRandom(10);
-				indexPage.Redirect(ost.str());
-			}
-			else
-			{
-				indexPage.RegisterVariableForce("title_head", "Мои группы");
-
-				strFriendsOnSinglePage	= indexPage.GetVarsHandler()->Get("FriendsOnSinglePage");
-				strPageToGet 			= indexPage.GetVarsHandler()->Get("page");
-				if(strPageToGet.empty()) strPageToGet = "0";
-				MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
-
-				indexPage.RegisterVariableForce("myFirstName", user.GetName());
-				indexPage.RegisterVariableForce("myLastName", user.GetNameLast());
-
-
-				if(!indexPage.SetTemplate("groups_i_own_list.htmlt"))
-				{
-					MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
-					throw CExceptionHTML("user not activated");
-				} // if(!indexPage.SetTemplate("my_network.htmlt"))
-			}
-
-
-			MESSAGE_DEBUG("", action, "finish");
-		}
-
 		if(action == "getGroupWall")
 		{
 			ostringstream	ost;
@@ -170,6 +129,102 @@ int main()
 			}
 		}
 
+	    if(action == "AJAX_getGroupWall")
+	    {
+			auto			success_message = ""s;
+			auto			error_message = ""s;
+	        auto            currPage = 0, newsOnSinglePage = 0;
+	        auto			result = ""s;
+
+	        auto			strNewsOnSinglePage = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("NewsOnSinglePage"));
+	        auto			strPageToGet        = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("page"));
+	        auto			groupLink			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("link"));
+	        auto			groupID				= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
+
+	        if(strPageToGet.empty()) strPageToGet = "0";
+
+			MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
+
+	        try{
+	            currPage = stoi(strPageToGet);
+	        } catch(...) {
+	            currPage = 0;
+	        }
+
+	        try{
+	            newsOnSinglePage = stoi(strNewsOnSinglePage);
+	        } catch(...) {
+	            newsOnSinglePage = 30;
+	        }
+
+	/*
+	        if(user.GetLogin() == "Guest")
+	        {
+	            ostringstream   ost;
+
+                MESSAGE_DEBUG("", action, "re-login required");
+
+	            ost.str("");
+	            ost << "/?rand=" << GetRandom(10);
+	            indexPage.Redirect(ost.str());
+	        }
+	*/
+			if(groupLink.length() && db.Query("SELECT * FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isblocked`=\"N\";"))
+				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+			else if(groupID.length() && db.Query("SELECT * FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isblocked`=\"N\";"))
+				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+			else
+			{
+                MESSAGE_ERROR("", action, "group login not found");
+			}
+
+			success_message = "\"feed\":[" + result + "]";
+
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
+
+			MESSAGE_DEBUG("", action, "finish");
+	    }
+
+		if(action == "groups_i_own_list")
+		{
+			ostringstream	ost;
+			string			strPageToGet, strFriendsOnSinglePage;
+
+			MESSAGE_DEBUG("", action, "start");
+
+			if(user.GetLogin() == "Guest")
+			{
+				ostringstream	ost;
+
+				MESSAGE_DEBUG("", action, " re-login required");
+
+				ost.str("");
+				ost << "/?rand=" << GetRandom(10);
+				indexPage.Redirect(ost.str());
+			}
+			else
+			{
+				indexPage.RegisterVariableForce("title_head", "Мои группы");
+
+				strFriendsOnSinglePage	= indexPage.GetVarsHandler()->Get("FriendsOnSinglePage");
+				strPageToGet 			= indexPage.GetVarsHandler()->Get("page");
+				if(strPageToGet.empty()) strPageToGet = "0";
+				MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
+
+				indexPage.RegisterVariableForce("myFirstName", user.GetName());
+				indexPage.RegisterVariableForce("myLastName", user.GetNameLast());
+
+
+				if(!indexPage.SetTemplate("groups_i_own_list.htmlt"))
+				{
+					MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
+					throw CExceptionHTML("user not activated");
+				} // if(!indexPage.SetTemplate("my_network.htmlt"))
+			}
+
+
+			MESSAGE_DEBUG("", action, "finish");
+		}
 
 		if(action == "AJAX_getGroupProfile")
 		{
@@ -301,64 +356,6 @@ int main()
 
 			MESSAGE_DEBUG("", action, "start");
 		}
-
-	    if(action == "AJAX_getGroupWall")
-	    {
-	        ostringstream   ost;
-			auto			success_message = ""s;
-			auto			error_message = ""s;
-	        int             currPage = 0, newsOnSinglePage = 0;
-	        auto			result = ""s;
-
-	        auto			strNewsOnSinglePage = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("NewsOnSinglePage"));
-	        auto			strPageToGet        = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("page"));
-	        auto			groupLink			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("link"));
-	        auto			groupID				= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
-
-	        if(strPageToGet.empty()) strPageToGet = "0";
-
-			MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
-
-	        try{
-	            currPage = stoi(strPageToGet);
-	        } catch(...) {
-	            currPage = 0;
-	        }
-
-	        try{
-	            newsOnSinglePage = stoi(strNewsOnSinglePage);
-	        } catch(...) {
-	            newsOnSinglePage = 30;
-	        }
-
-	/*
-	        if(user.GetLogin() == "Guest")
-	        {
-	            ostringstream   ost;
-
-                MESSAGE_DEBUG("", action, "re-login required");
-
-	            ost.str("");
-	            ost << "/?rand=" << GetRandom(10);
-	            indexPage.Redirect(ost.str());
-	        }
-	*/
-			if(groupLink.length() && db.Query("SELECT * FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
-			else if(groupID.length() && db.Query("SELECT * FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
-			else
-			{
-                MESSAGE_ERROR("", action, "group login not found");
-			}
-
-			success_message = "\"feed\":[" + result + "]";
-
-			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
-
-			MESSAGE_DEBUG("", action, "finish");
-	    }
-
 
 		if(action == "AJAX_getGroupProfileAndUser")
 		{
@@ -1029,6 +1026,47 @@ int main()
 
 			MESSAGE_DEBUG("", action, "end");
 
+		}
+
+		if(action == "AJAX_deleteGroup")
+		{
+			MESSAGE_DEBUG("", action, "start");
+
+			auto	success_message = ""s;
+			auto	error_message = ""s;
+
+			if(user.GetLogin() == "Guest")
+			{
+				error_message = "re-login required";
+				MESSAGE_DEBUG("", action, error_message);
+			}
+			else
+			{
+				auto	groupID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
+
+				if(groupID.length())
+				{
+					if(db.Query("SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `owner_id`=\"" + user.GetID() + "\";"))
+					{
+						
+					}
+					else
+					{
+						error_message = gettext("you are not authorized");
+						MESSAGE_ERROR("", action, error_message);
+					}
+
+				}
+				else
+				{
+					error_message = gettext("group not found or blocked");
+					MESSAGE_ERROR("", action, error_message);
+				}
+			}
+
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
+
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		MESSAGE_DEBUG("", action, " end (action's == \"" + action + "\") condition");
