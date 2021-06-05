@@ -538,42 +538,29 @@ int main()
 		// --- AJAX delete message FROM news feed
 		if(action == "AJAX_deleteNewsFeedMessage")
 		{
-
-			ostringstream	ostFinal;
-			CMysql			db1;
-			string			messageID;
-
-			messageID	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("messageID"));
+			auto		error_message = ""s;
+			auto		success_message = ""s;
+			auto		messageID	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("messageID"));
 
 			MESSAGE_DEBUG("", action, "start [" + messageID + "]");
 
-			if(messageID.empty())
+			if(user.GetLogin() == "Guest")
 			{
-				MESSAGE_DEBUG("", action, "messageID is not defined");
-
-				ostFinal.str("");
-				ostFinal << "{";
-				ostFinal << "\"result\" : \"error\",";
-				ostFinal << "\"description\" : \"messageID is empty\"";
-				ostFinal << "}";
+				error_message = gettext("re-login required");
+				MESSAGE_DEBUG("", action, error_message);
+			}
+			else if(messageID.empty())
+			{
+				error_message = gettext("mandatory parameter missed");
+				MESSAGE_DEBUG("", action, error_message);
 			}
 			else
 			{
-				if(user.GetLogin() == "Guest")
-				{
-					ostringstream	ost;
-
-					MESSAGE_DEBUG("", action, "re-login required");
-
-					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
-				}
-
-
 				if(AmIMessageOwner(messageID, &user, &db))
 				{
 					pair<string, string> 	messageOwner = GetMessageOwner(messageID, &user, &db);
-					string					messageOwnerType = messageOwner.first;
-					string					messageOwnerID = messageOwner.second;
+					auto					messageOwnerType = messageOwner.first;
+					auto					messageOwnerID = messageOwner.second;
 
 					if(messageOwnerType.length() && messageOwnerID.length())
 					{
@@ -584,13 +571,11 @@ int main()
 
 						if(db.Query("SELECT `imageSetID` FROM `feed_message` WHERE `id`='" + messageID + "';"))
 						{
-							ostringstream	ost;
-							string			imageSetID = db.Get(0, "imageSetID");
+							auto	imageSetID			= db.Get(0, "imageSetID");
+							auto	sqlWhereStatement	= " `setID`='" + imageSetID + "' AND `srcType`=\"" + messageOwnerType + "\" AND `userID`=\"" + messageOwnerID + "\" ";
 
-							ost.str("");
-							ost << " `setID`='" << imageSetID << "' AND `srcType`=\"" + messageOwnerType + "\" AND `userID`=\"" << messageOwnerID << "\" ";
-							RemoveMessageImages(ost.str(), &db);
-						} // --- if ("SELECT * FROM `feed_message` WHERE `id`='" << messageID << "';";)
+							RemoveMessageImages(sqlWhereStatement, &db);
+						}
 
 						db.Query("DELETE FROM `feed_message` WHERE `id`=\"" + messageID + "\";");
 
@@ -602,55 +587,29 @@ int main()
 						// --- removing comments and notifications
 						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\");");
 						db.Query("DELETE FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\";");
-
-						ostFinal.str("");
-						ostFinal << "{";
-						ostFinal << "\"result\" : \"success\",";
-						ostFinal << "\"description\" : \"\"";
-						ostFinal << "}";
 					}
 					else
 					{
-						MESSAGE_ERROR("", action, "message owner error (type:" + messageOwnerType + ", id:" + messageOwnerID + ")");
-
-						ostFinal.str("");
-						ostFinal << "{";
-						ostFinal << "\"result\" : \"error\",";
-						ostFinal << "\"description\" : \"Ошибка: Не получилось определить владельца сообщения\"";
-						ostFinal << "}";
+						error_message = gettext("message owner is not known");
+						MESSAGE_ERROR("", action, error_message);
 					}
 				}
 				else
 				{
-					MESSAGE_ERROR("", action, "message doesn't belongs to you");
-
-					ostFinal.str("");
-					ostFinal << "{";
-					ostFinal << "\"result\" : \"error\",";
-					ostFinal << "\"description\" : \"Ошибка: Вы не можете удалить чужое сообщение.\"";
-					ostFinal << "}";
+					error_message = gettext("you are not authorized");
+					MESSAGE_ERROR("", action, error_message);
 				}
 			}
 
-			indexPage.RegisterVariableForce("result", ostFinal.str());
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
-			{
-				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
-				throw CException("Template file was missing");
-			}
-
-			{
-				MESSAGE_DEBUG("", action, "end (messageID " + messageID + ")");
-			}
-
+			MESSAGE_DEBUG("", action, "end (messageID " + messageID + ")");
 		}
 
 		// --- AJAX delete comment FROM message
 		if(action == "AJAX_deleteNewsFeedComment")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			commentID;
 
 			commentID	= indexPage.GetVarsHandler()->Get("commentID");
@@ -709,7 +668,6 @@ int main()
 		if(action == "AJAX_removeCompanyExperience")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			expID;
 
 			expID	= indexPage.GetVarsHandler()->Get("id");
@@ -781,7 +739,6 @@ int main()
 		if(action == "AJAX_removeCertificationEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string		  usersCertificationID;
 
 			usersCertificationID	= indexPage.GetVarsHandler()->Get("id");
@@ -899,7 +856,6 @@ int main()
 		if(action == "AJAX_removeCourseEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersCourseID;
 
 			usersCourseID	= indexPage.GetVarsHandler()->Get("id");
@@ -969,7 +925,6 @@ int main()
 		if(action == "AJAX_removeSchoolEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersSchoolID;
 
 			usersSchoolID	= indexPage.GetVarsHandler()->Get("id");
@@ -1035,7 +990,6 @@ int main()
 		if(action == "AJAX_removeUniversityEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersUniversityID;
 
 			usersUniversityID	= indexPage.GetVarsHandler()->Get("id");
@@ -1109,7 +1063,6 @@ int main()
 		if(action == "AJAX_removeLanguageEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersLanguageID;
 
 			usersLanguageID	= indexPage.GetVarsHandler()->Get("id");
@@ -1177,7 +1130,6 @@ int main()
 		if(action == "AJAX_removeCompanyFounder")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			companyFounderID;
 
 			companyFounderID	= indexPage.GetVarsHandler()->Get("id");
@@ -1268,14 +1220,10 @@ int main()
 		// --- AJAX remove company owner
 		if(action == "AJAX_removeCompanyOwner")
 		{
-			ostringstream   ost, ostFinal;
-			CMysql		  db1;
-			string		  companyOwnerID;
-
-			companyOwnerID  = indexPage.GetVarsHandler()->Get("id");
-
 			MESSAGE_DEBUG("", action, "start");
 
+			ostringstream   ost, ostFinal;
+			auto			companyOwnerID  = indexPage.GetVarsHandler()->Get("id");
 
 			if(companyOwnerID.empty())
 			{
@@ -1361,7 +1309,6 @@ int main()
 		if(action == "AJAX_removeCompanyIndustry")
 		{
 			ostringstream   ost, ostFinal;
-			CMysql		  db1;
 			string		  companyIndustryID;
 
 			companyIndustryID  = indexPage.GetVarsHandler()->Get("id");
@@ -1451,7 +1398,6 @@ int main()
 		if(action == "AJAX_removeSkillEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			skillID;
 
 			skillID	= indexPage.GetVarsHandler()->Get("id");
@@ -1528,7 +1474,6 @@ int main()
 		if(action == "AJAX_removeRecommendationEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			recommendationID;
 
 			recommendationID	= indexPage.GetVarsHandler()->Get("id");
@@ -1909,7 +1854,6 @@ int main()
 		if(action == "AJAX_getURLMetaData")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			url, imageTempSet;
 
 			MESSAGE_DEBUG("", action, "start");
@@ -2697,7 +2641,6 @@ int main()
 			auto			user1 = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("user1"));
 			auto			user2 = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("user2"));
 			string			user1Data, user2Data, hopUserList;
-			CMysql			db1;
 			vector<int>		vectorFriendList1, vectorFriendList2, vectorFriendList3;
 
 
@@ -3828,12 +3771,12 @@ int main()
 		// --- JSON get list of my friends
 		if((action == "JSON_getMyNetworkFriendList") || (action == "JSON_getWhoWatchedONMeList"))
 		{
+			MESSAGE_DEBUG("", action, "start");
+
 			ostringstream	ost, ostFinal, friendsSqlQuery;
 			string			sessid, lookForKey, userList = "";
-			CMysql			db1;
 			int				affected;
-
-			MESSAGE_DEBUG("", action, "start");
+			CMysql			db1;
 
 			if(user.GetLogin() == "Guest")
 			{
@@ -6547,7 +6490,7 @@ int main()
 
 			if(user.GetLogin() == "Guest")
 			{
-				error_message = "re-login required";
+				error_message = gettext("re-login required");
 				MESSAGE_DEBUG("", action, error_message);
 			}
 			else
