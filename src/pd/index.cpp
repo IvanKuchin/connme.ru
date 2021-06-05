@@ -559,7 +559,7 @@ int main()
 				if(AmIMessageOwner(messageID, &user, &db))
 				{
 					pair<string, string> 	messageOwner = GetMessageOwner(messageID, &user, &db);
-`					auto					messageOwnerType = messageOwner.first;
+					auto					messageOwnerType = messageOwner.first;
 					auto					messageOwnerID = messageOwner.second;
 
 					if(messageOwnerType.length() && messageOwnerID.length())
