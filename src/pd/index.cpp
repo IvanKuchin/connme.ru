@@ -559,15 +559,14 @@ int main()
 				if(AmIMessageOwner(messageID, &user, &db))
 				{
 					pair<string, string> 	messageOwner = GetMessageOwner(messageID, &user, &db);
-					auto					messageOwnerType = messageOwner.first;
+`					auto					messageOwnerType = messageOwner.first;
 					auto					messageOwnerID = messageOwner.second;
 
 					if(messageOwnerType.length() && messageOwnerID.length())
 					{
 						// --- delete original message
-						db.Query("DELETE FROM `feed` WHERE `srcType`=\"" + messageOwnerType + "\" AND `userId`=\"" + messageOwnerID + "\" AND `actionTypeId`=\"11\" and `actionId`=\"" + messageID + "\";");
 						// --- delete reposted messages over a year
-						db.Query("DELETE FROM `feed` WHERE `srcType`=\"" + messageOwnerType + "\" AND `userId`=\"" + messageOwnerID + "\" AND `actionTypeId`=\"12\" and `actionId`=\"" + messageID + "\";");
+						db.Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId`=\"" + messageID + "\";");
 
 						if(db.Query("SELECT `imageSetID` FROM `feed_message` WHERE `id`='" + messageID + "';"))
 						{
