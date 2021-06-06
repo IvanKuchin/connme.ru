@@ -538,11 +538,11 @@ int main()
 		// --- AJAX delete message FROM news feed
 		if(action == "AJAX_deleteNewsFeedMessage")
 		{
+			MESSAGE_DEBUG("", action, "start");
+
 			auto		error_message = ""s;
 			auto		success_message = ""s;
 			auto		messageID	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("messageID"));
-
-			MESSAGE_DEBUG("", action, "start [" + messageID + "]");
 
 			if(user.GetLogin() == "Guest")
 			{
@@ -558,40 +558,27 @@ int main()
 			{
 				if(AmIMessageOwner(messageID, &user, &db))
 				{
-					pair<string, string> 	messageOwner = GetMessageOwner(messageID, &user, &db);
-					auto					messageOwnerType = messageOwner.first;
-					auto					messageOwnerID = messageOwner.second;
+					// --- delete images associated with message
+					// --- imageSet != 0 - needed to ensure that following items are unchanged
+					// ---                 *) images that are in-progress message crafting
+					// ---                 *) lost images
+					auto	sqlWhereStatement	= " `setID`=(SELECT `imageSetID` FROM `feed_message` WHERE `id`=\"" + messageID + "\" AND `imageSetID`!=\"0\")";
+					RemoveMessageImages(sqlWhereStatement, &db);
 
-					if(messageOwnerType.length() && messageOwnerID.length())
-					{
-						// --- delete original message
-						// --- delete reposted messages over a year
-						db.Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId`=\"" + messageID + "\";");
+					// --- delete original message
+					// --- delete reposted messages over a year
+					db.Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId`=\"" + messageID + "\";");
 
-						if(db.Query("SELECT `imageSetID` FROM `feed_message` WHERE `id`='" + messageID + "';"))
-						{
-							auto	imageSetID			= db.Get(0, "imageSetID");
-							auto	sqlWhereStatement	= " `setID`='" + imageSetID + "' AND `srcType`=\"" + messageOwnerType + "\" AND `userID`=\"" + messageOwnerID + "\" ";
+					db.Query("DELETE FROM `feed_message` WHERE `id`=\"" + messageID + "\";");
 
-							RemoveMessageImages(sqlWhereStatement, &db);
-						}
+					// --- removing likes / dislikes and notifications
+					db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId`='" + messageID + "';");
+					db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID`='" + messageID + "' and `parameter`=\"like\");");
+					db.Query("DELETE FROM `feed_message_params` WHERE `messageID`='" + messageID + "';");
 
-						db.Query("DELETE FROM `feed_message` WHERE `id`=\"" + messageID + "\";");
-
-						// --- removing likes / dislikes and notifications
-						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId`='" + messageID + "';");
-						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID`='" + messageID + "' and `parameter`=\"like\");");
-						db.Query("DELETE FROM `feed_message_params` WHERE `messageID`='" + messageID + "';");
-
-						// --- removing comments and notifications
-						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\");");
-						db.Query("DELETE FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\";");
-					}
-					else
-					{
-						error_message = gettext("message owner is not known");
-						MESSAGE_ERROR("", action, error_message);
-					}
+					// --- removing comments and notifications
+					db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\");");
+					db.Query("DELETE FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\";");
 				}
 				else
 				{
@@ -4557,7 +4544,7 @@ int main()
 					if(newsFeedMessageImageTempSet.length() && (newsFeedMessageImageTempSet != "0"))
 					{
 						// --- remove all images subjected to removal
-						RemoveMessageImages("`tempSet`=\"" + newsFeedMessageImageTempSet + "\" and `userID`=\"" + user.GetID() + "\" and `removeFlag`=\"remove\";", &db);
+						RemoveMessageImages(" `tempSet`=\"" + newsFeedMessageImageTempSet + "\" and `userID`=\"" + user.GetID() + "\" and `removeFlag`=\"remove\" ", &db);
 
 						// --- update images assigned to message
 						if(newsFeedMessageImageTempSet.length() && (newsFeedMessageImageTempSet != "0") && db.Query("SELECT `id` FROM `feed_images` WHERE `tempSet`=\"" + newsFeedMessageImageTempSet + "\" and `userID`=\"" + user.GetID() + "\";"))
