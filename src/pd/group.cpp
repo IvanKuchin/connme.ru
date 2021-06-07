@@ -169,13 +169,43 @@ int main()
 	            indexPage.Redirect(ost.str());
 	        }
 	*/
-			if(groupLink.length() && db.Query("SELECT * FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
-			else if(groupID.length() && db.Query("SELECT * FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+			if(groupLink.length())
+			{
+				auto	isBlocked = GetValueFromDB("SELECT `isBlocked` FROM `groups` WHERE `link`=\"" + groupLink + "\";", &db);
+
+				if(isBlocked == "N")
+				{
+					result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+				}
+				else if(isBlocked == "Y")
+				{
+					MESSAGE_DEBUG("", "", "group.link(" + groupLink + ") blocked");
+				}
+				else
+				{
+					MESSAGE_ERROR("", action, "group.link(" + groupLink + ") not found");
+				}
+			}
+			else if(groupID.length())
+			{
+				auto	isBlocked = GetValueFromDB("SELECT `isBlocked` FROM `groups` WHERE `id`=\"" + groupID + "\";", &db);
+
+				if(isBlocked == "N")
+				{
+					result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+				}
+				else if(isBlocked == "Y")
+				{
+					MESSAGE_DEBUG("", "", "group.id(" + groupID + ") blocked");
+				}
+				else
+				{
+					MESSAGE_ERROR("", action, "group.id(" + groupID + ") not found");
+				}
+			}
 			else
 			{
-                MESSAGE_ERROR("", action, "group login not found");
+                MESSAGE_ERROR("", action, "mandatory parameter missed");
 			}
 
 			success_message = "\"feed\":[" + result + "]";
