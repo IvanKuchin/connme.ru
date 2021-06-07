@@ -63,6 +63,10 @@ auto 	     	GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned
 auto    	  	GetUserNotificationInJSONFormat(string sqlRequest, CMysql *, CUser *) -> string;
 auto 			GetCandidatesListAppliedToVacancyInJSONFormat(string dbQuery, CMysql *) -> string;
 auto 			GetOpenVacanciesInJSONFormat(string companyID, CMysql *, CUser * = NULL) -> string;
+auto			DeleteMessageByID(const string &messageIDs, CMysql *, CUser * = NULL) -> string;
+
+auto			AmIGroupOwner(const string &groupID, CMysql *db, CUser *user) -> bool;
+auto			DeleteGroupByID(const string &groupID, CMysql *db, CUser *user) -> string;
 
 auto			RotateImage(string filename, int degree) -> string;
 auto			FlipImageVertical(string filename) -> string;

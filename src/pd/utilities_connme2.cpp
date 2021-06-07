@@ -1777,3 +1777,66 @@ string GetOpenVacanciesInJSONFormat(string dbQuery, CMysql *db, CUser *user/* = 
 
 	return result;
 }
+
+auto DeleteMessageByID(const string &messageIDs, CMysql *db, CUser *user) -> string
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto		error_message	= ""s;
+
+	// --- delete images associated with message
+	// --- imageSet != 0 - needed to ensure that following items are unchanged
+	// ---                 *) images that are in-progress message crafting
+	// ---                 *) lost images
+	auto	sqlWhereStatement	= " `setID`=(SELECT `imageSetID` FROM `feed_message` WHERE `id` IN (" + messageIDs + ") AND `imageSetID`!=\"0\")";
+	RemoveMessageImages(sqlWhereStatement, db);
+
+	// --- delete original message
+	// --- delete reposted messages over a year
+	db->Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId` IN (" + messageIDs + ");");
+
+	db->Query("DELETE FROM `feed_message` WHERE `id` IN (" + messageIDs + ");");
+
+	// --- removing likes / dislikes and notifications
+	db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId` IN (" + messageIDs + ");");
+	db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID` IN (" + messageIDs + ") and `parameter`=\"like\");");
+	db->Query("DELETE FROM `feed_message_params` WHERE `messageID` IN (" + messageIDs + ");");
+
+	// --- removing comments and notifications
+	db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID` IN (" + messageIDs + ") and `type`=\"message\");");
+	db->Query("DELETE FROM `feed_message_comment` WHERE `messageID` IN (" + messageIDs + ") and `type`=\"message\";");
+
+	MESSAGE_DEBUG("", "", "end (" + error_message + ")");
+
+	return error_message;
+}
+
+auto AmIGroupOwner(const string &groupID, CMysql *db, CUser *user) -> bool
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto		id		= GetValueFromDB("SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `owner_id`=\"" + user->GetID() + "\";", db);
+	auto		result	= id.length() > 0;
+
+	MESSAGE_DEBUG("", "", "end (" + to_string(result) + ")");
+
+	return result;
+}
+
+auto DeleteGroupByID(const string &groupID, CMysql *db, CUser *user) -> string
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto		error_message	= ""s;
+
+	// --- delete group create/join events (actionTypeIds: 64/65)
+
+	// --- delete group logo
+
+	// --- delete group
+
+
+	MESSAGE_DEBUG("", "", "end (" + error_message + ")");
+
+	return error_message;
+}

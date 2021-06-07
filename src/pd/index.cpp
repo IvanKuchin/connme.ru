@@ -558,27 +558,7 @@ int main()
 			{
 				if(AmIMessageOwner(messageID, &user, &db))
 				{
-					// --- delete images associated with message
-					// --- imageSet != 0 - needed to ensure that following items are unchanged
-					// ---                 *) images that are in-progress message crafting
-					// ---                 *) lost images
-					auto	sqlWhereStatement	= " `setID`=(SELECT `imageSetID` FROM `feed_message` WHERE `id`=\"" + messageID + "\" AND `imageSetID`!=\"0\")";
-					RemoveMessageImages(sqlWhereStatement, &db);
-
-					// --- delete original message
-					// --- delete reposted messages over a year
-					db.Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId`=\"" + messageID + "\";");
-
-					db.Query("DELETE FROM `feed_message` WHERE `id`=\"" + messageID + "\";");
-
-					// --- removing likes / dislikes and notifications
-					db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId`='" + messageID + "';");
-					db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID`='" + messageID + "' and `parameter`=\"like\");");
-					db.Query("DELETE FROM `feed_message_params` WHERE `messageID`='" + messageID + "';");
-
-					// --- removing comments and notifications
-					db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\");");
-					db.Query("DELETE FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\";");
+					error_message = DeleteMessageByID(messageID, &db, &user);
 				}
 				else
 				{

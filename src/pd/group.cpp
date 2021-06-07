@@ -1044,22 +1044,32 @@ int main()
 			{
 				auto	groupID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
 
-				if(groupID.length())
+				if(AmIGroupOwner(groupID, &db, &user))
 				{
-					if(db.Query("SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `owner_id`=\"" + user.GetID() + "\";"))
+					// --- delete group messages
+					auto	messageIDs = GetValuesFromDB("SELECT `actionId` FROM `feed` WHERE actionTypeId IN (11, 12) AND `dstType`=\"group\" AND `dstID`=\"" + groupID + "\";", &db);
+
+					error_message = DeleteMessageByID(join(messageIDs), &db, &user);
+					if(error_message.empty())
 					{
-						
+						// --- delete group metadata
+						error_message = DeleteGroupByID(groupID, &db, &user);
+						if(error_message.empty())
+						{
+						}
+						else
+						{
+							MESSAGE_ERROR("", action, error_message);	
+						}
 					}
 					else
 					{
-						error_message = gettext("you are not authorized");
-						MESSAGE_ERROR("", action, error_message);
+						MESSAGE_ERROR("", action, error_message);	
 					}
-
 				}
 				else
 				{
-					error_message = gettext("group not found or blocked");
+					error_message = gettext("you are not authorized");
 					MESSAGE_ERROR("", action, error_message);
 				}
 			}
