@@ -1920,7 +1920,7 @@ int main()
 #endif
 							// --- init variables
 							ost.str("");
-							ost << IMAGE_FEED_DIRECTORY << "/" << html.GetPreviewImageFolder() << "/" << html.GetPreviewImagePrefix() << ".jpg";
+							ost << IMAGE_FEED_DIRECTORY << FS_SEPARATOR << html.GetPreviewImageFolder() << FS_SEPARATOR << html.GetPreviewImagePrefix() << ".jpg";
 							finalFile = ost.str();
 
 							ost.str("");
@@ -2002,7 +2002,7 @@ int main()
 
 								if(feed_imageID)
 								{
-									feed_imageURL = html.GetPreviewImageFolder() + "/" + html.GetPreviewImagePrefix() + ".jpg";
+									feed_imageURL = html.GetPreviewImageFolder() + FS_SEPARATOR + html.GetPreviewImagePrefix() + ".jpg";
 									feed_mediaType = "image";
 								}
 								else
@@ -2085,7 +2085,7 @@ int main()
 			{
 				if(db.Get(0, "userid") == user.GetID())
 				{
-					auto	filename = config.GetFromFile("image_folders", "avatar") + "/avatars"+ db.Get(0, "folder") + "/" + db.Get(0, "filename");
+					auto	filename = config.GetFromFile("image_folders", "avatar") + "/avatars"+ db.Get(0, "folder") + FS_SEPARATOR + db.Get(0, "filename");
 
 					MESSAGE_DEBUG("", action, "removing avatar [id=" + avatarID + "] belongs to user " + user.GetLogin() + " [filename=" + filename + "]");
 
@@ -6602,7 +6602,7 @@ int main()
 
 
 					if(db.Query("SELECT * FROM `users_avatars` WHERE `userID`=\"" + friendID + "\" and `isActive`=\"1\";"))
-						indexPage.RegisterVariableForce("friendAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + "/" + string(db.Get(0, "filename")));
+						indexPage.RegisterVariableForce("friendAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + FS_SEPARATOR + string(db.Get(0, "filename")));
 
 					ost.str("");
 					ost << "SELECT * FROM `users_friends` WHERE `userid`='" << user.GetID() << "' and `friendID`='" << friendID << "';";
@@ -6682,7 +6682,7 @@ int main()
 
 
 			if(db.Query("SELECT * FROM `users_avatars` WHERE `userID`=\"" + user.GetID() + "\" and `isActive`=\"1\";"))
-				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + "/" + string(db.Get(0, "filename")));
+				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + FS_SEPARATOR + string(db.Get(0, "filename")));
 
 			if(!indexPage.SetTemplate("view_profile.htmlt"))
 			{
@@ -10886,7 +10886,7 @@ int main()
 			}
 
 			if(db.Query("SELECT * FROM `users_avatars` WHERE `userID`=\"" + user.GetID() + "\" and `isActive`=\"1\";"))
-				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + "/" + string(db.Get(0, "filename")));
+				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + FS_SEPARATOR + string(db.Get(0, "filename")));
 
 			indexPage.RegisterVariableForce("userLogin", user.GetLogin());
 			indexPage.RegisterVariableForce("myFirstName", user.GetName());

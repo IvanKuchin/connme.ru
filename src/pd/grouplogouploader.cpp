@@ -209,7 +209,7 @@ int main()
 									fileExtension = ".jpg";
 								}
 
-								file2Check = config.GetFromFile("image_folders", "group") + "/" + to_string(folderID) + "/" + filePrefix + ".jpg";
+								file2Check = config.GetFromFile("image_folders", "group") + FS_SEPARATOR + to_string(folderID) + FS_SEPARATOR + filePrefix + ".jpg";
 								tmpFile2Check = "/tmp/tmp_" + filePrefix + fileExtension;
 								tmpImageJPG = "/tmp/" + filePrefix + ".jpg";
 
@@ -241,14 +241,12 @@ int main()
 // --- Don't forget to remove previous logo
 								if(db.Query("select `logo_folder`, `logo_filename` from `groups` where `id`=\"" + groupID + "\";"))
 								{
-									string  currLogo = config.GetFromFile("image_folders", "group") + "/" + db.Get(0, "logo_folder") + "/" + db.Get(0, "logo_filename");
+									string  currLogo = config.GetFromFile("image_folders", "group") + FS_SEPARATOR + db.Get(0, "logo_folder") + FS_SEPARATOR + db.Get(0, "logo_filename");
 
 									if(isFileExists(currLogo)) 
 									{
-										{
-											CLog			log;
-											log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: remove current logo (" + currLogo + ")");
-										}
+										MESSAGE_DEBUG("", "", "remove current logo (" + currLogo + ")");
+
 										unlink(currLogo.c_str());
 									}
 								}

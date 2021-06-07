@@ -624,7 +624,7 @@ auto GetUsersNameAvatarInJSONFormat(string dbQuery, CMysql *db, CUser *user) -> 
 
 					if(db->Query("select * from `users_avatars` where `userid`='" + userID + "' and `isActive`='1';"))
 					{
-						avatarPath = "/images/avatars/avatars" + db->Get(0, "folder") + "/" + db->Get(0, "filename");
+						avatarPath = "/images/avatars/avatars" + db->Get(0, "folder") + FS_SEPARATOR + db->Get(0, "filename");
 					}
 
 					temp_result = "{"
@@ -804,7 +804,7 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 					// --- Get user avatars
 					avatarPath = "empty";
 					if(db->Query("select * from `users_avatars` where `userid`='" + userID + "' and `isActive`='1';"))
-						avatarPath = "/images/avatars/avatars" + db->Get(0, "folder") + "/" + db->Get(0, "filename");
+						avatarPath = "/images/avatars/avatars" + db->Get(0, "folder") + FS_SEPARATOR + db->Get(0, "filename");
 
 					// --- Get friendship status
 					userFriendship = "empty";
@@ -1784,27 +1784,34 @@ auto DeleteMessageByID(const string &messageIDs, CMysql *db, CUser *user) -> str
 
 	auto		error_message	= ""s;
 
-	// --- delete images associated with message
-	// --- imageSet != 0 - needed to ensure that following items are unchanged
-	// ---                 *) images that are in-progress message crafting
-	// ---                 *) lost images
-	auto	sqlWhereStatement	= " `setID`=(SELECT `imageSetID` FROM `feed_message` WHERE `id` IN (" + messageIDs + ") AND `imageSetID`!=\"0\")";
-	RemoveMessageImages(sqlWhereStatement, db);
+	if(messageIDs.length())
+	{
+		// --- delete images associated with message
+		// --- imageSet != 0 - needed to ensure that following items are unchanged
+		// ---                 *) images that are in-progress message crafting
+		// ---                 *) lost images
+		auto	sqlWhereStatement	= " `setID` IN (SELECT `imageSetID` FROM `feed_message` WHERE `id` IN (" + messageIDs + ") AND `imageSetID`!=\"0\")";
+		RemoveMessageImages(sqlWhereStatement, db);
 
-	// --- delete original message
-	// --- delete reposted messages over a year
-	db->Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId` IN (" + messageIDs + ");");
+		// --- delete original message
+		// --- delete reposted messages over a year
+		db->Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"11\",\"12\") AND `actionId` IN (" + messageIDs + ");");
 
-	db->Query("DELETE FROM `feed_message` WHERE `id` IN (" + messageIDs + ");");
+		db->Query("DELETE FROM `feed_message` WHERE `id` IN (" + messageIDs + ");");
 
-	// --- removing likes / dislikes and notifications
-	db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId` IN (" + messageIDs + ");");
-	db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID` IN (" + messageIDs + ") and `parameter`=\"like\");");
-	db->Query("DELETE FROM `feed_message_params` WHERE `messageID` IN (" + messageIDs + ");");
+		// --- removing likes / dislikes and notifications
+		db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId` IN (" + messageIDs + ");");
+		db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID` IN (" + messageIDs + ") and `parameter`=\"like\");");
+		db->Query("DELETE FROM `feed_message_params` WHERE `messageID` IN (" + messageIDs + ");");
 
-	// --- removing comments and notifications
-	db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID` IN (" + messageIDs + ") and `type`=\"message\");");
-	db->Query("DELETE FROM `feed_message_comment` WHERE `messageID` IN (" + messageIDs + ") and `type`=\"message\";");
+		// --- removing comments and notifications
+		db->Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID` IN (" + messageIDs + ") and `type`=\"message\");");
+		db->Query("DELETE FROM `feed_message_comment` WHERE `messageID` IN (" + messageIDs + ") and `type`=\"message\";");
+	}
+	else
+	{
+		MESSAGE_DEBUG("", "", "message list is empty");
+	}
 
 	MESSAGE_DEBUG("", "", "end (" + error_message + ")");
 
@@ -1823,18 +1830,39 @@ auto AmIGroupOwner(const string &groupID, CMysql *db, CUser *user) -> bool
 	return result;
 }
 
-auto DeleteGroupByID(const string &groupID, CMysql *db, CUser *user) -> string
+auto DeleteGroupByID(const string &groupID, CMysql *db, CUser *user, c_config *config) -> string
 {
 	MESSAGE_DEBUG("", "", "start");
 
 	auto		error_message	= ""s;
 
-	// --- delete group create/join events (actionTypeIds: 64/65)
-
 	// --- delete group logo
+	auto		affected		= db->Query("SELECT * FROM `groups` WHERE `id`=" + quoted(groupID) + ";");
+
+	if(affected)
+	{
+		auto	group_logo = config->GetFromFile("image_folders", "group") + FS_SEPARATOR + db->Get(0, "logo_folder") + FS_SEPARATOR + db->Get(0, "logo_filename");
+
+		if(isFileExists(group_logo))
+		{
+			unlink(group_logo.c_str());
+		}
+		else
+		{
+			MESSAGE_ERROR("", "", "image not found");
+		}
+	}
+	else
+	{
+		error_message = gettext("group not found");
+		MESSAGE_ERROR("", "", error_message);
+	}
+
+	// --- delete group create/join events (actionTypeIds: 64/65)
+	db->Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"64\",\"65\") AND `actionId` IN (" + groupID + ")");
 
 	// --- delete group
-
+	db->Query("DELETE FROM `groups` WHERE `id`=" + quoted(groupID) + ";");
 
 	MESSAGE_DEBUG("", "", "end (" + error_message + ")");
 

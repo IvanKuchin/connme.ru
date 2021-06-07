@@ -1047,13 +1047,13 @@ int main()
 				if(AmIGroupOwner(groupID, &db, &user))
 				{
 					// --- delete group messages
-					auto	messageIDs = GetValuesFromDB("SELECT `actionId` FROM `feed` WHERE actionTypeId IN (11, 12) AND `dstType`=\"group\" AND `dstID`=\"" + groupID + "\";", &db);
+					auto	messageIDs = GetValuesFromDB("SELECT `actionId` FROM `feed` WHERE `actionTypeId` IN (11, 12) AND `dstType`=\"group\" AND `dstID`=\"" + groupID + "\";", &db);
 
 					error_message = DeleteMessageByID(join(messageIDs), &db, &user);
 					if(error_message.empty())
 					{
 						// --- delete group metadata
-						error_message = DeleteGroupByID(groupID, &db, &user);
+						error_message = DeleteGroupByID(groupID, &db, &user, &config);
 						if(error_message.empty())
 						{
 						}
