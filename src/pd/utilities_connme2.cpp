@@ -1861,6 +1861,9 @@ auto DeleteGroupByID(const string &groupID, CMysql *db, CUser *user, c_config *c
 	// --- delete group create/join events (actionTypeIds: 64/65)
 	db->Query("DELETE FROM `feed` WHERE `actionTypeId` IN (\"64\",\"65\") AND `actionId` IN (" + groupID + ")");
 
+	// --- delete group subscriptions
+	db->Query("DELETE FROM `users_subscriptions` WHERE `entity_type` IN (\"group\") AND `entity_id` IN (" + groupID + ")");
+
 	// --- delete group
 	db->Query("DELETE FROM `groups` WHERE `id`=" + quoted(groupID) + ";");
 

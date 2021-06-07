@@ -944,38 +944,30 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 	};
 	vector<ItemClass>   itemsList;
 
-	ostringstream	  ostResult;
-	int			  affected;
-	vector<string>	vectorFriendList;
+	ostringstream	ostResult;
+	auto			vectorFriendList = GetValuesFromDB(
+									"SELECT `users_friends`.`friendID` "
+									"from `users_friends` "
+									"left join `users` on `users`.`id`=`users_friends`.`friendID` "
+									"where `users_friends`.`userID`='" + user->GetID() + "' and `users_friends`.`state`='confirmed' and `users`.`isactivated`='Y' and `users`.`isblocked`='N';"
+									, db);
 
-	ostResult.str("");
-	ostResult << "SELECT `users_friends`.`friendID` \
-			from `users_friends` \
-			left join `users` on `users`.`id`=`users_friends`.`friendID` \
-			where `users_friends`.`userID`='" << user->GetID() << "' and `users_friends`.`state`='confirmed' and `users`.`isactivated`='Y' and `users`.`isblocked`='N';";
+	auto 			affected = db->Query(
+		"SELECT "
+		"`feed`.`id` as `feed_id`, `feed`.`eventTimestamp` as `feed_eventTimestamp`, `feed`.`actionId` as `feed_actionId` , `feed`.`actionTypeId` as `feed_actionTypeId`, `feed`.`srcType` as `feed_srcType`, `feed`.`userId` as `feed_srcID`, `feed`.`dstType` as `feed_dstType`, `feed`.`dstID` as `feed_dstID`, "
+		"`action_types`.`title` as `action_types_title`, "
+		"`action_types`.`title_male` as `action_types_title_male`, "
+		"`action_types`.`title_female` as `action_types_title_female`, "
+		"`action_category`.`title` as `action_category_title`, "
+		"`action_category`.`title_male` as `action_category_title_male`, "
+		"`action_category`.`title_female` as `action_category_title_female` "
+		"FROM `feed` "
+		"INNER JOIN  `action_types`  ON `feed`.`actionTypeId`=`action_types`.`id` "
+		"INNER JOIN  `action_category`   ON `action_types`.`categoryID`=`action_category`.`id` "
+		"WHERE (" + whereStatement + ") and `action_types`.`isShowFeed`='1' "
+		"ORDER BY  `feed`.`eventTimestamp` DESC LIMIT " + to_string(currPage * newsOnSinglePage) + " , " + to_string(newsOnSinglePage) + ";"
+		);
 
-	affected = db->Query(ostResult.str());
-	for(auto i = 0; i < affected; i++)
-	{
-		vectorFriendList.push_back(db->Get(i, "friendID"));
-	}
-
-	ostResult.str("");
-	ostResult << "SELECT "
-		<< "`feed`.`id` as `feed_id`, `feed`.`eventTimestamp` as `feed_eventTimestamp`, `feed`.`actionId` as `feed_actionId` , `feed`.`actionTypeId` as `feed_actionTypeId`, `feed`.`srcType` as `feed_srcType`, `feed`.`userId` as `feed_srcID`, `feed`.`dstType` as `feed_dstType`, `feed`.`dstID` as `feed_dstID`, "
-		<< "`action_types`.`title` as `action_types_title`, "
-		<< "`action_types`.`title_male` as `action_types_title_male`, "
-		<< "`action_types`.`title_female` as `action_types_title_female`, "
-		<< "`action_category`.`title` as `action_category_title`, "
-		<< "`action_category`.`title_male` as `action_category_title_male`, "
-		<< "`action_category`.`title_female` as `action_category_title_female` "
-		<< "FROM `feed` "
-		<< "INNER JOIN  `action_types`  ON `feed`.`actionTypeId`=`action_types`.`id` "
-		<< "INNER JOIN  `action_category`   ON `action_types`.`categoryID`=`action_category`.`id` "
-		<< "WHERE (" << whereStatement << ") and `action_types`.`isShowFeed`='1' "
-		<< "ORDER BY  `feed`.`eventTimestamp` DESC LIMIT " << currPage * newsOnSinglePage << " , " << newsOnSinglePage;
-
-	affected = db->Query(ostResult.str());
 	for(auto i = 0; i < affected; i++)
 	{
 		ItemClass   item;
@@ -1173,11 +1165,9 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			// --- 15 friendship broken
 			// --- 16 friendship request sent
 
-			string  friendID = feedActionId;
+			auto  friendID = feedActionId;
 
-			ost1.str("");
-			ost1 << "SELECT `users`.`name` as `users_name`, `users`.`nameLast` as `users_nameLast` FROM `users` WHERE `id`=\"" << friendID << "\" and `isblocked`='N';";
-			if(db->Query(ost1.str()))
+			if(db->Query("SELECT `users`.`name` as `users_name`, `users`.`nameLast` as `users_nameLast` FROM `users` WHERE `id`=\"" + friendID + "\" and `isblocked`='N';"))
 			{
 				string  friendAvatar = "empty";
 				string  friendName;
