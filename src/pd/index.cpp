@@ -538,119 +538,44 @@ int main()
 		// --- AJAX delete message FROM news feed
 		if(action == "AJAX_deleteNewsFeedMessage")
 		{
+			MESSAGE_DEBUG("", action, "start");
 
-			ostringstream	ostFinal;
-			CMysql			db1;
-			string			messageID;
+			auto		error_message = ""s;
+			auto		success_message = ""s;
+			auto		messageID	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("messageID"));
 
-			messageID	= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("messageID"));
-
-			MESSAGE_DEBUG("", action, "start [" + messageID + "]");
-
-			if(messageID.empty())
+			if(user.GetLogin() == "Guest")
 			{
-				MESSAGE_DEBUG("", action, "messageID is not defined");
-
-				ostFinal.str("");
-				ostFinal << "{";
-				ostFinal << "\"result\" : \"error\",";
-				ostFinal << "\"description\" : \"messageID is empty\"";
-				ostFinal << "}";
+				error_message = gettext("re-login required");
+				MESSAGE_DEBUG("", action, error_message);
+			}
+			else if(messageID.empty())
+			{
+				error_message = gettext("mandatory parameter missed");
+				MESSAGE_DEBUG("", action, error_message);
 			}
 			else
 			{
-				if(user.GetLogin() == "Guest")
-				{
-					ostringstream	ost;
-
-					MESSAGE_DEBUG("", action, "re-login required");
-
-					indexPage.Redirect("/autologin?rand=" + GetRandom(10));
-				}
-
-
 				if(AmIMessageOwner(messageID, &user, &db))
 				{
-					pair<string, string> 	messageOwner = GetMessageOwner(messageID, &user, &db);
-					string					messageOwnerType = messageOwner.first;
-					string					messageOwnerID = messageOwner.second;
-
-					if(messageOwnerType.length() && messageOwnerID.length())
-					{
-						// --- delete original message
-						db.Query("DELETE FROM `feed` WHERE `srcType`=\"" + messageOwnerType + "\" AND `userId`=\"" + messageOwnerID + "\" AND `actionTypeId`=\"11\" and `actionId`=\"" + messageID + "\";");
-						// --- delete reposted messages over a year
-						db.Query("DELETE FROM `feed` WHERE `srcType`=\"" + messageOwnerType + "\" AND `userId`=\"" + messageOwnerID + "\" AND `actionTypeId`=\"12\" and `actionId`=\"" + messageID + "\";");
-
-						if(db.Query("SELECT `imageSetID` FROM `feed_message` WHERE `id`='" + messageID + "';"))
-						{
-							ostringstream	ost;
-							string			imageSetID = db.Get(0, "imageSetID");
-
-							ost.str("");
-							ost << " `setID`='" << imageSetID << "' AND `srcType`=\"" + messageOwnerType + "\" AND `userID`=\"" << messageOwnerID << "\" ";
-							RemoveMessageImages(ost.str(), &db);
-						} // --- if ("SELECT * FROM `feed_message` WHERE `id`='" << messageID << "';";)
-
-						db.Query("DELETE FROM `feed_message` WHERE `id`=\"" + messageID + "\";");
-
-						// --- removing likes / dislikes and notifications
-						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"50\" and `actionId`='" + messageID + "';");
-						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"49\" and `actionId` in (SELECT `id` FROM `feed_message_params` WHERE `messageID`='" + messageID + "' and `parameter`=\"like\");");
-						db.Query("DELETE FROM `feed_message_params` WHERE `messageID`='" + messageID + "';");
-
-						// --- removing comments and notifications
-						db.Query("DELETE FROM `users_notification` WHERE `actionTypeId`=\"19\" and `actionId` in (SELECT `id` FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\");");
-						db.Query("DELETE FROM `feed_message_comment` WHERE `messageID`='" + messageID + "' and `type`=\"message\";");
-
-						ostFinal.str("");
-						ostFinal << "{";
-						ostFinal << "\"result\" : \"success\",";
-						ostFinal << "\"description\" : \"\"";
-						ostFinal << "}";
-					}
-					else
-					{
-						MESSAGE_ERROR("", action, "message owner error (type:" + messageOwnerType + ", id:" + messageOwnerID + ")");
-
-						ostFinal.str("");
-						ostFinal << "{";
-						ostFinal << "\"result\" : \"error\",";
-						ostFinal << "\"description\" : \"Ошибка: Не получилось определить владельца сообщения\"";
-						ostFinal << "}";
-					}
+					error_message = DeleteMessageByID(messageID, &db, &user);
 				}
 				else
 				{
-					MESSAGE_ERROR("", action, "message doesn't belongs to you");
-
-					ostFinal.str("");
-					ostFinal << "{";
-					ostFinal << "\"result\" : \"error\",";
-					ostFinal << "\"description\" : \"Ошибка: Вы не можете удалить чужое сообщение.\"";
-					ostFinal << "}";
+					error_message = gettext("you are not authorized");
+					MESSAGE_ERROR("", action, error_message);
 				}
 			}
 
-			indexPage.RegisterVariableForce("result", ostFinal.str());
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
-			{
-				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
-				throw CException("Template file was missing");
-			}
-
-			{
-				MESSAGE_DEBUG("", action, "end (messageID " + messageID + ")");
-			}
-
+			MESSAGE_DEBUG("", action, "end (messageID " + messageID + ")");
 		}
 
 		// --- AJAX delete comment FROM message
 		if(action == "AJAX_deleteNewsFeedComment")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			commentID;
 
 			commentID	= indexPage.GetVarsHandler()->Get("commentID");
@@ -709,7 +634,6 @@ int main()
 		if(action == "AJAX_removeCompanyExperience")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			expID;
 
 			expID	= indexPage.GetVarsHandler()->Get("id");
@@ -781,7 +705,6 @@ int main()
 		if(action == "AJAX_removeCertificationEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string		  usersCertificationID;
 
 			usersCertificationID	= indexPage.GetVarsHandler()->Get("id");
@@ -899,7 +822,6 @@ int main()
 		if(action == "AJAX_removeCourseEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersCourseID;
 
 			usersCourseID	= indexPage.GetVarsHandler()->Get("id");
@@ -969,7 +891,6 @@ int main()
 		if(action == "AJAX_removeSchoolEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersSchoolID;
 
 			usersSchoolID	= indexPage.GetVarsHandler()->Get("id");
@@ -1035,7 +956,6 @@ int main()
 		if(action == "AJAX_removeUniversityEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersUniversityID;
 
 			usersUniversityID	= indexPage.GetVarsHandler()->Get("id");
@@ -1109,7 +1029,6 @@ int main()
 		if(action == "AJAX_removeLanguageEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			usersLanguageID;
 
 			usersLanguageID	= indexPage.GetVarsHandler()->Get("id");
@@ -1177,7 +1096,6 @@ int main()
 		if(action == "AJAX_removeCompanyFounder")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			companyFounderID;
 
 			companyFounderID	= indexPage.GetVarsHandler()->Get("id");
@@ -1268,14 +1186,10 @@ int main()
 		// --- AJAX remove company owner
 		if(action == "AJAX_removeCompanyOwner")
 		{
-			ostringstream   ost, ostFinal;
-			CMysql		  db1;
-			string		  companyOwnerID;
-
-			companyOwnerID  = indexPage.GetVarsHandler()->Get("id");
-
 			MESSAGE_DEBUG("", action, "start");
 
+			ostringstream   ost, ostFinal;
+			auto			companyOwnerID  = indexPage.GetVarsHandler()->Get("id");
 
 			if(companyOwnerID.empty())
 			{
@@ -1361,7 +1275,6 @@ int main()
 		if(action == "AJAX_removeCompanyIndustry")
 		{
 			ostringstream   ost, ostFinal;
-			CMysql		  db1;
 			string		  companyIndustryID;
 
 			companyIndustryID  = indexPage.GetVarsHandler()->Get("id");
@@ -1451,7 +1364,6 @@ int main()
 		if(action == "AJAX_removeSkillEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			skillID;
 
 			skillID	= indexPage.GetVarsHandler()->Get("id");
@@ -1528,7 +1440,6 @@ int main()
 		if(action == "AJAX_removeRecommendationEntry")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			recommendationID;
 
 			recommendationID	= indexPage.GetVarsHandler()->Get("id");
@@ -1909,7 +1820,6 @@ int main()
 		if(action == "AJAX_getURLMetaData")
 		{
 			ostringstream	ost, ostFinal;
-			CMysql			db1;
 			string			url, imageTempSet;
 
 			MESSAGE_DEBUG("", action, "start");
@@ -2010,7 +1920,7 @@ int main()
 #endif
 							// --- init variables
 							ost.str("");
-							ost << IMAGE_FEED_DIRECTORY << "/" << html.GetPreviewImageFolder() << "/" << html.GetPreviewImagePrefix() << ".jpg";
+							ost << IMAGE_FEED_DIRECTORY << FS_SEPARATOR << html.GetPreviewImageFolder() << FS_SEPARATOR << html.GetPreviewImagePrefix() << ".jpg";
 							finalFile = ost.str();
 
 							ost.str("");
@@ -2092,7 +2002,7 @@ int main()
 
 								if(feed_imageID)
 								{
-									feed_imageURL = html.GetPreviewImageFolder() + "/" + html.GetPreviewImagePrefix() + ".jpg";
+									feed_imageURL = html.GetPreviewImageFolder() + FS_SEPARATOR + html.GetPreviewImagePrefix() + ".jpg";
 									feed_mediaType = "image";
 								}
 								else
@@ -2175,7 +2085,7 @@ int main()
 			{
 				if(db.Get(0, "userid") == user.GetID())
 				{
-					auto	filename = config.GetFromFile("image_folders", "avatar") + "/avatars"+ db.Get(0, "folder") + "/" + db.Get(0, "filename");
+					auto	filename = config.GetFromFile("image_folders", "avatar") + "/avatars"+ db.Get(0, "folder") + FS_SEPARATOR + db.Get(0, "filename");
 
 					MESSAGE_DEBUG("", action, "removing avatar [id=" + avatarID + "] belongs to user " + user.GetLogin() + " [filename=" + filename + "]");
 
@@ -2697,7 +2607,6 @@ int main()
 			auto			user1 = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("user1"));
 			auto			user2 = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("user2"));
 			string			user1Data, user2Data, hopUserList;
-			CMysql			db1;
 			vector<int>		vectorFriendList1, vectorFriendList2, vectorFriendList3;
 
 
@@ -3828,12 +3737,12 @@ int main()
 		// --- JSON get list of my friends
 		if((action == "JSON_getMyNetworkFriendList") || (action == "JSON_getWhoWatchedONMeList"))
 		{
+			MESSAGE_DEBUG("", action, "start");
+
 			ostringstream	ost, ostFinal, friendsSqlQuery;
 			string			sessid, lookForKey, userList = "";
-			CMysql			db1;
 			int				affected;
-
-			MESSAGE_DEBUG("", action, "start");
+			CMysql			db1;
 
 			if(user.GetLogin() == "Guest")
 			{
@@ -4615,7 +4524,7 @@ int main()
 					if(newsFeedMessageImageTempSet.length() && (newsFeedMessageImageTempSet != "0"))
 					{
 						// --- remove all images subjected to removal
-						RemoveMessageImages("`tempSet`=\"" + newsFeedMessageImageTempSet + "\" and `userID`=\"" + user.GetID() + "\" and `removeFlag`=\"remove\";", &db);
+						RemoveMessageImages(" `tempSet`=\"" + newsFeedMessageImageTempSet + "\" and `userID`=\"" + user.GetID() + "\" and `removeFlag`=\"remove\" ", &db);
 
 						// --- update images assigned to message
 						if(newsFeedMessageImageTempSet.length() && (newsFeedMessageImageTempSet != "0") && db.Query("SELECT `id` FROM `feed_images` WHERE `tempSet`=\"" + newsFeedMessageImageTempSet + "\" and `userID`=\"" + user.GetID() + "\";"))
@@ -6547,7 +6456,7 @@ int main()
 
 			if(user.GetLogin() == "Guest")
 			{
-				error_message = "re-login required";
+				error_message = gettext("re-login required");
 				MESSAGE_DEBUG("", action, error_message);
 			}
 			else
@@ -6693,7 +6602,7 @@ int main()
 
 
 					if(db.Query("SELECT * FROM `users_avatars` WHERE `userID`=\"" + friendID + "\" and `isActive`=\"1\";"))
-						indexPage.RegisterVariableForce("friendAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + "/" + string(db.Get(0, "filename")));
+						indexPage.RegisterVariableForce("friendAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + FS_SEPARATOR + string(db.Get(0, "filename")));
 
 					ost.str("");
 					ost << "SELECT * FROM `users_friends` WHERE `userid`='" << user.GetID() << "' and `friendID`='" << friendID << "';";
@@ -6773,7 +6682,7 @@ int main()
 
 
 			if(db.Query("SELECT * FROM `users_avatars` WHERE `userID`=\"" + user.GetID() + "\" and `isActive`=\"1\";"))
-				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + "/" + string(db.Get(0, "filename")));
+				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + FS_SEPARATOR + string(db.Get(0, "filename")));
 
 			if(!indexPage.SetTemplate("view_profile.htmlt"))
 			{
@@ -10977,7 +10886,7 @@ int main()
 			}
 
 			if(db.Query("SELECT * FROM `users_avatars` WHERE `userID`=\"" + user.GetID() + "\" and `isActive`=\"1\";"))
-				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + "/" + string(db.Get(0, "filename")));
+				indexPage.RegisterVariableForce("myUserAvatar", "/images/avatars/avatars" + string(db.Get(0, "folder")) + FS_SEPARATOR + string(db.Get(0, "filename")));
 
 			indexPage.RegisterVariableForce("userLogin", user.GetLogin());
 			indexPage.RegisterVariableForce("myFirstName", user.GetName());
@@ -11190,9 +11099,7 @@ int main()
 			}
 			else
 			{
-				{
-					MESSAGE_ERROR("", action, "login is not defined");
-				}
+				MESSAGE_ERROR("", action, "login is not defined");
 			}
 
 			indexPage.RegisterVariableForce("content", "На ваш почтовый ящик выслан пароль !");
@@ -11208,34 +11115,47 @@ int main()
 		c.SetLanguage(indexPage.GetLanguage());
 		c.SetDB(&db);
 
-		MESSAGE_DEBUG("", action, "catch CExceptionHTML: exception reason: [" + c.GetReason() + "]");
+		MESSAGE_DEBUG("", action, "catch CExceptionHTML: DEBUG exception reason: [" + c.GetReason() + "]");
 
-		if(!indexPage.SetTemplate(c.GetTemplate())) return(-1);
+		if(!indexPage.SetTemplate(c.GetTemplate()))
+		{
+			MESSAGE_ERROR("", "", "template (" + c.GetTemplate() + ") not found");
+			return(-1);
+		}
 
 		indexPage.RegisterVariable("content", c.GetReason());
 		indexPage.OutTemplate();
-		return(0);
+
+		return(-1);
 	}
 	catch(CException &c)
 	{
-		MESSAGE_ERROR("", action, "catch CException: exception reason: [" + c.GetReason() + "]");
+		MESSAGE_ERROR("", action, "catch CException: exception: ERROR  " + c.GetReason());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt")) return(-1);
+		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		{
+			MESSAGE_ERROR("", "", "template not found");
+			return(-1);
+		}
 
 		indexPage.RegisterVariable("content", c.GetReason());
 		indexPage.OutTemplate();
+
 		return(-1);
 	}
 	catch(exception& e)
 	{
-		MESSAGE_ERROR("", action, "catch standard exception: [" + e.what() + "]");
+		MESSAGE_ERROR("", action, "catch(exception& e): catch standard exception: ERROR  " + e.what());
 
 		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
 		{
+			MESSAGE_ERROR("", "", "template not found");
 			return(-1);
 		}
+		
 		indexPage.RegisterVariable("content", e.what());
 		indexPage.OutTemplate();
+
 		return(-1);
 	}
 

@@ -27,9 +27,9 @@ auto 			GetCourseListInJSONFormat(string dbQuery, CMysql *, bool includeStudents
 auto 			GetSkillListInJSONFormat(string user_id, CMysql *) -> string;
 auto 			GetUniversityListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
 auto 			GetSchoolListInJSONFormat(string dbQuery, CMysql *, bool includeStudents = false) -> string;
-auto			GetUserRibbons_InJSONFormat(const string &query, CMysql *db) -> string;
-auto 			GetRibbons_InJSONFormat(const string &query, CMysql *db) -> string;
-auto 			AttachRibbon(const string &feed_id, CMysql *db, CUser *user) -> string;
+auto			GetUserRibbons_InJSONFormat(const string &query, CMysql *) -> string;
+auto 			GetRibbons_InJSONFormat(const string &query, CMysql *) -> string;
+auto 			AttachRibbon(const string &feed_id, CMysql *, CUser *) -> string;
 
 
 auto			GetCompanyPositionIDByTitle(string title, CMysql *) -> string;
@@ -63,6 +63,10 @@ auto 	     	GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned
 auto    	  	GetUserNotificationInJSONFormat(string sqlRequest, CMysql *, CUser *) -> string;
 auto 			GetCandidatesListAppliedToVacancyInJSONFormat(string dbQuery, CMysql *) -> string;
 auto 			GetOpenVacanciesInJSONFormat(string companyID, CMysql *, CUser * = NULL) -> string;
+auto			DeleteMessageByID(const string &messageIDs, CMysql *, CUser * = NULL) -> string;
+
+auto			AmIGroupOwner(const string &groupID, CMysql *, CUser *) -> bool;
+auto			DeleteGroupByID(const string &groupID, CMysql *, CUser *, c_config *) -> string;
 
 auto			RotateImage(string filename, int degree) -> string;
 auto			FlipImageVertical(string filename) -> string;
@@ -70,7 +74,7 @@ auto			FlipImageHorizontal(string filename) -> string;
 auto			RenameImageInDB(string image_id, CMysql *) -> string;
 
 auto			GetUserListInJSONFormat_BySearchString(const string &lookForKey, bool include_myself, CMysql *, CUser *) -> string;
-auto			GetUsersID_BySearchString(const string &lookForKey, bool include_myself, CMysql *db, CUser *user) -> vector<string>;
+auto			GetUsersID_BySearchString(const string &lookForKey, bool include_myself, CMysql *, CUser *) -> vector<string>;
 
 auto      		GetGroupListInJSONFormat(string dbQuery, CMysql *, CUser *) -> string;
 

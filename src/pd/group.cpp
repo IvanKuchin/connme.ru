@@ -24,17 +24,13 @@ int main()
 
 		if(!indexPage.SetTemplate("index.htmlt"))
 		{
-			CLog	log;
-
-			log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: template file was missing");
+			MESSAGE_ERROR("", "", "template file was missing");
 			throw CException("Template file was missing");
 		}
 
 		if(db.Connect(&config) < 0)
 		{
-			CLog	log;
-
-			log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: Can not connect to mysql database");
+			MESSAGE_ERROR("", "", "Can not connect to mysql database");
 			throw CException("MySql connection");
 		}
 
@@ -61,79 +57,19 @@ int main()
 
 		MESSAGE_DEBUG("", "", "pre-condition if(action == \"" + action + "\")");
 
-		if(action == "groups_i_own_list")
-		{
-			ostringstream	ost;
-			string			strPageToGet, strFriendsOnSinglePage;
-
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]::groups_i_own_list: start");
-			}
-
-			if(user.GetLogin() == "Guest")
-			{
-				ostringstream	ost;
-
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
-
-				ost.str("");
-				ost << "/?rand=" << GetRandom(10);
-				indexPage.Redirect(ost.str());
-			}
-			else
-			{
-				indexPage.RegisterVariableForce("title_head", "Мои группы");
-
-				strFriendsOnSinglePage	= indexPage.GetVarsHandler()->Get("FriendsOnSinglePage");
-				strPageToGet 			= indexPage.GetVarsHandler()->Get("page");
-				if(strPageToGet.empty()) strPageToGet = "0";
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ": page ", strPageToGet, " requested");
-				}
-
-				indexPage.RegisterVariableForce("myFirstName", user.GetName());
-				indexPage.RegisterVariableForce("myLastName", user.GetNameLast());
-
-
-				if(!indexPage.SetTemplate("groups_i_own_list.htmlt"))
-				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ":ERROR: can't find template my_network.htmlt");
-					throw CExceptionHTML("user not activated");
-				} // if(!indexPage.SetTemplate("my_network.htmlt"))
-			}
-
-
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]::groups_i_own_list: finish");
-			}
-		}
-
 		if(action == "getGroupWall")
 		{
 			ostringstream	ost;
 			string			id = "", link = "";
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 /*
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + " re-login required");
-				}
+				MESSAGE_DEBUG("", action, "re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -153,18 +89,12 @@ int main()
 					}
 					else
 					{
-						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ":ERROR: group.link(" + link + ") not found");
-						}
+						MESSAGE_ERROR("", action, "group.link(" + link + ") not found");
 					}
 				}
 				else
 				{
-					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ":ERROR: id and link are empty");
-					}
+					MESSAGE_ERROR("", action, "id and link are empty");
 
 				}
 			}
@@ -179,18 +109,12 @@ int main()
 					}
 					else
 					{
-						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ":ERROR: group.id(" + id + ") not found");
-						}
+						MESSAGE_ERROR("", action, "group.id(" + id + ") not found");
 					}
 				}
 				else
 				{
-					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ":ERROR: id and link are empty");
-					}
+					MESSAGE_ERROR("", action, "id and link are empty");
 
 				}
 			}
@@ -200,30 +124,118 @@ int main()
 
 			if(!indexPage.SetTemplate("view_group_profile.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file getGroupWall.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file getGroupWall.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 		}
 
+	    if(action == "AJAX_getGroupWall")
+	    {
+			auto			success_message = ""s;
+			auto			error_message = ""s;
+	        auto            currPage = 0, newsOnSinglePage = 0;
+	        auto			result = ""s;
+
+	        auto			strNewsOnSinglePage = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("NewsOnSinglePage"));
+	        auto			strPageToGet        = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("page"));
+	        auto			groupLink			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("link"));
+	        auto			groupID				= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
+
+	        if(strPageToGet.empty()) strPageToGet = "0";
+
+			MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
+
+	        try{
+	            currPage = stoi(strPageToGet);
+	        } catch(...) {
+	            currPage = 0;
+	        }
+
+	        try{
+	            newsOnSinglePage = stoi(strNewsOnSinglePage);
+	        } catch(...) {
+	            newsOnSinglePage = 30;
+	        }
+
+	/*
+	        if(user.GetLogin() == "Guest")
+	        {
+	            ostringstream   ost;
+
+                MESSAGE_DEBUG("", action, "re-login required");
+
+	            ost.str("");
+	            ost << "/?rand=" << GetRandom(10);
+	            indexPage.Redirect(ost.str());
+	        }
+	*/
+			if(groupLink.length() && db.Query("SELECT * FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isblocked`=\"N\";"))
+				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+			else if(groupID.length() && db.Query("SELECT * FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isblocked`=\"N\";"))
+				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
+			else
+			{
+                MESSAGE_ERROR("", action, "group login not found");
+			}
+
+			success_message = "\"feed\":[" + result + "]";
+
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
+
+			MESSAGE_DEBUG("", action, "finish");
+	    }
+
+		if(action == "groups_i_own_list")
+		{
+			ostringstream	ost;
+			string			strPageToGet, strFriendsOnSinglePage;
+
+			MESSAGE_DEBUG("", action, "start");
+
+			if(user.GetLogin() == "Guest")
+			{
+				ostringstream	ost;
+
+				MESSAGE_DEBUG("", action, " re-login required");
+
+				ost.str("");
+				ost << "/?rand=" << GetRandom(10);
+				indexPage.Redirect(ost.str());
+			}
+			else
+			{
+				indexPage.RegisterVariableForce("title_head", "Мои группы");
+
+				strFriendsOnSinglePage	= indexPage.GetVarsHandler()->Get("FriendsOnSinglePage");
+				strPageToGet 			= indexPage.GetVarsHandler()->Get("page");
+				if(strPageToGet.empty()) strPageToGet = "0";
+				MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
+
+				indexPage.RegisterVariableForce("myFirstName", user.GetName());
+				indexPage.RegisterVariableForce("myLastName", user.GetNameLast());
+
+
+				if(!indexPage.SetTemplate("groups_i_own_list.htmlt"))
+				{
+					MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
+					throw CExceptionHTML("user not activated");
+				} // if(!indexPage.SetTemplate("my_network.htmlt"))
+			}
+
+
+			MESSAGE_DEBUG("", action, "finish");
+		}
 
 		if(action == "AJAX_getGroupProfile")
 		{
 			ostringstream   ostResult;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, "re-login required");
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
 			}
@@ -247,8 +259,7 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ":ERROR: in groupID [", groupID, "]");
+					MESSAGE_ERROR("", action, "in groupID [" + groupID + "]");
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ERROR in groupID\",\"groups\":[]}";
 				}
@@ -260,34 +271,23 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		if((action == "AJAX_blockGroup") || (action == "AJAX_unblockGroup"))
 		{
 			ostringstream   ostResult;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, "re-login required");
 
 				ostResult << "{\"result\":\"error\",\"description\":\"re-login required\"}";
 			}
@@ -319,10 +319,7 @@ int main()
 						else
 						{
 
-							{
-								CLog			log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_blockGroup:ERROR: updating DB");
-							}
+							MESSAGE_ERROR("", action, ":ERROR: updating DB");
 
 							ostResult.str("");
 							ostResult << "{";
@@ -333,8 +330,7 @@ int main()
 					}
 					else
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:AJAX_blockGroup:ERROR: groupID [" + groupID + "] doesn't belongs to you");
+						MESSAGE_ERROR("", action, ":ERROR: groupID [" + groupID + "] doesn't belongs to you");
 
 						ostResult << "{\"result\":\"error\",\"description\":\"вы не можете редактировать группу\",\"groups\":[]}";
 					}
@@ -342,8 +338,7 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ":ERROR: in groupID [", groupID, "]");
+					MESSAGE_ERROR("", action, "in groupID [" + groupID + "]");
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ERROR in groupID\",\"groups\":[]}";
 				}
@@ -355,97 +350,24 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 		}
-
-	    if(action == "AJAX_getGroupWall")
-	    {
-	        ostringstream   ost;
-			auto			success_message = ""s;
-			auto			error_message = ""s;
-	        int             currPage = 0, newsOnSinglePage = 0;
-	        auto			result = ""s;
-
-	        auto			strNewsOnSinglePage = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("NewsOnSinglePage"));
-	        auto			strPageToGet        = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("page"));
-	        auto			groupLink			= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("link"));
-	        auto			groupID				= CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
-
-	        if(strPageToGet.empty()) strPageToGet = "0";
-
-			MESSAGE_DEBUG("", action, "page " + strPageToGet + " requested");
-
-	        try{
-	            currPage = stoi(strPageToGet);
-	        } catch(...) {
-	            currPage = 0;
-	        }
-
-	        try{
-	            newsOnSinglePage = stoi(strNewsOnSinglePage);
-	        } catch(...) {
-	            newsOnSinglePage = 30;
-	        }
-
-	/*
-	        if(user.GetLogin() == "Guest")
-	        {
-	            ostringstream   ost;
-
-	            {
-	                CLog    log;
-	                log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ": re-login required");
-	            }
-
-	            ost.str("");
-	            ost << "/?rand=" << GetRandom(10);
-	            indexPage.Redirect(ost.str());
-	        }
-	*/
-			if(groupLink.length() && db.Query("SELECT * FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `link`=\"" + groupLink + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
-			else if(groupID.length() && db.Query("SELECT * FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isblocked`=\"N\";"))
-				result = GetNewsFeedInJSONFormat(" ((`feed`.`dstType`=\"group\") AND `feed`.`dstID` IN (SELECT `id` FROM `groups` WHERE `id`=\"" + groupID + "\" AND `isBlocked`=\"N\")) ", currPage, newsOnSinglePage, &user, &db);
-			else
-			{
-                CLog    log;
-                log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ":ERROR: group login not found");
-			}
-
-			success_message = "\"feed\":[" + result + "]";
-
-			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
-
-			MESSAGE_DEBUG("", action, "finish");
-	    }
-
 
 		if(action == "AJAX_getGroupProfileAndUser")
 		{
 			ostringstream   ostResult;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			ostResult.str("");
 /*
 			if(user.GetLogin() == "Guest")
 			{
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, "re-login required");
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
 			}
@@ -476,8 +398,7 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ":ERROR: in groupLink [", groupLink, "]");
+					MESSAGE_ERROR("", action, "in groupLink [" + groupLink + "]");
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ERROR in groupLink\",\"groups\":[]}";
 				}
@@ -489,16 +410,11 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		// --- AJAX friend list for autocomplete
@@ -508,10 +424,7 @@ int main()
 			string			sessid, lookForKey, groupsList;
 			vector<string>	searchWords;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			// --- Initialization
 			ostFinal.str("");
@@ -520,10 +433,7 @@ int main()
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -551,10 +461,7 @@ int main()
 				}
 				else
 				{
-					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": searching key is empty");
-					}
+					MESSAGE_DEBUG("", action, " searching key is empty");
 					ostFinal << "{\"status\":\"error\",\"description\":\"searching key is empty or less then 3\", \"groups\":[]}";
 				}
 
@@ -562,37 +469,25 @@ int main()
 
 				if(!indexPage.SetTemplate("json_response.htmlt"))
 				{
-					CLog	log;
-
-					log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:ERROR: template file json_response.htmlt was missing"));
+					MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 					throw CException("Template file was missing");
 				}
 			}
 
-			{
-				CLog	log;
-
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": final response [length = " + to_string(ostFinal.str().length()) + "]");
-			}
+			MESSAGE_DEBUG("", action, "final response [length = " + to_string(ostFinal.str().length()) + "]");
 		}
 
 		if((action == "AJAX_SubscribeOnGroup") || (action == "AJAX_UnsubscribeFromGroup"))
 		{
 			ostringstream   ostResult;
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream   ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, "re-login required");
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
 			}
@@ -608,33 +503,23 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == " + action + ":ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == " + action + ": finish");
-			}
+			MESSAGE_DEBUG("", action, "finish");
 		}
 		if(action == "edit_group")
 		{
 			ostringstream	ost;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -645,35 +530,24 @@ int main()
 
 			if(!indexPage.SetTemplate("edit_group.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file edit_group.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file edit_group.htmlt was missing");
 				throw CException("Template file edit_group.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("edit_group.htmlt"))
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": end");
-			}
+			MESSAGE_DEBUG("", action, "end");
 		} 	// if(action == "edit_group")
 
 		if(action == "createnewgroup")
 		{
 			ostringstream	ost;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -684,16 +558,11 @@ int main()
 
 			if(!indexPage.SetTemplate("create_group.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file createnewgroup.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file createnewgroup.htmlt was missing");
 				throw CException("Template file createnewgroup.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("createnewgroup.htmlt"))
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": end");
-			}
+			MESSAGE_DEBUG("", action, "end");
 		} 	// if(action == "createnewgroup")
 
 		if(action == "AJAX_updateGroupTitle")
@@ -701,19 +570,13 @@ int main()
 			string			value, id;
 			ostringstream	ostFinal;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -742,8 +605,7 @@ int main()
 					{
 
 						{
-							CLog			log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_updateGroupTitle:ERROR: updating DB");
+							MESSAGE_ERROR("", action, ":ERROR: updating DB");
 						}
 
 						ostFinal.str("");
@@ -756,8 +618,7 @@ int main()
 				else
 				{
 					{
-						CLog			log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_updateGroupTitle:ERROR: user.id(" + user.GetID() + ") is not a group(" + id + ") owner");
+						MESSAGE_ERROR("", action, ":ERROR: user.id(" + user.GetID() + ") is not a group(" + id + ") owner");
 					}
 
 					ostFinal.str("");
@@ -771,8 +632,7 @@ int main()
 			{
 				ostringstream	ost;
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:AJAX_updateGroupTitle: id(" + id + ") or value(" + value + ") is empty");
+					MESSAGE_ERROR("", action, ": id(" + id + ") or value(" + value + ") is empty");
 				}
 
 				ostFinal.str("");
@@ -786,16 +646,11 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file json_response.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": end");
-			}
+			MESSAGE_DEBUG("", action, "end");
 
 		}
 
@@ -804,19 +659,13 @@ int main()
 			string			value, id;
 			ostringstream	ostFinal;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -845,8 +694,7 @@ int main()
 					{
 
 						{
-							CLog			log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_updateGroupDescription:ERROR: updating DB");
+							MESSAGE_ERROR("", action, ":ERROR: updating DB");
 						}
 
 						ostFinal.str("");
@@ -859,8 +707,7 @@ int main()
 				else
 				{
 					{
-						CLog			log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_updateGroupDescription:ERROR: user.id(" + user.GetID() + ") is not a group(" + id + ") owner");
+						MESSAGE_ERROR("", action, ":ERROR: user.id(" + user.GetID() + ") is not a group(" + id + ") owner");
 					}
 
 					ostFinal.str("");
@@ -874,8 +721,7 @@ int main()
 			{
 				ostringstream	ost;
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:AJAX_updateGroupDescription: id(" + id + ") or value(" + value + ") is empty");
+					MESSAGE_ERROR("", action, ": id(" + id + ") or value(" + value + ") is empty");
 				}
 
 				ostFinal.str("");
@@ -889,16 +735,11 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file json_response.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": end");
-			}
+			MESSAGE_DEBUG("", action, "end");
 
 		}
 
@@ -908,19 +749,13 @@ int main()
 			long int		id;
 			ostringstream	ostFinal;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ostFinal.str("");
 				ostFinal << "{";
@@ -941,8 +776,7 @@ int main()
 				{
 					ostringstream	ost;
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:AJAX_createGroup: title(" + title + ") is empty");
+						MESSAGE_ERROR("", action, ": title(" + title + ") is empty");
 					}
 
 					ostFinal.str("");
@@ -956,10 +790,7 @@ int main()
 					// --- if link is empty it became equal to group id
 					// --- maximum length group.id is 11
 					// --- to avoid overlapping between group.links, it must be longer than 11 
-					{
-						CLog			log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:AJAX_createGroup: link[" + link + "] too short");
-					}
+					MESSAGE_DEBUG("", action, "link[" + link + "] too short");
 
 					ostFinal.str("");
 					ostFinal << "{";
@@ -970,10 +801,7 @@ int main()
 				}
 				else if(link.find_first_not_of("abcdefghijklmnopqrstuvwxyz_1234567890") != string::npos)
 				{
-					{
-						CLog			log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:AJAX_createGroup: link[" + link + "] contains prohibited symbols");
-					}
+					MESSAGE_DEBUG("", action, "link[" + link + "] contains prohibited symbols");
 
 					ostFinal.str("");
 					ostFinal << "{";
@@ -984,10 +812,7 @@ int main()
 				}
 				else if(title.length() && db.Query("SELECT `id` FROM `groups` WHERE `title`=\"" + title + "\";"))
 				{
-					{
-						CLog			log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:AJAX_createGroup: group[" + title + "] already exists");
-					}
+					MESSAGE_DEBUG("", action, "group[" + title + "] already exists");
 					ostFinal.str("");
 					ostFinal << "{";
 					ostFinal << "\"result\" : \"error\",";
@@ -996,10 +821,7 @@ int main()
 				}
 				else if(link.length() && db.Query("SELECT `id` FROM `groups` WHERE `link`=\"" + link + "\";"))
 				{
-					{
-						CLog			log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:AJAX_createGroup: link[" + link + "] already exists");
-					}
+					MESSAGE_DEBUG("", action, "link[" + link + "] already exists");
 					ostFinal.str("");
 					ostFinal << "{";
 					ostFinal << "\"result\" : \"error\",";
@@ -1022,8 +844,7 @@ int main()
 							db.Query("UPDATE `groups` SET `link`=\"" + to_string(id) + "\" WHERE `id`=\"" + to_string(id) + "\";");
 							if(db.isError())
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_createGroup:ERROR: updating `group` table");
+								MESSAGE_ERROR("", action, ":ERROR: updating `group` table");
 							}
 						}
 
@@ -1043,8 +864,7 @@ int main()
 						// --- insert notification into feed
 						if(db.Query("SELECT `id` FROM `feed` WHERE `userId`=\"" + user.GetID() + "\" AND `srcType`=\"user\" AND `actionTypeId`=\"65\" AND `actionId`=\"" + to_string(id) + "\";"))
 						{
-							CLog		log;
-							log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: already subscribed [groupID: " + to_string(id) + ", userID: " + user.GetID() + "]");
+							MESSAGE_DEBUG("", action, "[groupID: " + to_string(id) + ", userID: " + user.GetID() + "]");
 						}
 						else
 						{
@@ -1053,8 +873,7 @@ int main()
 							}
 							else
 							{
-								CLog		log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: inserting into `feed` table");
+								MESSAGE_ERROR("", action, "inserting into `feed` table");
 							}
 						}
 					}
@@ -1062,8 +881,7 @@ int main()
 					{
 
 						{
-							CLog			log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_createGroup:ERROR: inserting into `group` table");
+							MESSAGE_ERROR("", action, ":ERROR: inserting into `group` table");
 						}
 
 						ostFinal.str("");
@@ -1079,16 +897,11 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file json_response.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": end");
-			}
+			MESSAGE_DEBUG("", action, "end");
 
 		}
 
@@ -1098,19 +911,13 @@ int main()
 			string			value, id;
 			ostringstream	ostFinal;
 
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": start");
-			}
+			MESSAGE_DEBUG("", action, "start");
 
 			if(user.GetLogin() == "Guest")
 			{
 				ostringstream	ost;
 
-				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == " + action + ": re-login required");
-				}
+				MESSAGE_DEBUG("", action, " re-login required");
 
 				ost.str("");
 				ost << "/?rand=" << GetRandom(10);
@@ -1130,10 +937,7 @@ int main()
 
 					if(value.length() < 10)
 					{
-						{
-							CLog			log;
-							log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]::" + action + ": link[" + value + "] is too short, must be longer than 10 symbols");
-						}
+						MESSAGE_DEBUG("", action, "link[" + value + "] is too short, must be longer than 10 symbols");
 
 						ostFinal.str("");
 						ostFinal << "{";
@@ -1144,10 +948,7 @@ int main()
 					}
 					else if(value.find_first_not_of("abcdefghijklmnopqrstuvwxyz_-1234567890") != string::npos)
 					{
-						{
-							CLog			log;
-							log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]::" + action + ": link[" + value + "] contains prohibited symbols");
-						}
+						MESSAGE_DEBUG("", action, "link[" + value + "] contains prohibited symbols");
 
 						ostFinal.str("");
 						ostFinal << "{";
@@ -1158,10 +959,7 @@ int main()
 					}
 					else if(db.Query("SELECT `id` FROM `groups` WHERE `link`=\"" + value + "\";"))
 					{
-						{
-							CLog			log;
-							log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]::" + action + ": link[" + value + "] contains prohibited symbols");
-						}
+						MESSAGE_DEBUG("", action, "link[" + value + "] contains prohibited symbols");
 
 						ostFinal.str("");
 						ostFinal << "{";
@@ -1185,10 +983,7 @@ int main()
 						else
 						{
 
-							{
-								CLog			log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::" + action + ":ERROR: updating DB");
-							}
+							MESSAGE_ERROR("", action, "updating DB");
 
 							ostFinal.str("");
 							ostFinal << "{";
@@ -1201,10 +996,7 @@ int main()
 				}
 				else
 				{
-					{
-						CLog			log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::" + action + ":ERROR: user.id(" + user.GetID() + ") is not a group(" + id + ") owner");
-					}
+					MESSAGE_ERROR("", action, "user.id(" + user.GetID() + ") is not a group(" + id + ") owner");
 
 					ostFinal.str("");
 					ostFinal << "{";
@@ -1215,11 +1007,7 @@ int main()
 			}
 			else
 			{
-				ostringstream	ost;
-				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:" + action + ": id(" + id + ") or value(" + value + ") is empty");
-				}
+				MESSAGE_ERROR("", action, "id(" + id + ") or value(" + value + ") is empty");
 
 				ostFinal.str("");
 				ostFinal << "{";
@@ -1232,103 +1020,118 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file json_response.htmlt was missing"));
+				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 
+			MESSAGE_DEBUG("", action, "end");
+
+		}
+
+		if(action == "AJAX_deleteGroup")
+		{
+			MESSAGE_DEBUG("", action, "start");
+
+			auto	success_message = ""s;
+			auto	error_message = ""s;
+
+			if(user.GetLogin() == "Guest")
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == " + action + ": end");
+				error_message = "re-login required";
+				MESSAGE_DEBUG("", action, error_message);
+			}
+			else
+			{
+				auto	groupID = CheckHTTPParam_Number(indexPage.GetVarsHandler()->Get("id"));
+
+				if(AmIGroupOwner(groupID, &db, &user))
+				{
+					// --- delete group messages
+					auto	messageIDs = GetValuesFromDB("SELECT `actionId` FROM `feed` WHERE `actionTypeId` IN (11, 12) AND `dstType`=\"group\" AND `dstID`=\"" + groupID + "\";", &db);
+
+					error_message = DeleteMessageByID(join(messageIDs), &db, &user);
+					if(error_message.empty())
+					{
+						// --- delete group metadata
+						error_message = DeleteGroupByID(groupID, &db, &user, &config);
+						if(error_message.empty())
+						{
+						}
+						else
+						{
+							MESSAGE_ERROR("", action, error_message);	
+						}
+					}
+					else
+					{
+						MESSAGE_ERROR("", action, error_message);	
+					}
+				}
+				else
+				{
+					error_message = gettext("you are not authorized");
+					MESSAGE_ERROR("", action, error_message);
+				}
 			}
 
+			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
+
+			MESSAGE_DEBUG("", action, "start");
 		}
 
-
-		{
-			CLog	log;
-			ostringstream	ost;
-
-			ost.str("");
-			ost << __func__ << "[" << __LINE__ << "]: end (action's == \"" << action << "\") condition";
-			log.Write(DEBUG, ost.str());
-		}
+		MESSAGE_DEBUG("", action, " end (action's == \"" + action + "\") condition");
 
 		indexPage.OutTemplate();
 
 	}
-/*
-	catch(CExceptionRedirect &c) {
-		CLog	log;
-		ostringstream	ost;
-
-		ost.str("");
-		ost << string(__func__) + ":: catch CRedirectHTML: exception used for redirection";
-		log.Write(DEBUG, ost.str());
-
-		c.SetDB(&db);
-
-		if(!indexPage.SetTemplate(c.GetTemplate())) {
-
-			ost.str("");
-			ost << string(__func__) + ":: catch CRedirectHTML: ERROR, template redirect.htmlt not found";
-			log.Write(ERROR, ost.str());
-
-			throw CException("Template file was missing");
-		}
-
-		indexPage.RegisterVariableForce("content", "redirect page");
-		indexPage.OutTemplate();
-
-	}
-*/
 	catch(CExceptionHTML &c)
 	{
-		CLog	log;
-
 		c.SetLanguage(indexPage.GetLanguage());
 		c.SetDB(&db);
 
-		log.Write(DEBUG, string(__func__) + ": catch CExceptionHTML: DEBUG exception reason: [", c.GetReason(), "]");
+		MESSAGE_DEBUG("", action, "catch CExceptionHTML: DEBUG exception reason: [" + c.GetReason() + "]");
 
 		if(!indexPage.SetTemplate(c.GetTemplate()))
 		{
+			MESSAGE_ERROR("", "", "template (" + c.GetTemplate() + ") not found");
 			return(-1);
 		}
+
 		indexPage.RegisterVariable("content", c.GetReason());
 		indexPage.OutTemplate();
-		return(0);
+
+		return(-1);
 	}
 	catch(CException &c)
 	{
-		CLog 	log;
+		MESSAGE_ERROR("", action, "catch CException: exception: ERROR  " + c.GetReason());
 
 		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
 		{
+			MESSAGE_ERROR("", "", "template not found");
 			return(-1);
 		}
 
-		log.Write(ERROR, string(__func__) + ": catch CException: exception: ERROR  ", c.GetReason());
-
 		indexPage.RegisterVariable("content", c.GetReason());
 		indexPage.OutTemplate();
+
 		return(-1);
 	}
 	catch(exception& e)
 	{
-		CLog 	log;
-		log.Write(PANIC, string(__func__) + ": catch(exception& e): catch standard exception: ERROR  ", e.what());
+		MESSAGE_ERROR("", action, "catch(exception& e): catch standard exception: ERROR  " + e.what());
 
 		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
 		{
+			MESSAGE_ERROR("", "", "template not found");
 			return(-1);
 		}
+		
 		indexPage.RegisterVariable("content", e.what());
 		indexPage.OutTemplate();
+
 		return(-1);
 	}
 
 	return(0);
 }
-
