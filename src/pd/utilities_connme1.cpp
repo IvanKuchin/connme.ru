@@ -1023,8 +1023,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: user.id [" + itemsList[i].src_id + "] not found");
+				MESSAGE_ERROR("", "", "user.id [" + itemsList[i].src_id + "] not found");
 			}
 		}
 		else if(itemsList[i].src_type == "company")
@@ -1044,8 +1043,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: company.id [" + itemsList[i].src_id + "] not found");
+				MESSAGE_ERROR("", "", "company.id [" + itemsList[i].src_id + "] not found");
 			}
 		}
 		else if(itemsList[i].src_type == "group")
@@ -1065,14 +1063,12 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: company.id [" + itemsList[i].src_id + "] not found");
+				MESSAGE_ERROR("", "", "company.id [" + itemsList[i].src_id + "] not found");
 			}
 		}
 		else
 		{
-			CLog	log;
-			log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: unknown srcType [" + itemsList[i].src_type + "]");
+			MESSAGE_ERROR("", "", "unknown srcType [" + itemsList[i].src_type + "]");
 		}
 
 		// --- avatar for dstObj
@@ -1093,8 +1089,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: company.id [" + itemsList[i].dst_id + "] not found");
+				MESSAGE_ERROR("", "", "company.id [" + itemsList[i].dst_id + "] not found");
 			}
 		}
 
@@ -1154,8 +1149,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: can't get message [" + feedActionId + "] FROM feed_message");
+				MESSAGE_ERROR("", "", "can't get message [" + feedActionId + "] FROM feed_message");
 			} // --- Message in news feed not found
 		}
 
@@ -1167,81 +1161,82 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 
 			auto  friendID = feedActionId;
 
-			if(db->Query("SELECT `users`.`name` as `users_name`, `users`.`nameLast` as `users_nameLast` FROM `users` WHERE `id`=\"" + friendID + "\" and `isblocked`='N';"))
+			if(db->Query("SELECT `users`.`name` as `users_name`, `users`.`nameLast` as `users_nameLast`, `users`.`isblocked` as `users_isblocked` FROM `users` WHERE `id`=\"" + friendID + "\";"))
 			{
-				string  friendAvatar = "empty";
-				string  friendName;
-				string  friendNameLast;
-				string  friendCompanyName;
-				string  friendCompanyID;
-				string  friendUsersCompanyPositionTitle;
+				auto	friendIsBlocked					= db->Get(0, "users_isblocked");
+				auto	friendName						= db->Get(0, "users_name");
+				auto	friendNameLast					= db->Get(0, "users_nameLast");
 
-				friendName = db->Get(0, "users_name");
-				friendNameLast = db->Get(0, "users_nameLast");
-
-				ost1.str("");
-				ost1 << "SELECT * FROM `users_avatars` WHERE `userid`='" << friendID << "' and `isActive`='1';";
-				if(db->Query(ost1.str()))
+				if(friendIsBlocked == "N")
 				{
-					ost1.str("");
-					ost1 << "/images/avatars/avatars" << db->Get(0, "folder") << "/" << db->Get(0, "filename");
-					friendAvatar = ost1.str();
-				}
 
-				ost1.str("");
-				ost1 << "SELECT `company_position`.`title` as `users_company_position_title`,  \
-						`company`.`id` as `company_id`, `company`.`name` as `company_name` \
-						FROM `users_company` \
-						LEFT JOIN  `company_position` ON `company_position`.`id`=`users_company`.`position_title_id` \
-						LEFT JOIN  `company`				ON `company`.`id`=`users_company`.`company_id` \
-						WHERE `users_company`.`user_id`=\"" << friendID << "\" and `users_company`.`current_company`='1' \
-						ORDER BY  `users_company`.`occupation_start` DESC ";
-				if(db->Query(ost1.str()))
-				{
-					friendCompanyName = db->Get(0, "company_name");
-					friendCompanyID = db->Get(0, "company_id");
-					friendUsersCompanyPositionTitle = db->Get(0, "users_company_position_title");
+					auto	friendAvatar					= "empty"s;
+					auto	friendCompanyName				= ""s;
+					auto	friendCompanyID					= ""s;
+					auto	friendUsersCompanyPositionTitle	= ""s;
+
+					if(db->Query("SELECT * FROM `users_avatars` WHERE `userid`='" + friendID + "' and `isActive`='1';"))
+					{
+						friendAvatar = "/images/avatars/avatars" + db->Get(0, "folder") + "/" + db->Get(0, "filename");
+					}
+
+					if(db->Query(
+							"SELECT `company_position`.`title` as `users_company_position_title`,  "
+							"`company`.`id` as `company_id`, `company`.`name` as `company_name` "
+							"FROM `users_company` "
+							"LEFT JOIN  `company_position` ON `company_position`.`id`=`users_company`.`position_title_id` "
+							"LEFT JOIN  `company`				ON `company`.`id`=`users_company`.`company_id` "
+							"WHERE `users_company`.`user_id`=\"" + friendID + "\" and `users_company`.`current_company`='1' "
+							"ORDER BY  `users_company`.`occupation_start` DESC;"
+						))
+					{
+						friendCompanyName = db->Get(0, "company_name");
+						friendCompanyID = db->Get(0, "company_id");
+						friendUsersCompanyPositionTitle = db->Get(0, "users_company_position_title");
+					}
+					else
+					{
+						MESSAGE_DEBUG("", "", "can't get information [" + itemsList[i].feed_actionId + "] about user employment");
+					} // --- Message in news feed not found
+
+					{
+						if(ostResult.str().length() > 10) ostResult << ",";
+
+						ostResult << "{";
+						ostResult << "\"avatar\":\""			  << srcAvatarPath									<< "\",";
+						ostResult << "\"srcObj\":{"			 << messageSrcObject << "},";
+						ostResult << "\"messageOwner\":{" << messageSrcObject << "},";
+						ostResult << "\"actionCategoryTitle\":\"" << itemsList[i].action_category_title		   << "\",";
+						ostResult << "\"actionCategoryTitleMale\":\"" << itemsList[i].action_category_title_male	<< "\",";
+						ostResult << "\"actionCategoryTitleFemale\":\""<< itemsList[i].action_category_title_female   << "\",";
+						ostResult << "\"actionTypesTitle\":\""  << itemsList[i].action_types_title			  << "\",";
+						ostResult << "\"actionTypesTitleMale\":\""<< itemsList[i].action_types_title_male		 << "\",";
+						ostResult << "\"actionTypesTitleFemale\":\""<< itemsList[i].action_types_title_female	 << "\",";
+						ostResult << "\"actionTypesId\":\""	<< itemsList[i].feed_actionTypeId				   << "\",";
+
+						ostResult << "\"friendAvatar\":\""	  << friendAvatar								  << "\",";
+						ostResult << "\"friendID\":\""		  << friendID									  << "\",";
+						ostResult << "\"friendName\":\""		  << friendName									<< "\",";
+						ostResult << "\"friendNameLast\":\""	  << friendNameLast								<< "\",";
+						ostResult << "\"friendCompanyID\":\""	<< friendCompanyID							   << "\",";
+						ostResult << "\"friendCompanyName\":\""   << friendCompanyName							  << "\",";
+						ostResult << "\"friendUsersCompanyPositionTitle\":\"" << friendUsersCompanyPositionTitle	  << "\",";
+
+						ostResult << "\"eventTimestamp\":\""	  << itemsList[i].feed_eventTimestamp										<< "\",";
+						ostResult << "\"eventTimestampDelta\":\"" << to_string(GetTimeDifferenceFromNow(itemsList[i].feed_eventTimestamp))  << "\"";
+						ostResult << "}";
+
+						// if(i < (affected - 1)) ostResult << ",";
+					} // --- Message Access Rights allow to post it to the news feed
 				}
 				else
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + string("]:") + ": can't get information [", itemsList[i].feed_actionId, "] about his/her employment");
-				} // --- Message in news feed not found
-
-				{
-					if(ostResult.str().length() > 10) ostResult << ",";
-
-					ostResult << "{";
-					ostResult << "\"avatar\":\""			  << srcAvatarPath									<< "\",";
-					ostResult << "\"srcObj\":{"			 << messageSrcObject << "},";
-					ostResult << "\"messageOwner\":{" << messageSrcObject << "},";
-					ostResult << "\"actionCategoryTitle\":\"" << itemsList[i].action_category_title		   << "\",";
-					ostResult << "\"actionCategoryTitleMale\":\"" << itemsList[i].action_category_title_male	<< "\",";
-					ostResult << "\"actionCategoryTitleFemale\":\""<< itemsList[i].action_category_title_female   << "\",";
-					ostResult << "\"actionTypesTitle\":\""  << itemsList[i].action_types_title			  << "\",";
-					ostResult << "\"actionTypesTitleMale\":\""<< itemsList[i].action_types_title_male		 << "\",";
-					ostResult << "\"actionTypesTitleFemale\":\""<< itemsList[i].action_types_title_female	 << "\",";
-					ostResult << "\"actionTypesId\":\""	<< itemsList[i].feed_actionTypeId				   << "\",";
-
-					ostResult << "\"friendAvatar\":\""	  << friendAvatar								  << "\",";
-					ostResult << "\"friendID\":\""		  << friendID									  << "\",";
-					ostResult << "\"friendName\":\""		  << friendName									<< "\",";
-					ostResult << "\"friendNameLast\":\""	  << friendNameLast								<< "\",";
-					ostResult << "\"friendCompanyID\":\""	<< friendCompanyID							   << "\",";
-					ostResult << "\"friendCompanyName\":\""   << friendCompanyName							  << "\",";
-					ostResult << "\"friendUsersCompanyPositionTitle\":\"" << friendUsersCompanyPositionTitle	  << "\",";
-
-					ostResult << "\"eventTimestamp\":\""	  << itemsList[i].feed_eventTimestamp										<< "\",";
-					ostResult << "\"eventTimestampDelta\":\"" << to_string(GetTimeDifferenceFromNow(itemsList[i].feed_eventTimestamp))  << "\"";
-					ostResult << "}";
-
-					// if(i < (affected - 1)) ostResult << ",";
-				} // --- Message Access Rights allow to post it to the news feed
+					MESSAGE_DEBUG("", "", "user [" + friendID + "] blocked");
+				}
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: user [", friendID, "] not found or blocked");
+				MESSAGE_ERROR("", "", "user [" + friendID + "] not found");
 			}
 		}
 		else if((feedActionTypeId == "41")) 
@@ -1286,15 +1281,13 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: skill_id [", skillID, "] not found");
+					MESSAGE_ERROR("", "", "skill_id [" + skillID + "] not found");
 				}
 
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: users_skill_id [", users_skillID, "] not found");
+				MESSAGE_ERROR("", "", "users_skill_id [" + users_skillID + "] not found");
 			}
 		}
 		else if((feedActionTypeId == "54") || (feedActionTypeId == "53"))
