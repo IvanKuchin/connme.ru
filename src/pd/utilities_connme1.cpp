@@ -69,14 +69,10 @@ string GetBookListInJSONFormat(string dbQuery, CMysql *db, bool includeReaders/*
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no books returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no books returned by the request [" + dbQuery + "]");
 	}
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 
 	return ostResult.str();
 }
@@ -146,13 +142,11 @@ string GetComplainListInJSONFormat(string dbQuery, CMysql *db, bool includeReade
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no complains returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no complains returned by the request [" + dbQuery + "]");
 	}
 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
+		MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 	}
 
 	return ostResult.str();
@@ -226,13 +220,11 @@ string GetCertificationListInJSONFormat(string dbQuery, CMysql *db, bool include
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no certifications returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no certifications returned by the request [" + dbQuery + "]");
 	}
 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
+		MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 	}
 
 	return ostResult.str();
@@ -306,13 +298,11 @@ string GetCourseListInJSONFormat(string dbQuery, CMysql *db, bool includeStudent
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no courses returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no courses returned by the request [" + dbQuery + "]");
 	}
 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
+		MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 	}
 
 	return ostResult.str();
@@ -433,13 +423,11 @@ string GetUniversityListInJSONFormat(string dbQuery, CMysql *db, bool includeStu
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no university's returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no university's returned by the request [" + dbQuery + "]");
 	}
 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
+		MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 	}
 
 	return ostResult.str();
@@ -513,13 +501,11 @@ string GetSchoolListInJSONFormat(string dbQuery, CMysql *db, bool includeStudent
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no school's returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no school's returned by the request [" + dbQuery + "]");
 	}
 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
+		MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 	}
 
 	return ostResult.str();
@@ -586,13 +572,11 @@ string GetLanguageListInJSONFormat(string dbQuery, CMysql *db, bool includeStude
 	} // --- if sql-query on user selection success
 	else
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no languages returned by the request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no languages returned by the request [" + dbQuery + "]");
 	}
 
 	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: finish (returning string length = " + to_string(ostResult.str().length()) + ")");
+		MESSAGE_DEBUG("", "", "finish (returning string length = " + to_string(ostResult.str().length()) + ")");
 	}
 
 	return ostResult.str();
@@ -667,14 +651,7 @@ string GetMessageImageList(string imageSetID, CMysql *db)
 		}
 	}
 
-	{
-		CLog			log;
-		ostringstream	ost;
-
-		ost.str();
-		ost <<  "GetMessageImageList: end. returning string length " << result.length();
-		log.Write(DEBUG, ost.str());
-	}
+	MESSAGE_DEBUG("", "", "GetMessageImageList: end. returning string length " + to_string(result.length()));
 
 	return result;
 }
@@ -730,17 +707,18 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 
 		for(auto i = 0; i < companyCounter; i++)
 		{
-				string			  companyOwners = "";
-				string			  companyFounders = "";
-				string			  companyIndustry = "";
+				auto			  companyOwners = ""s;
+				auto			  companyFounders = ""s;
+				auto			  companyIndustry = ""s;
 
 				if(includeEmployedUsersList)
 				{
 					// --- VERY VERY VERY !!! slow implementation 
 					// --- do NOT use it in production
-					string	  temp = "";
+					auto		temp		= ""s;
+					auto		affected	= db->Query("select `user_id` from `users_company` where `company_id`=\"" + companiesList[i].id + "\";");
 
-					for(int j = 0; j < db->Query("select `user_id` from `users_company` where `company_id`=\"" + companiesList[i].id + "\";"); ++j)
+					for(int j = 0; j < affected; ++j)
 					{
 						if(temp.length()) temp += ",";
 						temp += db->Get(j, "user_id");
@@ -768,9 +746,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 						}
 
 					// --- company owners list
-					ost.str("");
-					ost << "select * from `company_owner`  where `companyID`=\"" << companiesList[i].id << "\"";
-					affected = db->Query(ost.str());
+					affected = db->Query("select * from `company_owner`  where `companyID`=\"" + companiesList[i].id + "\"");
 					if(affected)
 					{
 						struct  CompanyOwnerType 
@@ -801,9 +777,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 							companyOwners += "\",\"name\":\"";
 							if(tempVector.at(i).userID != "0")
 							{
-								ost.str("");
-								ost << "select * from `users` where `id`=\"" << tempVector.at(i).userID << "\";";
-								if(db->Query(ost.str()))
+								if(db->Query("select * from `users` where `id`=\"" + tempVector.at(i).userID + "\";"))
 								{
 									companyOwners += db->Get(0, "name");
 									companyOwners += " ";
@@ -811,8 +785,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 								}
 								else
 								{
-									CLog	log;
-									log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no user with ID [", tempVector.at(i).userID, "]");
+									MESSAGE_DEBUG("", "", "there are no user with ID [" + tempVector.at(i).userID + "]");
 								}
 							}
 							else
@@ -824,9 +797,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 					}
 
 					// --- company founders list
-					ost.str("");
-					ost << "select * from `company_founder`  where `companyID`=\"" << companiesList[i].id << "\"";
-					affected = db->Query(ost.str());
+					affected = db->Query("select * from `company_founder`  where `companyID`=\"" + companiesList[i].id + "\"");
 					if(affected)
 					{
 						struct  CompanyFounderType 
@@ -857,9 +828,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 							companyFounders += "\",\"name\":\"";
 							if(tempVector.at(i).userID != "0")
 							{
-								ost.str("");
-								ost << "select * from `users` where `id`=\"" << tempVector.at(i).userID << "\";";
-								if(db->Query(ost.str()))
+								if(db->Query("select * from `users` where `id`=\"" + tempVector.at(i).userID + "\";"))
 								{
 									companyFounders += db->Get(0, "name");
 									companyFounders += " ";
@@ -867,8 +836,7 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 								}
 								else
 								{
-									CLog	log;
-									log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no user with ID [", tempVector.at(i).userID, "]");
+									MESSAGE_DEBUG("", "", "there are no user with ID [" + tempVector.at(i).userID + "]");
 								}
 							}
 							else
@@ -904,15 +872,10 @@ string GetCompanyListInJSONFormat(string dbQuery, CMysql *db, CUser *user, bool 
 	} // --- if sql-query on company selection success
 	else
 	{
-		CLog	log;
-
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: there are no companies returned by request [", dbQuery, "]");
+		MESSAGE_DEBUG("", "", "there are no companies returned by request [" + dbQuery + "]");
 	}
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: end (number of companies returned is " + to_string(companyCounter) + ")");
-	}
+	MESSAGE_DEBUG("", "", "finish (number of companies returned is " + to_string(companyCounter) + ")");
 
 	return ostFinal.str();
 }
@@ -1362,22 +1325,19 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 					}
 					else
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: books_author_id [" + bookAuthorID + "] not found");
+						MESSAGE_ERROR("", "", "books_author_id [" + bookAuthorID + "] not found");
 					}
 
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: books_id [" + bookID + "] not found");
+					MESSAGE_ERROR("", "", "books_id [" + bookID + "] not found");
 				}
 				
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: users_books_id [" + feedActionId + "] not found");
+				MESSAGE_ERROR("", "", "users_books_id [" + feedActionId + "] not found");
 			}
 		}
 		else if((feedActionTypeId == "64") || (feedActionTypeId == "65"))
@@ -1414,20 +1374,17 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 					}
 					else
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: `group`.`id` [" + groupID + "] blocked");
+						MESSAGE_DEBUG("", "", "`group`.`id` [" + groupID + "] blocked");
 					}
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: `group`.`id` [" + groupID + "] not found");
+					MESSAGE_ERROR("", "", "`group`.`id` [" + groupID + "] not found");
 				}
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: `group`.`id` [" + groupID + "] is empty");
+				MESSAGE_ERROR("", "", "`group`.`id` [" + groupID + "] is empty");
 			}
 		}
 		else if(feedActionTypeId == "63")
@@ -1458,8 +1415,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: books_id [" + companyID + "] not found");
+				MESSAGE_ERROR("", "", "books_id [" + companyID + "] not found");
 			}
 		}
 		else if(feedActionTypeId == "22")
@@ -1492,8 +1448,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 						certificationVendorName = db->Get(0, "name");
 					else
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: certification vendor [" + certificationVendorID + "] not found");
+						MESSAGE_ERROR("", "", "certification vendor [" + certificationVendorID + "] not found");
 					}
 						
 					if(ostResult.str().length() > 10) ostResult << ",";
@@ -1528,16 +1483,14 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: certification track [" + certificationTrackID + "] not found");
+					MESSAGE_ERROR("", "", "certification track [" + certificationTrackID + "] not found");
 				}
 
 				
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: users_certification_id [" + feedActionId + "] not found");
+				MESSAGE_ERROR("", "", "users_certification_id [" + feedActionId + "] not found");
 			}
 			
 		}
@@ -1573,8 +1526,7 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 						courseVendorName = db->Get(0, "name");
 					else
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: course vendor [" + courseVendorID + "] not found");
+						MESSAGE_ERROR("", "", "course vendor [" + courseVendorID + "] not found");
 					}
 
 					if(db->Query("SELECT * FROM `users_courses` WHERE `user_id`=\"" + user->GetID() + "\" AND `track_id`=\"" + courseTrackID + "\";"))
@@ -1615,16 +1567,14 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: course track [" + courseTrackID + "] not found");
+					MESSAGE_ERROR("", "", "course track [" + courseTrackID + "] not found");
 				}
 
 				
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: users_course_id [" + feedActionId + "] not found");
+				MESSAGE_ERROR("", "", "users_course_id [" + feedActionId + "] not found");
 			}
 			
 		}
@@ -1669,15 +1619,13 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 						}
 						else
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: university [" + scienceDegreeUniversityID + "] geo_region [" + scienceDegreeUniversityRegionID + "] geo_country [" + scienceDegreeUniversityCountryID + "] not found");
+							MESSAGE_ERROR("", "", "university [" + scienceDegreeUniversityID + "] geo_region [" + scienceDegreeUniversityRegionID + "] geo_country [" + scienceDegreeUniversityCountryID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: university [" + scienceDegreeUniversityID + "] geo_region [" + scienceDegreeUniversityRegionID + "] not found");
+						MESSAGE_ERROR("", "", "university [" + scienceDegreeUniversityID + "] geo_region [" + scienceDegreeUniversityRegionID + "] not found");
 					}
 
 					{
@@ -1722,15 +1670,13 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: university ID [" + scienceDegreeUniversityID + "] not found");
+					MESSAGE_ERROR("", "", "university ID [" + scienceDegreeUniversityID + "] not found");
 				}
 				
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: users_university_id [" + feedActionId + "] not found");
+				MESSAGE_ERROR("", "", "users_university_id [" + feedActionId + "] not found");
 			}
 		}
 		else if(feedActionTypeId == "40")
@@ -1787,16 +1733,14 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: language[" + languageID + "] not found");
+					MESSAGE_ERROR("", "", "language[" + languageID + "] not found");
 				}
 
 				
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: users_language_id [" + feedActionId + "] not found");
+				MESSAGE_ERROR("", "", "users_language_id [" + feedActionId + "] not found");
 			}
 			
 		}
@@ -1859,16 +1803,14 @@ string GetNewsFeedInJSONFormat(string whereStatement, int currPage, int newsOnSi
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: company[" + companyID + "] not found");
+					MESSAGE_ERROR("", "", "company[" + companyID + "] not found");
 				}
 
 				
 			}
 			else
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: users_company_id [" + feedActionId + "] not found");
+				MESSAGE_ERROR("", "", "users_company_id [" + feedActionId + "] not found");
 			}
 			
 		}
@@ -2212,8 +2154,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:typeID=" + to_string(typeID) + ": there is no media assigned to message");
+							MESSAGE_DEBUG("", "", "typeID=" + to_string(typeID) + ": there is no media assigned to message");
 						}
 
 						ostResult << "\"notificationMessageID\":\"" << messageID << "\",";
@@ -2235,15 +2176,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR finding messageID[" + messageID + "] in feed_message");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR finding messageID[" + messageID + "] in feed_message");
 				}
 			} // --- comment type "message"
 
@@ -2291,15 +2230,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR finding book in feed_message");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR finding book in feed_message");
 				}
 			} // --- comment type "book"
 
@@ -2316,8 +2253,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:typeID=" + to_string(typeID) + ": finding users_certifications by (track_id[" + trackID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
+					MESSAGE_DEBUG("", "", "typeID=" + to_string(typeID) + ": finding users_certifications by (track_id[" + trackID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
 				}
 
 
@@ -2359,15 +2295,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: certification.id[" + trackID + "] not found");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: certification.id[" + trackID + "] not found");
 				}
 			} // --- if(likeType == "certification")
 
@@ -2382,8 +2316,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:typeID=" + to_string(typeID) + ": finding users_courses by (track_id[" + trackID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
+					MESSAGE_DEBUG("", "", "typeID=" + to_string(typeID) + ": finding users_courses by (track_id[" + trackID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
 				}
 
 
@@ -2424,15 +2357,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: course.id[" + trackID + "] not found");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: course.id[" + trackID + "] not found");
 				}
 			} // --- if(likeType == "course")
 
@@ -2454,8 +2385,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: typeID=" + to_string(typeID) + ": finding users_universities by (university_id[" + universityID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
+					MESSAGE_DEBUG("", "", "typeID=" + to_string(typeID) + ": finding users_universities by (university_id[" + universityID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
 				}
 
 
@@ -2509,15 +2439,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: university.id[" + universityID + "] not found");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: university.id[" + universityID + "] not found");
 				}
 			} // --- if(commentType == "university")
 			if(commentType == "company")
@@ -2538,8 +2466,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:typeID=" + to_string(typeID) + ": finding users_companies by (company_id[" + companyID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
+					MESSAGE_DEBUG("", "", "typeID=" + to_string(typeID) + ": finding users_companies by (company_id[" + companyID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
 				}
 
 
@@ -2585,15 +2512,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: company.id[" + companyID + "] not found");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: company.id[" + companyID + "] not found");
 				}
 			} // --- if(commentType == "company")
 			if(commentType == "language")
@@ -2609,8 +2534,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:typeID=" + to_string(typeID) + ": finding users_languages by (language_id[" + languageID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
+					MESSAGE_DEBUG("", "", "typeID=" + to_string(typeID) + ": finding users_languages by (language_id[" + languageID + "] and user_id[" + (user ? user->GetID() : "NULL") + "]) or (user[" + (user ? "not null" : "null") + "] == NULL)");
 				}
 
 
@@ -2645,22 +2569,19 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: language.id[" + languageID + "] not found");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: language.id[" + languageID + "] not found");
 				}
 			} // --- if(commentType == "language")
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users_recommendation");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users_recommendation");
 		}
 	}
 
@@ -2705,29 +2626,25 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from skill");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from skill");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users_skill");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users_skill");
 				}
 
 			}
 			else
 			{
-				CLog log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users");
+				MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users");
 			}
 
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from skill_confirmed");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from skill_confirmed");
 		}
 	}
 
@@ -2756,15 +2673,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from skill");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from skill");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users_skill");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users_skill");
 				}
 
 			}
@@ -2809,15 +2724,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from skill");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from skill");
 					}
 
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users_recommendation (probably deleted already)");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users_recommendation (probably deleted already)");
 				}
 
 			}
@@ -2851,8 +2764,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from skill");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from skill");
 					}
 
 				}
@@ -2896,8 +2808,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from skill");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from skill");
 					}
 
 				}
@@ -2905,8 +2816,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users_recommendation");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users_recommendation");
 		}
 	}
 
@@ -2946,8 +2856,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 							}
 							else
 							{
-								CLog log;
-								log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: typeID=49: there is no media assigned to message");
+								MESSAGE_DEBUG("", "", "typeID=49: there is no media assigned to message");
 							} // --- imageSet is empty
 
 							ostResult << "\"notificationCommentType\":\"" << commentType << "\",";
@@ -2965,14 +2874,12 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: selecting from users");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: selecting from users");
 						}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding message in feed_message");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding message in feed_message");
 				}
 			} // --- if(likeType == "message")
 
@@ -3022,21 +2929,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: book.id[" + bookID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: book.id[" + bookID + "] not found");
 					}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding users_books.id[" + usersBooksID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding users_books.id[" + usersBooksID + "]");
 				}
 			} // --- if(likeType == "book")
 
@@ -3084,21 +2988,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: certification.id[" + trackID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: certification.id[" + trackID + "] not found");
 					}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding users_certifications.id[" + usersCertificationsID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding users_certifications.id[" + usersCertificationsID + "]");
 				}
 			} // --- if(likeType == "certification")
 
@@ -3144,21 +3045,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: course.id[" + trackID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: course.id[" + trackID + "] not found");
 					}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding users_courses.id[" + usersCoursesID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding users_courses.id[" + usersCoursesID + "]");
 				}
 			} // --- if(likeType == "course")
 			if(commentType == "likeLanguage")
@@ -3198,21 +3096,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: language.id[" + languageID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: language.id[" + languageID + "] not found");
 					}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding users_languages.id[" + usersLanguagesID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding users_languages.id[" + usersLanguagesID + "]");
 				}
 			} // --- if(likeType == "language")
 
@@ -3259,21 +3154,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: company.id[" + companyID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: company.id[" + companyID + "] not found");
 					}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding users_companies.id[" + usersCompaniesID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding users_companies.id[" + usersCompaniesID + "]");
 				}
 			} // --- if(likeType == "company")
 
@@ -3336,21 +3228,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
+							MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: users.id[" + friend_userID + "] not found");
 						}
 
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: university.id[" + universityID + "] not found");
+						MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: university.id[" + universityID + "] not found");
 					}
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR: finding users_universities.id[" + usersUniversityDegreeID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR: finding users_universities.id[" + usersUniversityDegreeID + "]");
 				}
 			} // --- if(commentType == "university")
 
@@ -3359,8 +3248,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from feed_message_params");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from feed_message_params");
 		}
 	}
 
@@ -3390,8 +3278,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: typeID=50: there is no media assigned to message");
+					MESSAGE_DEBUG("", "", "typeID=50: there is no media assigned to message");
 				}
 
 				ostResult << "\"notificationMessageID\":\"" << messageID << "\",";
@@ -3403,8 +3290,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 			}
 			else
 			{
-				CLog log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR finding message int feed_message");
+				MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR finding message int feed_message");
 			}
 		}
 	}
@@ -3431,8 +3317,7 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users[userID = " + birthdayUserID + "]");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users[userID = " + birthdayUserID + "]");
 		}
 	}
 
@@ -3456,15 +3341,13 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 			}
 			else
 			{
-				CLog log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_vacancy[id = " + vacancy_id + "]");
+				MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from company_vacancy[id = " + vacancy_id + "]");
 			}
 
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_candidates[id = " + company_candidates_id + "]");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from company_candidates[id = " + company_candidates_id + "]");
 		}
 	}
 
@@ -3504,21 +3387,18 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from users[userID = " + friendUserID + "]");
+					MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from users[userID = " + friendUserID + "]");
 				}
 			}
 			else
 			{
-				CLog log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_vacancy[id = " + company_id + "]");
+				MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from company_vacancy[id = " + company_id + "]");
 			}
 
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_possession_request[id = " + company_possession_request_id + "]");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from company_possession_request[id = " + company_possession_request_id + "]");
 		}
 	}
 
@@ -3533,19 +3413,11 @@ string  GetUserNotificationSpecificDataByType(unsigned long typeID, unsigned lon
 		}
 		else
 		{
-			CLog log;
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR:typeID=" + to_string(typeID) + ": ERROR selecting from company_candidates[id = " + company_id + "]");
+			MESSAGE_ERROR("", "", "typeID=" + to_string(typeID) + ": ERROR selecting from company_candidates[id = " + company_id + "]");
 		}
 	}
 
-	{
-		CLog	log;
-		ostringstream   ost;
-
-		ost.str("");
-		ost << __func__ << "(typeID=" << typeID << ", actionID=" << actionID << ")[" << __LINE__ << "]: end (return strlen=" << ostResult.str().length() << ")";
-		log.Write(DEBUG, ost.str());
-	}
+	MESSAGE_DEBUG("", "", "finish (return strlen=" + to_string(ostResult.str().length()) + ")");
 
 	return  ostResult.str();
 }
@@ -3555,10 +3427,7 @@ string  GetUserNotificationInJSONFormat(string sqlRequest, CMysql *db, CUser *us
 	int			 affected;
 	ostringstream   ostUserNotifications;
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) +  "]: start");
-	}
+	MESSAGE_DEBUG("", "", "start");
 
 	ostUserNotifications.str("");
 	ostUserNotifications << "[";
@@ -3648,10 +3517,7 @@ string  GetUserNotificationInJSONFormat(string sqlRequest, CMysql *db, CUser *us
 	}
 	ostUserNotifications << "]";
 
-	{
-		CLog	log;
-		log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) +  "]: finish");
-	}
+	MESSAGE_DEBUG("", "", "finish");
 	
 	return ostUserNotifications.str();
 }
