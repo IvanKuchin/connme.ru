@@ -289,7 +289,7 @@ int main(int argc, char **argv)
 	// char cert_path[1024];
 	// char key_path[1024];
  	unsigned int threads = 1;
-	int use_ssl = 1;
+	int use_ssl = 0;
 	void *retval;
 	int opts = 0;
 	int n = 0;

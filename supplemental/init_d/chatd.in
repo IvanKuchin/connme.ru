@@ -15,7 +15,7 @@
 set -e
 
 DAEMON="${CHAT_INSTALL_DIR}/chat-server"
-CHATD_OPTS="--daemonize"
+CHATD_OPTS="--daemonize -s"
 NAME="chatd"
 PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin"
 
