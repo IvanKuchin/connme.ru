@@ -104,6 +104,7 @@ my	%config				= do 'archive.config.pl';
 my	%folders_to_backup	= do 'archive.folders_to_backup.pl';
 my	%persistent_folders	= do 'archive.persistent_folders.pl';
 my	$domainSuffix		= $config{project_domain};
+my	$src_pi_folder		= $config{project_source_dir}."/src/pi";
 
 if(CheckDBConnectivity() == 0)
 {
@@ -238,7 +239,7 @@ if($action =~ /^--backup/)
 	}
 
 	print "archiving ....\n";
-	$system_err = system("tar -czhf ".$archive_filename." *");
+	$system_err = system("tar -czf ".$archive_filename." *");
 	if($system_err) { print "\n\narchiving\t[ERROR]\n"; }
 	else			{ print "archiving\t[OK]\n"; }
 
@@ -422,6 +423,10 @@ if($action =~ /^--restore/)
 		print "adding MySQL production data to MySQL backup structure\n";
 		system("mysqldump --login-path=".$config{login_path}." --default-character-set=utf8mb4 --no-create-info --skip-add-drop-table -Q $domainSuffix >> sql");
 	}
+
+	# --- restore src pi folder
+	remove_dir_recursively($src_pi_folder);	
+	system("git clone https://github.com/IvanKuchin/backend_pi.git ".$src_pi_folder);
 
 	if(isDevServer())
 	{
