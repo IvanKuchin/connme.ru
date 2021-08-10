@@ -104,7 +104,7 @@ my	%config				= do 'archive.config.pl';
 my	%folders_to_backup	= do 'archive.folders_to_backup.pl';
 my	%persistent_folders	= do 'archive.persistent_folders.pl';
 my	$domainSuffix		= $config{project_domain};
-my	$src_pi_folder		= $config{project_source_dir}."/src/pi";
+my	$src_pi_folder		= "./SRCDIR/src/pi";
 
 if(CheckDBConnectivity() == 0)
 {
@@ -425,7 +425,9 @@ if($action =~ /^--restore/)
 	}
 
 	# --- restore src pi folder
-	remove_dir_recursively($src_pi_folder);	
+	print("recover SRC PI folder\n");
+	print("\tremoving ".$src_pi_folder."\n");
+	system("rm -rf ".$src_pi_folder);	
 	system("git clone https://github.com/IvanKuchin/backend_pi.git ".$src_pi_folder);
 
 	if(isDevServer())
@@ -1082,7 +1084,7 @@ sub Copy_Production_To_Local
 		if(isDirExists($folders_to_backup{$folder_id}))
 		{
 			print "\tcopying ".$folders_to_backup{$folder_id}." -> $folder_id";
-			system("cp -R -L ".$folders_to_backup{$folder_id}." $folder_id");
+			system("cp -R ".$folders_to_backup{$folder_id}." $folder_id");
 			print "\t[ok]\n";
 		}
 		else
