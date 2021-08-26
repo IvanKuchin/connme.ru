@@ -14,16 +14,16 @@ http_username => "www-data",
 tables_to_upgrade => "action_category action_types site_themes faq",
 
 replace_dev_to_www_files => [
-	"SRCDIR/CMakeLists.txt",
+	"SRCDIR/CMakeLists.txt",				# --- fixed
 	"ROOTDIR_CGI/admin/templates/domain.htmlt",
 	"ROOTDIR_CGI/templates/ru/pages/domain.htmlt",
-	"ROOTDIR_CGI/admin/.htaccess",
-	"ROOTDIR_HTML/quality_assurance/.htaccess"
+	"ROOTDIR_CGI/admin/.htaccess",				# --- fixed
+	"ROOTDIR_HTML/quality_assurance/.htaccess"		# --- fixed
 ],
 
 replace_devimages_to_images_files => [
-	"SRCDIR/CMakeLists.txt",
-	"ROOTDIR_HTML/.htaccess",
+	"SRCDIR/CMakeLists.txt",	# --- fixed
+	"ROOTDIR_HTML/.htaccess",	# --- fixed
 ],
 
 local_tmp_folder => "tmp/",

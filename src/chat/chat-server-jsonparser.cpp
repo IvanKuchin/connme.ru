@@ -69,7 +69,7 @@ bool JSONParser::BuildNameValuePairs(const std::string jsonLine)
                         CLog                log(CHAT_LOG_FILE_NAME);
                         std::ostringstream  ost;
                         ost.str("");
-                        ost << "ERROR: parameter separator wrong at position " << JSONNextLV << " [" << jsonLine << "]";
+                        ost << "parameter separator wrong at position " << JSONNextLV << " [" << jsonLine << "]";
                         log.Write(ERROR, ost.str());
                     }
                     break;
@@ -82,7 +82,7 @@ bool JSONParser::BuildNameValuePairs(const std::string jsonLine)
                     CLog                log(CHAT_LOG_FILE_NAME);
                     std::ostringstream  ost;
                     ost.str("");
-                    ost << "ERROR: parameter separator not found [" << jsonLine << "]";
+                    ost << "parameter separator not found [" << jsonLine << "]";
                     log.Write(ERROR, ost.str());
                 }
                 break;
@@ -95,7 +95,7 @@ bool JSONParser::BuildNameValuePairs(const std::string jsonLine)
                 CLog                log(CHAT_LOG_FILE_NAME);
                 std::ostringstream  ost;
                 ost.str("");
-                ost << "ERROR: error parsing name:value pair [" << jsonLine << "]";
+                ost << "error parsing name:value pair [" << jsonLine << "]";
                 log.Write(ERROR, ost.str());
             }
             break;
@@ -104,12 +104,10 @@ bool JSONParser::BuildNameValuePairs(const std::string jsonLine)
     if(JSONObjectEndIterator == std::string::npos)
     {
         result = false;
+
         {
-            CLog                log(CHAT_LOG_FILE_NAME);
-            std::ostringstream  ost;
-            ost.str("");
-            ost << "ERROR: problem detected at position " << JSONObjectEndIterator;
-            log.Write(ERROR, ost.str());
+            CLog  log(CHAT_LOG_FILE_NAME);
+            log.Write(ERROR, "problem detected at position " + JSONObjectEndIterator);
         }
     }
    
@@ -139,7 +137,7 @@ bool JSONParser::ParseJSONObject (const std::string jsonLine)
             CLog                log(CHAT_LOG_FILE_NAME);
             std::ostringstream  ost;
             ost.str("");
-            ost << "ERROR: parsing Name:Value pairs";
+            ost << "parsing Name:Value pairs";
             log.Write(ERROR, ost.str());
         }
     }
