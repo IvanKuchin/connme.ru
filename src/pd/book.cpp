@@ -24,17 +24,15 @@ int main()
 
 	if(!indexPage.SetTemplate("index.htmlt"))
 	{
-		CLog	log;
 
-		log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: template file was missing");
+		MESSAGE_ERROR("", "", "template file was missing");
 		throw CException("Template file was missing");
 	}
 
 	if(db.Connect(&config) < 0)
 	{
-		CLog	log;
 
-		log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: Can not connect to mysql database");
+		MESSAGE_ERROR("", "", "Can not connect to mysql database");
 		throw CException("MySql connection");
 	}
 
@@ -67,16 +65,14 @@ int main()
 		string		  id;
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getBookByISBN10: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		ostResult.str("");
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == JSON_getBookByISBN10: re-login required");
+				MESSAGE_DEBUG("", action, "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -97,17 +93,15 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("JSON_getBookByISBN10.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookByISBN10: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "JSON_getBookByISBN10")
+	}
 
 	if(action == "AJAX_setBookRating")
 	{
@@ -115,16 +109,14 @@ int main()
 		string		  id, bookID, rating;
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_setBookRating: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		ostResult.str("");
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -141,8 +133,7 @@ int main()
 			{
 				id = "";
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating: can't convert id to number");
+					MESSAGE_DEBUG("", "", "can't convert id to number");
 				}
 			}
 
@@ -154,8 +145,7 @@ int main()
 			{
 				bookID = "";
 				{
-					CLog log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating: can't convert bookID to number");
+					MESSAGE_DEBUG("", "", "can't convert bookID to number");
 				}
 			}
 
@@ -168,8 +158,7 @@ int main()
 			{
 				rating = "";
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating:ERROR: fail to convert rating to number");
+					MESSAGE_ERROR("", "", "fail to convert rating to number");
 				}
 			}
 
@@ -197,8 +186,7 @@ int main()
 					}
 					else
 					{
-						CLog log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating:ERROR: inserting  into `users_books` fail");
+						MESSAGE_ERROR("", "", "inserting  into `users_books` fail");
 
 						ostResult << "{\"result\":\"error\",\"description\":\"ошибка: не указан bookID\"}";
 					}
@@ -206,8 +194,7 @@ int main()
 				}
 				else
 				{
-					CLog log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating:ERROR: bookID is not defined");
+					MESSAGE_ERROR("", "", "bookID is not defined");
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ошибка: не указан bookID\"}";
 				} // --- if(bookID.length())
@@ -226,17 +213,15 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("AJAX_setBookRating.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_setBookRating: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "AJAX_setBookRating")
+	}
 
 	if(action == "updateBookReadTimestamp")
 	{
@@ -244,16 +229,14 @@ int main()
 		string		  id, value;
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == updateBookReadTimestamp: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		ostResult.str("");
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == updateBookReadTimestamp: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -271,8 +254,7 @@ int main()
 			}
 			else
 			{
-				CLog log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == updateBookReadTimestamp: can't update live feed");
+				MESSAGE_ERROR("", "", ":can't update live feed");
 			}
 */
 		}
@@ -281,17 +263,15 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("updateBookReadTimestamp.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == updateBookReadTimestamp: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "updateBookReadTimestamp")
+	}
 
 	if(action == "AJAX_complainBook")
 	{
@@ -300,16 +280,14 @@ int main()
 		string			complainBookComment;
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_complainBook: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		ostResult.str("");
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_complainBook: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -326,9 +304,8 @@ int main()
 
 			if(db.Query("select * from `book_complains` WHERE `authorName`=\"" + complainBookAuthor + "\" AND `title`=\"" + complainBookTitle + "\" AND `isbn10`=\"" + complainBookISBN10 + "\" AND `isbn13`=\"" + complainBookISBN13 + "\" AND `cover`=\"" + complainBookCover + "\""))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: inserting complain");
+				MESSAGE_ERROR("", "", "inserting complain");
 
 				ostResult << "{\"result\":\"error\", \"description\":\"Подобная жалоба уже есть.\"}";
 			}
@@ -341,8 +318,7 @@ int main()
 					ostResult << "{\"result\":\"success\", \"id\":\"" << id << "\"}";
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: inserting complain");
+					MESSAGE_ERROR("", "", "inserting complain");
 
 					ostResult << "{\"result\":\"error\", \"description\":\"Ошибка, попробуйте еще раз.\"}";
 				}
@@ -353,17 +329,15 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("AJAX_complainBook.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_complainBook: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "AJAX_complainBook")
+	}
 
 	if((action == "JSON_getBookAuthorListAutocomplete") || (action == "JSON_getBookTitleListAutocomplete"))
 	{
@@ -371,8 +345,7 @@ int main()
 		string		  lookForKey;
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getBookAuthorListAutocomplete: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		lookForKey = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("lookForKey"));
@@ -381,8 +354,7 @@ int main()
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookAuthorListAutocomplete: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -426,8 +398,7 @@ int main()
 			}
 			else
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookAuthorListAutocomplete: lookFor key [" + lookForKey + "] length less than 3");
+				MESSAGE_DEBUG("", "", "lookFor key [" + lookForKey + "] length less than 3");
 			}
 			ostResult << "{\"result\":\"success\", \"items\":[" << itemList << "]}";
 		}
@@ -436,17 +407,15 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("JSON_getBookAuthorListAutocomplete.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookAuthorListAutocomplete: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "JSON_getBookAuthorListAutocomplete")
+	}
 
 	// --- AJAX remove book from read list
 	if(action == "AJAX_removeBookEntry")
@@ -456,16 +425,14 @@ int main()
 		string		  usersBooksID;
 
 		{
-			CLog	log;
-			log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]:") + ":action == AJAX_removeBookEntry: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		usersBooksID = indexPage.GetVarsHandler()->Get("id");
 
 		if(usersBooksID.empty())
 		{
-			CLog	log;
-			log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]:") + ": action == AJAX_removeBookEntry: usersBooksID is not defined");
+			MESSAGE_DEBUG("", action, "usersBooksID is not defined");
 
 			ostFinal.str("");
 			ostFinal << "{" << std::endl;
@@ -480,8 +447,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]:") + ": action == AJAX_removeBookEntry: re-login required");
+					MESSAGE_DEBUG("", action, "re-login required");
 				}
 
 				ost.str("");
@@ -518,8 +484,7 @@ int main()
 			}
 			else
 			{
-				CLog	log;
-				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]:") + ": action == AJAX_removeBookEntry: usersBooksID doesn't belongs to you or empty");
+				MESSAGE_DEBUG("", action, "usersBooksID doesn't belongs to you or empty");
 
 				ostFinal.str("");
 				ostFinal << "{" << std::endl;
@@ -533,15 +498,13 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, __func__ + string("[") + to_string(__LINE__) + string("]:template file json_response.htmlt was missing"));
+			MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 			throw CException("Template file was missing");
 		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + string("]:") + ":action == AJAX_removeBookEntry: end");
+			MESSAGE_DEBUG("", action, "end");
 		}
 	} // --- if(action == "AJAX_removeBookEntry")
 
@@ -551,8 +514,7 @@ int main()
 		string		  bookTitle(""), bookAuthor(""), bookAuthorID("");
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getBookISBNsByAuthorAndTitle: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		bookTitle	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("bookTitle"));
@@ -562,8 +524,7 @@ int main()
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookISBNsByAuthorAndTitle: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -581,14 +542,12 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookISBNsByAuthorAndTitle: author doesn't exists");
+					MESSAGE_DEBUG("", "", "author doesn't exists");
 				}
 			}
 			else
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookISBNsByAuthorAndTitle: title or author is empty");
+				MESSAGE_DEBUG("", "", "title or author is empty");
 			}
 			ostResult << "{\"result\":\"success\", \"books\":[" << bookList << "]}";
 		}
@@ -597,17 +556,15 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("JSON_getBookISBNsByAuthorAndTitle.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookISBNsByAuthorAndTitle: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "JSON_getBookISBNsByAuthorAndTitle")
+	}
 
 	// --- AJAX get author by name
 	if(action == "JSON_getBookDetailsByTitle")
@@ -616,8 +573,7 @@ int main()
 		string		  bookTitle(""), bookAuthor(""), bookAuthorID("");
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getBookDetailsByTitle: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		bookTitle = CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("bookTitle"));
@@ -626,8 +582,7 @@ int main()
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookDetailsByTitle: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -645,14 +600,12 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookDetailsByTitle: book doesn't exists");
+					MESSAGE_DEBUG("", "", "book doesn't exists");
 				}
 			}
 			else
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookDetailsByTitle: title is empty");
+				MESSAGE_DEBUG("", "", "title is empty");
 			}
 			ostResult << "{\"result\":\"success\", \"books\":[" << bookList << "]}";
 		}
@@ -661,15 +614,13 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("JSON_getBookDetailsByTitle.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == JSON_getBookDetailsByTitle: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
 	} // --- if(action == "AJAX_getAuthorByName")
 
@@ -681,8 +632,7 @@ int main()
 		string			isbn10FromDB = "", isbn13FromDB = "";
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_addEditProfileAddBook: start");
+			MESSAGE_DEBUG("", action, "start");
 		}
 
 		newBookTitle	= CheckHTTPParam_Text(indexPage.GetVarsHandler()->Get("title"));
@@ -710,8 +660,7 @@ int main()
 		if(user.GetLogin() == "Guest")
 		{
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: re-login required");
+				MESSAGE_DEBUG("", "", "re-login required");
 			}
 
 			ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -736,8 +685,7 @@ int main()
 				if(!newBookISBN10.empty() && !newBookISBN13.empty())
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: check by ISBN10 and ISBN13");
+						MESSAGE_DEBUG("", "", "check by ISBN10 and ISBN13");
 					}
 
 					if(db.Query("select * from `book` where `isbn10`=\"" + newBookISBN10 + "\" and `isbn13`=\"" + newBookISBN13 + "\";"))
@@ -751,8 +699,7 @@ int main()
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: book with that pair (ISBN10, ISBN13)[" + newBookISBN10 + ", " + newBookISBN13 + "] exists with different title or author");
+							MESSAGE_ERROR("", "", "book with that pair (ISBN10, ISBN13)[" + newBookISBN10 + ", " + newBookISBN13 + "] exists with different title or author");
 
 							nextStep = "error";
 							ostResult << "{\"result\":\"error\", \"description\":\"книга с такими ISBN уже есть, но у нее другое название или автор\"}";
@@ -772,8 +719,7 @@ int main()
 							}
 							else
 							{
-								CLog log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: book with that pair (ISBN10, ISBN13)[" + newBookISBN10 + ", ] exists with different title or author");
+								MESSAGE_ERROR("", "", "book with that pair (ISBN10, ISBN13)[" + newBookISBN10 + ", ] exists with different title or author");
 
 								nextStep = "error";
 								ostResult << "{\"result\":\"error\", \"description\":\"книга с такими ISBN уже есть, но у нее другое название или автор\"}";
@@ -791,8 +737,7 @@ int main()
 							}
 							else
 							{
-								CLog log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: book with that pair (ISBN10, ISBN13)[" + newBookISBN10 + ", ] exists with different title or author");
+								MESSAGE_ERROR("", "", "book with that pair (ISBN10, ISBN13)[" + newBookISBN10 + ", ] exists with different title or author");
 
 								nextStep = "error";
 								ostResult << "{\"result\":\"error\", \"description\":\"книга с такими ISBN уже есть, но у нее другое название или автор\"}";
@@ -806,8 +751,7 @@ int main()
 				else if(!newBookISBN10.empty())
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: check by ISBN10");
+						MESSAGE_DEBUG("", "", "check by ISBN10");
 					}
 
 					if(db.Query("select * from `book` where `isbn10`=\"" + newBookISBN10 + "\";"))
@@ -821,8 +765,7 @@ int main()
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: wrong ISBN10[" + newBookISBN10 + "]");
+							MESSAGE_ERROR("", "", "wrong ISBN10[" + newBookISBN10 + "]");
 
 							nextStep = "error";
 							ostResult << "{\"result\":\"error\", \"description\":\"книга с ISBN10 уже есть, но у нее другое название или автор\"}";
@@ -835,8 +778,7 @@ int main()
 				else if(!newBookISBN13.empty())
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: check by ISBN13");
+						MESSAGE_DEBUG("", "", "check by ISBN13");
 					}
 
 					if(db.Query("select * from `book` where `isbn13`=\"" + newBookISBN13 + "\";"))
@@ -850,8 +792,7 @@ int main()
 						}
 						else
 						{
-							CLog log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: wrong ISBN13[" + newBookISBN13 + "]");
+							MESSAGE_ERROR("", "", "wrong ISBN13[" + newBookISBN13 + "]");
 
 							nextStep = "error";
 							ostResult << "{\"result\":\"error\", \"description\":\"книга с ISBN13 уже есть, но у нее другое название или автор\"}";
@@ -867,8 +808,7 @@ int main()
 				{
 					// --- requested book doesn't exists 
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: new book read (no isbn's provided)");
+						MESSAGE_DEBUG("", "", "new book read (no isbn's provided)");
 					}
 					nextStep = "readNewBook";
 				}
@@ -876,8 +816,7 @@ int main()
 				{
 					// --- requested book exists 
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: existing book read (no isbn's provided)");
+						MESSAGE_DEBUG("", "", "existing book read (no isbn's provided)");
 					}
 					nextStep = "readExistingBook";
 				}
@@ -886,8 +825,7 @@ int main()
 				if(!newBookISBN10.empty())
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: check with ISBN10");
+						MESSAGE_DEBUG("", "", "check with ISBN10");
 					}
 
 					if(db.Query("select * from `book` where `isbn10`=\"" + newBookISBN10 + "\";"))
@@ -897,9 +835,8 @@ int main()
 						if(bookIDbyISBN10 != newBookID)
 						{
 							{
-								CLog	log;
 								// --- must be converted to DEBUG later
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: book with ISBN10[" + newBookISBN10 + "] already exists and differ");
+								MESSAGE_ERROR("", "", "book with ISBN10[" + newBookISBN10 + "] already exists and differ");
 							}
 
 							nextStep = "error";
@@ -912,8 +849,7 @@ int main()
 				if(!newBookISBN13.empty())
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: check with ISBN13");
+						MESSAGE_DEBUG("", "", "check with ISBN13");
 					}
 
 					if(db.Query("select * from `book` where `isbn13`=\"" + newBookISBN13 + "\";"))
@@ -923,9 +859,8 @@ int main()
 						if(bookIDbyISBN13 != newBookID)
 						{
 							{
-								CLog	log;
 								// --- must be converted to DEBUG later
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: book with ISBN13[" + newBookISBN13 + "] already exists and differ");
+								MESSAGE_ERROR("", "", "book with ISBN13[" + newBookISBN13 + "] already exists and differ");
 							}
 
 							nextStep = "error";
@@ -937,8 +872,7 @@ int main()
 				if(nextStep == "readNewBook")
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:nextStep == readNewBook: start");
+						MESSAGE_DEBUG("", "", "nextStep == readNewBook: start");
 					}
 
 					nextStep = "readExistingBook";
@@ -949,8 +883,7 @@ int main()
 						if(newAuthorID.empty() || newAuthorID == "0")
 						{
 							{
-								CLog log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: can't insert new author into `book_author`");
+								MESSAGE_ERROR("", "", "can't insert new author into `book_author`");
 							}
 
 							nextStep = "error";
@@ -967,8 +900,7 @@ int main()
 						if(newBookID.empty() || newBookID == "0")
 						{
 							{
-								CLog log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: can't insert new book into `book`");
+								MESSAGE_ERROR("", "", "can't insert new book into `book`");
 							}
 
 							nextStep = "error";
@@ -980,8 +912,7 @@ int main()
 				if(nextStep == "readExistingBook")
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:nextStep == readExistingBook:start");
+						MESSAGE_DEBUG("", "", "nextStep == readExistingBook:start");
 					}
 					nextStep = "success";
 
@@ -996,8 +927,7 @@ int main()
 					}
 					else
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:nextStep == readExistingBook: no need to update ISBN10");
+						MESSAGE_DEBUG("", "", "nextStep == readExistingBook: no need to update ISBN10");
 					}
 
 					// --- update ISBN13, if required
@@ -1011,8 +941,7 @@ int main()
 					}
 					else
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:nextStep == readExistingBook: no need to update ISBN13");
+						MESSAGE_DEBUG("", "", "nextStep == readExistingBook: no need to update ISBN13");
 					}
 
 					if(db.Query("SELECT * FROM `users_books` WHERE `userID`=\"" + user.GetID() + "\" AND `bookID`=\"" + newBookID + "\";"))
@@ -1036,16 +965,14 @@ int main()
 							else
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + ": action == AJAX_addEditProfileAddBook: ERROR: inserting into news_feed");
+									MESSAGE_DEBUG("", action, "inserting into news_feed");
 								}
 							}
 						}
 						else
 						{
 							{
-								CLog log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook:ERROR: can't insert new book into `book`");
+								MESSAGE_ERROR("", "", "can't insert new book into `book`");
 							}
 
 							nextStep = "error";
@@ -1091,8 +1018,7 @@ int main()
 					}
 					else 
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_addEditProfileAddBook: book path is empty");
+						MESSAGE_DEBUG("", action, "book path is empty");
 					}
 
 					ostResult << "]}";
@@ -1101,8 +1027,7 @@ int main()
 			}
 			else
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: book title or book author empty");
+				MESSAGE_DEBUG("", "", "book title or book author empty");
 				
 				ostResult << "{\"result\":\"error\", \"description\":\"название или автор книги пустые\"}";
 			}
@@ -1112,65 +1037,22 @@ int main()
 
 		if(!indexPage.SetTemplate("json_response.htmlt"))
 		{
-			CLog	log;
 
-			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("AJAX_addEditProfileAddBook.htmlt"))
+		}
 
 		{
-			CLog	log;
-			log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_addEditProfileAddBook: end");
+			MESSAGE_DEBUG("", "", "end");
 		}
-	}   // if(action == "AJAX_addEditProfileAddBook")
-
-
-
-
-
-
-
-
-
-
-
-	{
-		CLog	log;
-		ostringstream	ost;
-
-		ost.str("");
-		ost << __func__ << "[" << __LINE__ << "]: end (action's == \"" << action << "\") condition";
-		log.Write(DEBUG, ost.str());
 	}
+
+
+	MESSAGE_DEBUG("", action, "end (action's == \"" + action + "\") condition")
 
 	indexPage.OutTemplate();
 
 	}
-/*
-	catch(CExceptionRedirect &c) {
-		CLog	log;
-		ostringstream	ost;
-
-		ost.str("");
-		ost << string(__func__) + ":: catch CRedirectHTML: exception used for redirection";
-		log.Write(DEBUG, ost.str());
-
-		c.SetDB(&db);
-
-		if(!indexPage.SetTemplate(c.GetTemplate())) {
-
-			ost.str("");
-			ost << string(__func__) + ":: catch CRedirectHTML: ERROR, template redirect.htmlt not found";
-			log.Write(ERROR, ost.str());
-
-			throw CException("Template file was missing");
-		}
-
-		indexPage.RegisterVariableForce("content", "redirect page");
-		indexPage.OutTemplate();
-
-	}
-*/
 	catch(CExceptionHTML &c)
 	{
 		c.SetLanguage(indexPage.GetLanguage());
