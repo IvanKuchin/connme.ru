@@ -24,17 +24,13 @@ int main()
 
 		if(!indexPage.SetTemplate("index.htmlt"))
 		{
-			CLog	log;
-
-			log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: template file was missing");
+			MESSAGE_ERROR("", "", "template file was missing");
 			throw CException("Template file was missing");
 		}
 
 		if(db.Connect(&config) < 0)
 		{
-			CLog	log;
-
-			log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:ERROR: Can not connect to mysql database");
+			MESSAGE_ERROR("", "", "Can not connect to mysql database");
 			throw CException("MySql connection");
 		}
 
@@ -67,8 +63,7 @@ int main()
 			string			sessid, id, link;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == view_company_profile: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 /*
@@ -77,8 +72,7 @@ int main()
 				ostringstream	ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == view_company_profile re-login required");
+					MESSAGE_DEBUG("", "", " re-login required");
 				}
 
 				ost.str("");
@@ -100,16 +94,14 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == view_company_profile:ERROR: company.link(" + link + ") not found");
+							MESSAGE_ERROR("", "", "company.link(" + link + ") not found");
 						}
 					}
 				}
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == view_company_profile:ERROR: id and link are empty");
+						MESSAGE_ERROR("", "", "id and link are empty");
 					}
 
 				}
@@ -126,16 +118,14 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == view_company_profile:ERROR: company.id(" + id + ") not found");
+							MESSAGE_ERROR("", "", "company.id(" + id + ") not found");
 						}
 					}
 				}
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == view_company_profile:ERROR: id and link are empty");
+						MESSAGE_ERROR("", "", "id and link are empty");
 					}
 
 				}
@@ -146,9 +136,8 @@ int main()
 
 			if(!indexPage.SetTemplate("view_company_profile.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:template file view_company_profile.htmlt was missing"));
+				MESSAGE_ERROR("", "", "template file view_company_profile.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 		}
@@ -171,8 +160,7 @@ int main()
 	        if(strPageToGet.empty()) strPageToGet = "0";
 
 	        {
-	            CLog    log;
-	            log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_getCompanyWall: page " + strPageToGet + " requested");
+	            MESSAGE_DEBUG("", "", "page " + strPageToGet + " requested");
 	        }
 
 	        try{
@@ -193,8 +181,7 @@ int main()
 	            ostringstream   ost;
 
 	            {
-	                CLog    log;
-	                log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_getCompanyWall: re-login required");
+	                MESSAGE_DEBUG("", "", "re-login required");
 	            }
 
 	            ost.str("");
@@ -226,16 +213,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getCompanyProfile: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == JSON_getCompanyProfile: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -257,8 +242,7 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getCompanyProfile:ERROR: in companyID [", companyID, "]");
+					MESSAGE_ERROR("", "", "in companyID [" + companyID + "]");
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ERROR in companyID\",\"companies\":[]}";
 				}
@@ -268,15 +252,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getCompanyProfile: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 		}
 
@@ -285,16 +267,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getCompanyProfileAndMyVacancies: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 /*			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == JSON_getCompanyProfileAndMyVacancies: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -321,8 +301,7 @@ int main()
 				}
 				else
 				{
-					CLog	log;
-					log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getCompanyProfileAndMyVacancies:ERROR: in companyID [", companyID, "]");
+					MESSAGE_ERROR("", "", "in companyID [" + companyID + "]");
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ERROR in companyID\",\"companies\":[]}";
 				}
@@ -334,15 +313,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == JSON_getCompanyProfileAndMyVacancies: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 		}
 
@@ -352,16 +329,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_removeOpenVacancy: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_removeOpenVacancy: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -375,8 +350,7 @@ int main()
 					id = to_string(stol(id.c_str()));
 				} catch(...) {
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_removeOpenVacancy:ERROR: can't convert OpenVacancyID to number");
+						MESSAGE_ERROR("", "", "can't convert OpenVacancyID to number");
 					}
 				}
 
@@ -399,8 +373,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_removeOpenVacancy:ERROR: userID[" + user.GetID() + "] not allowed remove openVacancyID[" + id + "], due to he is not company[" + companyID + "] admin");
+							MESSAGE_ERROR("", "", "userID[" + user.GetID() + "] not allowed remove openVacancyID[" + id + "], due to he is not company[" + companyID + "] admin");
 						}
 
 						ostResult << "{\"result\":\"error\",\"description\":\"Вам нельзя удалить эту вакансию\"}";
@@ -409,8 +382,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_removeOpenVacancy:ERROR: openVacancyID[" + id + "] not found in DB");
+						MESSAGE_ERROR("", "", "openVacancyID[" + id + "] not found in DB");
 					}
 					ostResult << "{\"result\":\"error\",\"description\":\"Вакансия не найдена\"}";
 				}
@@ -420,15 +392,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_removeOpenVacancy: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 		}
 
@@ -439,16 +409,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_precreateNewOpenVacancy: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -544,8 +512,7 @@ int main()
 				if(!company_id.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: companyid is empty");
+						MESSAGE_ERROR("", "", "companyid is empty");
 					}
 
 					ostResult << "{" 
@@ -556,8 +523,7 @@ int main()
 				else if(!company_position_id.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: title is empty");
+						MESSAGE_ERROR("", "", "title is empty");
 					}
 
 					ostResult << "{" 
@@ -568,8 +534,7 @@ int main()
 				else if(!month.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: month is empty");
+						MESSAGE_ERROR("", "", "month is empty");
 					}
 
 					ostResult << "{" 
@@ -580,8 +545,7 @@ int main()
 				else if(!geo_locality_id.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: geo_locality_id is empty");
+						MESSAGE_ERROR("", "", "geo_locality_id is empty");
 					}
 
 					ostResult << "{" 
@@ -592,8 +556,7 @@ int main()
 				else if(!employmenttype.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: employmenttype is empty");
+						MESSAGE_ERROR("", "", "employmenttype is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -603,8 +566,7 @@ int main()
 				else if(!question1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question1 is empty");
+						MESSAGE_ERROR("", "", "question1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -614,8 +576,7 @@ int main()
 				else if(!question1answers.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question1answers is empty");
+						MESSAGE_ERROR("", "", "question1answers is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -625,8 +586,7 @@ int main()
 				else if(!question1answer1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question1answer1 is empty");
+						MESSAGE_ERROR("", "", "question1answer1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -636,8 +596,7 @@ int main()
 				else if(!question1answer2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question1answer2 is empty");
+						MESSAGE_ERROR("", "", "question1answer2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -647,8 +606,7 @@ int main()
 				else if(!question1answer3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question1answer3 is empty");
+						MESSAGE_ERROR("", "", "question1answer3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -658,8 +616,7 @@ int main()
 				else if(!question2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question2 is empty");
+						MESSAGE_ERROR("", "", "question2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -669,8 +626,7 @@ int main()
 				else if(!question2answers.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question2answers is empty");
+						MESSAGE_ERROR("", "", "question2answers is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -680,8 +636,7 @@ int main()
 				else if(!question2answer1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question2answer1 is empty");
+						MESSAGE_ERROR("", "", "question2answer1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -691,8 +646,7 @@ int main()
 				else if(!question2answer2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question2answer2 is empty");
+						MESSAGE_ERROR("", "", "question2answer2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -702,8 +656,7 @@ int main()
 				else if(!question2answer3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question2answer3 is empty");
+						MESSAGE_ERROR("", "", "question2answer3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -713,8 +666,7 @@ int main()
 				else if(!question3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question3 is empty");
+						MESSAGE_ERROR("", "", "question3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -724,8 +676,7 @@ int main()
 				else if(!question3answers.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question3answers is empty");
+						MESSAGE_ERROR("", "", "question3answers is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -735,8 +686,7 @@ int main()
 				else if(!question3answer1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question3answer1 is empty");
+						MESSAGE_ERROR("", "", "question3answer1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -746,8 +696,7 @@ int main()
 				else if(!question3answer2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question3answer2 is empty");
+						MESSAGE_ERROR("", "", "question3answer2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -757,8 +706,7 @@ int main()
 				else if(!question3answer3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: question3answer3 is empty");
+						MESSAGE_ERROR("", "", "question3answer3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -768,8 +716,7 @@ int main()
 				else if(!publish_period.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: publish is empty");
+						MESSAGE_ERROR("", "", "publish is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -818,8 +765,7 @@ int main()
 						if(db.isError())
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: inserting users_notification table");
+								MESSAGE_ERROR("", "", "inserting users_notification table");
 							}
 
 							ostResult.str("");
@@ -841,8 +787,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy:ERROR: user[" + user.GetID() + "] not allowed create vacancy in companyID[" + company_id + "]");
+							MESSAGE_ERROR("", "", "user[" + user.GetID() + "] not allowed create vacancy in companyID[" + company_id + "]");
 						}
 
 						ostResult.str("");
@@ -859,15 +804,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_precreateNewOpenVacancy: end");
+				MESSAGE_DEBUG("", "", "end");
 			}
 		}   // if(action == "AJAX_precreateNewOpenVacancy")
 
@@ -876,16 +819,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectCandidate: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_rejectCandidate: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -914,8 +855,7 @@ int main()
 							if(db.isError())
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_rejectCandidate:ERROR: updating company_candidates table");
+									MESSAGE_ERROR("", "", "updating company_candidates table");
 								}
 
 								ostResult.str("");
@@ -939,8 +879,7 @@ int main()
 							else
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_rejectCandidate:ERROR: inserting into user notification");
+									MESSAGE_ERROR("", "", "inserting into user notification");
 								}
 							}
 
@@ -948,8 +887,7 @@ int main()
 						else
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_rejectCandidate:ERROR: user[" + user.GetID() + "] not allowed reject candidate[" + company_candidate_id + "]");
+								MESSAGE_ERROR("", "", "user[" + user.GetID() + "] not allowed reject candidate[" + company_candidate_id + "]");
 							}
 
 							ostResult.str("");
@@ -963,8 +901,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_rejectCandidate:ERROR: user[" + user.GetID() + "] company_vacancy not found by id[" + vacancy_id + "]");
+							MESSAGE_ERROR("", "", "user[" + user.GetID() + "] company_vacancy not found by id[" + vacancy_id + "]");
 						}
 
 						ostResult.str("");
@@ -978,8 +915,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_rejectCandidate:ERROR: user[" + user.GetID() + "] company_candidate not found by id[" + company_candidate_id + "]");
+						MESSAGE_ERROR("", "", "user[" + user.GetID() + "] company_candidate not found by id[" + company_candidate_id + "]");
 					}
 
 					ostResult.str("");
@@ -995,15 +931,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_rejectCandidate.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_rejectCandidate: end");
+				MESSAGE_DEBUG("", "", "end");
 			}
 		}   // if(action == "AJAX_rejectCandidate")
 
@@ -1018,8 +952,7 @@ int main()
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_getCandidatesAppliedToPosition: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1044,8 +977,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: user[" + user.GetID() + "] not allowed to get candidates list applied to company_vacancy.id[" + open_vacancy_id + "]");
+							MESSAGE_ERROR("", "", "user[" + user.GetID() + "] not allowed to get candidates list applied to company_vacancy.id[" + open_vacancy_id + "]");
 						}
 
 						ostResult.str("");
@@ -1058,9 +990,8 @@ int main()
 				else
 				{
 					{
-						CLog	log;
 
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: company_vacancy.id[" + open_vacancy_id + "] not found");
+						MESSAGE_ERROR("", "", "company_vacancy.id[" + open_vacancy_id + "] not found");
 					}
 
 					ostResult.str("");
@@ -1077,9 +1008,8 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			} 
 
@@ -1092,16 +1022,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_amIAppliedToVacancy: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_amIAppliedToVacancy: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1124,15 +1052,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_amIAppliedToVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_amIAppliedToVacancy: end");
+				MESSAGE_DEBUG("", "", "end");
 			}
 		}   // if(action == "AJAX_amIAppliedToVacancy")
 
@@ -1142,16 +1068,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_updateOpenVacancy: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1204,8 +1128,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy: openVacancyID[" + openVacancyID + "] not found in DB.company_vacancy table");
+						MESSAGE_DEBUG("", "", "openVacancyID[" + openVacancyID + "] not found in DB.company_vacancy table");
 					}
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ОШИБКА. вакансия не найдена в БД.\"}";
@@ -1259,8 +1182,7 @@ int main()
 				if(!company_id.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: companyid is empty");
+						MESSAGE_ERROR("", "", "companyid is empty");
 					}
 
 					ostResult << "{" 
@@ -1271,8 +1193,7 @@ int main()
 				else if(!company_position_id.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: title is empty");
+						MESSAGE_ERROR("", "", "title is empty");
 					}
 
 					ostResult << "{" 
@@ -1283,8 +1204,7 @@ int main()
 				else if(!month.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: month is empty");
+						MESSAGE_ERROR("", "", "month is empty");
 					}
 
 					ostResult << "{" 
@@ -1295,8 +1215,7 @@ int main()
 				else if(!geo_locality_id.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: geo_locality_id is empty");
+						MESSAGE_ERROR("", "", "geo_locality_id is empty");
 					}
 
 					ostResult << "{" 
@@ -1307,8 +1226,7 @@ int main()
 				else if(!employmenttype.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: employmenttype is empty");
+						MESSAGE_ERROR("", "", "employmenttype is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1318,8 +1236,7 @@ int main()
 				else if(!question1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question1 is empty");
+						MESSAGE_ERROR("", "", "question1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1329,8 +1246,7 @@ int main()
 				else if(!question1answers.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question1answers is empty");
+						MESSAGE_ERROR("", "", "question1answers is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1340,8 +1256,7 @@ int main()
 				else if(!question1answer1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question1answer1 is empty");
+						MESSAGE_ERROR("", "", "question1answer1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1351,8 +1266,7 @@ int main()
 				else if(!question1answer2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question1answer2 is empty");
+						MESSAGE_ERROR("", "", "question1answer2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1362,8 +1276,7 @@ int main()
 				else if(!question1answer3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question1answer3 is empty");
+						MESSAGE_ERROR("", "", "question1answer3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1373,8 +1286,7 @@ int main()
 				else if(!question2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question2 is empty");
+						MESSAGE_ERROR("", "", "question2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1384,8 +1296,7 @@ int main()
 				else if(!question2answers.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question2answers is empty");
+						MESSAGE_ERROR("", "", "question2answers is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1395,8 +1306,7 @@ int main()
 				else if(!question2answer1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question2answer1 is empty");
+						MESSAGE_ERROR("", "", "question2answer1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1406,8 +1316,7 @@ int main()
 				else if(!question2answer2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question2answer2 is empty");
+						MESSAGE_ERROR("", "", "question2answer2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1417,8 +1326,7 @@ int main()
 				else if(!question2answer3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question2answer3 is empty");
+						MESSAGE_ERROR("", "", "question2answer3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1428,8 +1336,7 @@ int main()
 				else if(!question3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question3 is empty");
+						MESSAGE_ERROR("", "", "question3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1439,8 +1346,7 @@ int main()
 				else if(!question3answers.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question3answers is empty");
+						MESSAGE_ERROR("", "", "question3answers is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1450,8 +1356,7 @@ int main()
 				else if(!question3answer1.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question3answer1 is empty");
+						MESSAGE_ERROR("", "", "question3answer1 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1461,8 +1366,7 @@ int main()
 				else if(!question3answer2.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question3answer2 is empty");
+						MESSAGE_ERROR("", "", "question3answer2 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1472,8 +1376,7 @@ int main()
 				else if(!question3answer3.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: question3answer3 is empty");
+						MESSAGE_ERROR("", "", "question3answer3 is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1483,8 +1386,7 @@ int main()
 				else if(!publish_period.length())
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: publish is empty");
+						MESSAGE_ERROR("", "", "publish is empty");
 					}
 					ostResult << "{"
 							  << "\"result\":\"error\","
@@ -1531,8 +1433,7 @@ int main()
 						if(db.isError())
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: updating users_notification table");
+								MESSAGE_ERROR("", "", "updating users_notification table");
 							}
 
 							ostResult.str("");
@@ -1553,8 +1454,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy:ERROR: user[" + user.GetID() + "] not allowed create vacancy in companyID[" + company_id + "]");
+							MESSAGE_ERROR("", "", "user[" + user.GetID() + "] not allowed create vacancy in companyID[" + company_id + "]");
 						}
 
 						ostResult.str("");
@@ -1571,15 +1471,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_updateOpenVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_updateOpenVacancy: end");
+				MESSAGE_DEBUG("", "", "end");
 			}
 		}   // if(action == "AJAX_updateOpenVacancy")
 
@@ -1589,16 +1487,14 @@ int main()
 			ostringstream   ostResult;
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_applyToVacancy: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
 			if(user.GetLogin() == "Guest")
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_applyToVacancy: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1625,8 +1521,7 @@ int main()
 					if(db.Query("SELECT `id` FROM `company_candidates` WHERE `vacancy_id`=\"" + openVacancyID + "\" AND `user_id`=\"" + user.GetID() + "\" AND `status`=\"rejected\";"))
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: no allowed to apply to rejected vacancy (company_candidates.id = " + db.Get(0, "id") + ")");
+							MESSAGE_ERROR("", "", "no allowed to apply to rejected vacancy (company_candidates.id = " + db.Get(0, "id") + ")");
 						}
 						ostResult << "{"
 								  << "\"result\":\"error\","
@@ -1639,8 +1534,7 @@ int main()
 						if(!question1answers.length())
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: question1answers is empty");
+								MESSAGE_ERROR("", "", "question1answers is empty");
 							}
 							ostResult << "{"
 									  << "\"result\":\"error\","
@@ -1650,8 +1544,7 @@ int main()
 						else if(!question2answers.length())
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: question2answers is empty");
+								MESSAGE_ERROR("", "", "question2answers is empty");
 							}
 							ostResult << "{"
 									  << "\"result\":\"error\","
@@ -1661,8 +1554,7 @@ int main()
 						else if(!question3answers.length())
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: question3answers is empty");
+								MESSAGE_ERROR("", "", "question3answers is empty");
 							}
 							ostResult << "{"
 									  << "\"result\":\"error\","
@@ -1696,8 +1588,7 @@ int main()
 							if(db.isError())
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: updating users_notification table");
+									MESSAGE_ERROR("", "", "updating users_notification table");
 								}
 
 								ostResult.str("");
@@ -1722,8 +1613,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]:action == AJAX_applyToVacancy: openVacancyID[" + openVacancyID + "] not found in DB.company_vacancy table");
+						MESSAGE_DEBUG("", "", "openVacancyID[" + openVacancyID + "] not found in DB.company_vacancy table");
 					}
 
 					ostResult << "{\"result\":\"error\",\"description\":\"ОШИБКА. вакансия не найдена в БД.\"}";
@@ -1736,15 +1626,13 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
+				MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
 			}  // if(!indexPage.SetTemplate("AJAX_applyToVacancy.htmlt"))
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy: end");
+				MESSAGE_DEBUG("", "", "end");
 			}
 		}   // if(action == "AJAX_applyToVacancy")
 
@@ -1752,8 +1640,7 @@ int main()
 		{
 			ostringstream   ostResult;
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyTakeOwnership: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
@@ -1762,8 +1649,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyTakeOwnership: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1787,8 +1673,7 @@ int main()
 							if(db.isError())
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: updating users_notification table");
+									MESSAGE_ERROR("", "", "updating users_notification table");
 								}
 
 								ostResult.str("");
@@ -1812,8 +1697,7 @@ int main()
 						else
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyTakeOwnership: ERROR: company[" + companyID + "] can't be assigned to user[" + user.GetID() + "] due to current owner exists");
+								MESSAGE_ERROR("", "", ": ERROR: company[" + companyID + "] can't be assigned to user[" + user.GetID() + "] due to current owner exists");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть переданна\"}";
@@ -1822,8 +1706,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyTakeOwnership: ERROR: company[" + companyID + "] doesn't exists");
+							MESSAGE_ERROR("", "", ": ERROR: company[" + companyID + "] doesn't exists");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует\"}";
@@ -1832,8 +1715,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_companyTakeOwnership: ERROR: mandatory parameter missed or empty in HTML request [companyID]");
+						MESSAGE_ERROR("", "", "mandatory parameter missed or empty in HTML request [companyID]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -1844,14 +1726,12 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyTakeOwnership:ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", "", "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyTakeOwnership: finish");
+				MESSAGE_DEBUG("", "", "finish");
 			}
 		}
 
@@ -1859,8 +1739,7 @@ int main()
 		{
 			ostringstream   ostResult;
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
@@ -1869,8 +1748,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -1889,8 +1767,7 @@ int main()
 									"`eventTimestamp` >= UNIX_TIMESTAMP() - 86400*30;")) // --- ratelimiter once per month
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: possession request already exists [id = " + db.Get(0, "id") + "]");
+							MESSAGE_ERROR("", "", ": possession request already exists [id = " + db.Get(0, "id") + "]");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"Такой запрос уже существует\"}";
@@ -1937,16 +1814,14 @@ int main()
 									else
 									{
 										{
-											CLog	log;
-											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting to `user_notification` table");
+											MESSAGE_ERROR("", "", ": ERROR: inserting to `user_notification` table");
 										}
 									}
 								}
 								else
 								{
 									{
-										CLog	log;
-										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting possession request to `company_possession_request` table");
+										MESSAGE_ERROR("", "", ": ERROR: inserting possession request to `company_possession_request` table");
 									}
 
 									ostResult << "{\"result\": \"error\", \"description\": \"Ошибка БД\"}";
@@ -1956,8 +1831,7 @@ int main()
 							else
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: company[" + companyID + "] can't be assigned to user[" + user.GetID() + "] due to current owner exists");
+									MESSAGE_ERROR("", "", ": ERROR: company[" + companyID + "] can't be assigned to user[" + user.GetID() + "] due to current owner exists");
 								}
 
 								ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть переданна\"}";
@@ -1966,8 +1840,7 @@ int main()
 						else
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: company[" + companyID + "] doesn't exists");
+								MESSAGE_ERROR("", "", ": ERROR: company[" + companyID + "] doesn't exists");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует\"}";
@@ -1977,8 +1850,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_companyPossessionRequest: ERROR: mandatory parameter missed or empty in HTML request [companyID]");
+						MESSAGE_ERROR("", "", "mandatory parameter missed or empty in HTML request [companyID]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -1989,14 +1861,12 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest:ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", "", "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: finish");
+				MESSAGE_DEBUG("", "", "finish");
 			}
 		}
 
@@ -2004,8 +1874,7 @@ int main()
 		{
 			ostringstream   ostResult;
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
@@ -2014,8 +1883,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2058,8 +1926,7 @@ int main()
 										if(db.isError())
 										{
 											{
-												CLog	log;
-												log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: updating users_notification table");
+												MESSAGE_ERROR("", "", "updating users_notification table");
 											}
 
 											ostResult.str("");
@@ -2083,8 +1950,7 @@ int main()
 											else
 											{
 												{
-													CLog	log;
-													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting to `user_notification` table");
+													MESSAGE_ERROR("", "", ": ERROR: inserting to `user_notification` table");
 												}
 											}
 
@@ -2094,8 +1960,7 @@ int main()
 									else
 									{
 										{
-											CLog	log;
-											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
+											MESSAGE_ERROR("", "", ": ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
 										}
 
 										ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть передана\"}";
@@ -2104,8 +1969,7 @@ int main()
 								else
 								{
 									{
-										CLog	log;
-										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
+										MESSAGE_ERROR("", "", ": ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
 									}
 
 									ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует или не ваша\"}";
@@ -2114,8 +1978,7 @@ int main()
 							else
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: mandatory parameter empty [requested_company_id]");
+									MESSAGE_ERROR("", "", "mandatory parameter empty [requested_company_id]");
 								}
 
 								ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -2124,8 +1987,7 @@ int main()
 						else
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: possession request in wrong state [state: " + status + "], must be in `requested` state");
+								MESSAGE_ERROR("", "", "possession request in wrong state [state: " + status + "], must be in `requested` state");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2134,8 +1996,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: possession request [id: " + possessionRequestID + "] not found");
+							MESSAGE_ERROR("", "", "possession request [id: " + possessionRequestID + "] not found");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2144,8 +2005,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_grantPossessionRequest: ERROR: notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
+						MESSAGE_ERROR("", "", "notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти ваш notification\"}";
@@ -2155,14 +2015,12 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest:ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", "", "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_grantPossessionRequest: finish");
+				MESSAGE_DEBUG("", "", "finish");
 			}
 		}
 
@@ -2170,8 +2028,7 @@ int main()
 		{
 			ostringstream   ostResult;
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
@@ -2180,8 +2037,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2198,8 +2054,7 @@ int main()
 						if(db.isError())
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: updating users_notification table");
+								MESSAGE_ERROR("", "", "updating users_notification table");
 							}
 
 							ostResult.str("");
@@ -2219,8 +2074,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: ERROR: company[" + companyID + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
+						MESSAGE_ERROR("", "", ": ERROR: company[" + companyID + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует или не ваша\"}";
@@ -2230,14 +2084,12 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession:ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", "", "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_dropCompanyPossession: finish");
+				MESSAGE_DEBUG("", "", "finish");
 			}
 		}
 
@@ -2245,8 +2097,7 @@ int main()
 		{
 			ostringstream   ostResult;
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
@@ -2255,8 +2106,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2292,8 +2142,7 @@ int main()
 										if(db.isError())
 										{
 											{
-												CLog	log;
-												log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:action == AJAX_applyToVacancy:ERROR: updating users_notification table");
+												MESSAGE_ERROR("", "", "updating users_notification table");
 											}
 
 											ostResult.str("");
@@ -2316,8 +2165,7 @@ int main()
 											else
 											{
 												{
-													CLog	log;
-													log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_companyPossessionRequest: ERROR: inserting to `user_notification` table");
+													MESSAGE_ERROR("", "", ": ERROR: inserting to `user_notification` table");
 												}
 											}
 
@@ -2327,8 +2175,7 @@ int main()
 									else
 									{
 										{
-											CLog	log;
-											log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
+											MESSAGE_ERROR("", "", ": ERROR: company[" + requested_company_id + "] doesn't belongs to you [userid: " + user.GetID() + "]");
 										}
 
 										ostResult << "{\"result\": \"error\", \"description\": \"Компания не может быть передана\"}";
@@ -2337,8 +2184,7 @@ int main()
 								else
 								{
 									{
-										CLog	log;
-										log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
+										MESSAGE_ERROR("", "", ": ERROR: company[" + requested_company_id + "] doesn't exists or not belongs to you [id: " + user.GetID() + "]");
 									}
 
 									ostResult << "{\"result\": \"error\", \"description\": \"Компания не существует или не ваша\"}";
@@ -2347,8 +2193,7 @@ int main()
 							else
 							{
 								{
-									CLog	log;
-									log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: mandatory parameter empty [requested_company_id]");
+									MESSAGE_ERROR("", "", "mandatory parameter empty [requested_company_id]");
 								}
 
 								ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: недостаточно параметров\"}";
@@ -2357,8 +2202,7 @@ int main()
 						else
 						{
 							{
-								CLog	log;
-								log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: possession request in wrong state [state: " + status + "], must be in `requested` state");
+								MESSAGE_ERROR("", "", "possession request in wrong state [state: " + status + "], must be in `requested` state");
 							}
 
 							ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2367,8 +2211,7 @@ int main()
 					else
 					{
 						{
-							CLog	log;
-							log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: possession request [id: " + possessionRequestID + "] not found");
+							MESSAGE_ERROR("", "", "possession request [id: " + possessionRequestID + "] not found");
 						}
 
 						ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти запрос на владение\"}";
@@ -2377,8 +2220,7 @@ int main()
 				else
 				{
 					{
-						CLog	log;
-						log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]::AJAX_rejectPossessionRequest: ERROR: notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
+						MESSAGE_ERROR("", "", "notification [id: " + notificationID + ", actionTypeId: 60] doesn't exists or not yours [userid: " + user.GetID() + "]");
 					}
 
 					ostResult << "{\"result\": \"error\", \"description\": \"ОШИБКА: невозможно найти ваш notification\"}";
@@ -2388,14 +2230,12 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest:ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", "", "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_rejectPossessionRequest: finish");
+				MESSAGE_DEBUG("", "", "finish");
 			}
 		}
 
@@ -2404,14 +2244,11 @@ int main()
 		// --- AJAX friend list for autocomplete
 		if((action == "AJAX_getFindCompaniesListAutocomplete") || (action == "AJAX_getFindCompaniesList") || (action == "AJAX_getFindCompanyByID") || (action == "AJAX_getMyCompaniesList"))
 		{
+			MESSAGE_DEBUG("", "", "start");
+
 			ostringstream	ost, ostFinal;
 			string			sessid, lookForKey, companiesList;
 			vector<string>	searchWords;
-
-			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + string("]:") + ": action == AJAX_getFindCompaniesListAutocomplete: start");
-			}
 
 			// --- Initialization
 			ostFinal.str("");
@@ -2421,8 +2258,7 @@ int main()
 				ostringstream	ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == AJAX_getFindCompaniesListAutocomplete: re-login required");
+					MESSAGE_DEBUG("", "", "::action == AJAX_getFindCompaniesListAutocomplete: re-login required");
 				}
 
 				ost.str("");
@@ -2455,8 +2291,7 @@ int main()
 			else
 			{
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]::action == AJAX_getFindCompaniesListAutocomplete: searching key is empty");
+					MESSAGE_DEBUG("", "", "::action == AJAX_getFindCompaniesListAutocomplete: searching key is empty");
 				}
 				ostFinal << "{\"status\":\"error\",\"description\":\"searching key is empty or less then 3\", \"companies\":[]}";
 			}
@@ -2465,25 +2300,19 @@ int main()
 
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
 
-				log.Write(ERROR, string(__func__) + string("[") + to_string(__LINE__) + string("]:ERROR: template file json_response.htmlt was missing"));
+				MESSAGE_ERROR("", "", "ERROR: template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
 			}
 
-			{
-				CLog	log;
-
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + string("]:") + ":action == AJAX_getFindCompaniesListAutocomplete: final response [length = " + to_string(ostFinal.str().length()) + "]");
-			}
+			MESSAGE_DEBUG("", "", "finish [length = " + to_string(ostFinal.str().length()) + "]");
 		}
 
 		if((action == "AJAX_SubscribeOnCompany") || (action == "AJAX_UnsubscribeFromCompany"))
 		{
 			ostringstream   ostResult;
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_SubscribeOnCompany: start");
+				MESSAGE_DEBUG("", "", "start");
 			}
 
 			ostResult.str("");
@@ -2492,8 +2321,7 @@ int main()
 				ostringstream   ost;
 
 				{
-					CLog	log;
-					log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_SubscribeOnCompany: re-login required");
+					MESSAGE_DEBUG("", "", "re-login required");
 				}
 
 				ostResult << "{\"result\":\"error\",\"description\":\"сессия закончилась, необходимо вновь зайти на сайт\"}";
@@ -2510,54 +2338,20 @@ int main()
 			indexPage.RegisterVariableForce("result", ostResult.str());
 			if(!indexPage.SetTemplate("json_response.htmlt"))
 			{
-				CLog	log;
-				log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]: action == AJAX_SubscribeOnCompany:ERROR: can't find template json_response.htmlt");
+				MESSAGE_ERROR("", "", "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
 			}
 
 			{
-				CLog	log;
-				log.Write(DEBUG, string(__func__) + string("[") + to_string(__LINE__) + "]: action == AJAX_SubscribeOnCompany: finish");
+				MESSAGE_DEBUG("", "", "finish");
 			}
 		}
 
-		{
-			CLog	log;
-			ostringstream	ost;
-
-			ost.str("");
-			ost << __func__ << "[" << __LINE__ << "]: end (action's == \"" << action << "\") condition";
-			log.Write(DEBUG, ost.str());
-		}
+		MESSAGE_DEBUG("", "", "end (action's == \"" + action + "\") condition");
 
 		indexPage.OutTemplate();
 
 	}
-/*
-	catch(CExceptionRedirect &c) {
-		CLog	log;
-		ostringstream	ost;
-
-		ost.str("");
-		ost << string(__func__) + ":: catch CRedirectHTML: exception used for redirection";
-		log.Write(DEBUG, ost.str());
-
-		c.SetDB(&db);
-
-		if(!indexPage.SetTemplate(c.GetTemplate())) {
-
-			ost.str("");
-			ost << string(__func__) + ":: catch CRedirectHTML: ERROR, template redirect.htmlt not found";
-			log.Write(ERROR, ost.str());
-
-			throw CException("Template file was missing");
-		}
-
-		indexPage.RegisterVariableForce("content", "redirect page");
-		indexPage.OutTemplate();
-
-	}
-*/
 	catch(CExceptionHTML &c)
 	{
 		c.SetLanguage(indexPage.GetLanguage());
