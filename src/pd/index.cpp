@@ -343,7 +343,7 @@ int main()
 			if(!indexPage.SetTemplate(template_name))
 			{
 				MESSAGE_DEBUG("", action, "can't find template " + template_name);
-			} // if(!indexPage.SetTemplate("my_network.htmlt"))
+			}
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -4022,7 +4022,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
 				throw CExceptionHTML("template page missing");
-			} // if(!indexPage.SetTemplate("json_response.htmlt"))
+			}
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -4587,13 +4587,13 @@ int main()
 						}
 
 						MESSAGE_DEBUG("", action, "end (message FROM " + newsFeedMessageSrcType + ".id[" + newsFeedMessageSrcID + "] has been posted)");
-					} // if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImage == "")))
+					}
 					else
 					{
 						// --- Empty title, message and image
 						error_message = gettext("can't post message due to title, text and image is empty");
 						MESSAGE_ERROR("", action, error_message);
-					} // if(!((newsFeedMessageTitle == "") && (newsFeedMessageText == "") && (newsFeedMessageImage == "")))
+					}
 				}
 				else
 				{
@@ -6131,7 +6131,7 @@ int main()
 				{
 					MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
 					throw CExceptionHTML("user not activated");
-				} // if(!indexPage.SetTemplate("json_response.htmlt"))
+				}
 			}
 			else
 			{
@@ -6422,7 +6422,7 @@ int main()
 						ost << "\"description\": \"ERROR finding commenting message owner\"";
 						ost << "}";
 					}
-				} // if(newsFeedMessageID.length() > 0)
+				}
 				else
 				{
 					// --- Empty title, message and image
@@ -6434,7 +6434,7 @@ int main()
 
 					MESSAGE_ERROR("", action, "can't update message due to messageID is not defined");
 				}
-			} // if(user.GetLogin() == "Guest")
+			}
 
 			indexPage.RegisterVariableForce("result", ost.str());
 
@@ -6474,7 +6474,7 @@ int main()
 				{
 					error_message = user.ChangePasswordTo(newPassword);
 				}
-			} // if(user.GetLogin() == "Guest")
+			}
 
 			AJAX_ResponseTemplate(&indexPage, "", error_message);
 		}
@@ -6737,7 +6737,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
-			} // if(!indexPage.SetTemplate("json_response.htmlt"))
+			}
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -7012,7 +7012,7 @@ int main()
 
 					}  // if(!user.isActive())
 				}  // if(!user.isFound())
-			} // if(sessid.length() < 5)
+			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
 
@@ -7088,7 +7088,7 @@ int main()
 					error_message = "Токен активации пустой";
 					MESSAGE_ERROR("", action, "activator_id is empty");
 				}
-			} // if(sessid.length() < 5)
+			}
 
 			if(error_message.empty())
 			{
@@ -7234,7 +7234,7 @@ int main()
 					MESSAGE_DEBUG("", action, "error_message is not empty");
 				}
 
-			} // if(sessid.length() < 5)
+			}
 
 			AJAX_ResponseTemplate(&indexPage, success_message, error_message);
 
@@ -7358,7 +7358,7 @@ int main()
 								ostResult << "\"url\": \"/" + config.GetFromFile("default_action", "guest") + "?rand=" << GetRandom(10) << "\"";
 								ostResult << "}";
 							}
-						} // if(password != user.GetPasswd())
+						}
 					}  // if(!user.isActive())
 				}
 				else
@@ -7371,7 +7371,7 @@ int main()
 					ostResult << "\"description\": \"Почта или Пароль указаны не верно.\"";
 					ostResult << "}";
 				}
-			} // if(sessid.length() < 5)
+			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
 
@@ -7482,11 +7482,11 @@ int main()
 								{
 									MESSAGE_ERROR("", action, "template file index.htmlt was missing");
 									throw CException("Template file was missing");
-								} // if(!indexPage.SetTemplate("activator_regNewUser.htmlt"))
+								}
 
-							} // if captcha correct
+							}
 
-						} // if(CheckUserEmailExisting(regEmail))
+						}
 					}
 
 			}
@@ -7509,7 +7509,7 @@ int main()
 				if(!indexPage.SetTemplate(template_name))
 				{
 					MESSAGE_DEBUG("", action, "can't find template " + template_name);
-				} // if(!indexPage.SetTemplate("my_network.htmlt"))
+				}
 			}
 
 			MESSAGE_DEBUG("", action, "finish");
@@ -7627,8 +7627,8 @@ int main()
 
 							}  // if(!user.isActive()) 
 						}  // if(!user.isFound()) 
-					} // if(sessid.length() < 5)
-				} // if(!act.Load(activatorID))
+					}
+				}
 			}
 			else
 			{
@@ -10898,7 +10898,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "can't find template news_feed.htmlt");
 				throw CExceptionHTML("user not activated");
-			} // if(!indexPage.SetTemplate("news_feed.htmlt"))
+			}
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -10936,7 +10936,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
 				throw CExceptionHTML("user not activated");
-			} // if(!indexPage.SetTemplate("my_network.htmlt"))
+			}
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -10972,7 +10972,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
 				throw CExceptionHTML("user not activated");
-			} // if(!indexPage.SetTemplate("my_network.htmlt"))
+			}
 
 			MESSAGE_DEBUG("", action, "finish");
 		}
@@ -11005,7 +11005,7 @@ int main()
 			{
 				MESSAGE_ERROR("", action, "can't find template find_friends.htmlt");
 				throw CExceptionHTML("user not activated");
-			} // if(!indexPage.SetTemplate("find_friends.htmlt"))
+			}
 		}
 
 		if(action == "delete_picture")

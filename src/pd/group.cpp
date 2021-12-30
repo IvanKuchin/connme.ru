@@ -249,7 +249,7 @@ int main()
 				{
 					MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
 					throw CExceptionHTML("user not activated");
-				} // if(!indexPage.SetTemplate("my_network.htmlt"))
+				}
 			}
 
 
