@@ -89,25 +89,16 @@ int main(void)
 
 		if((action.length() > 10) && (action.compare(action.length() - 9, 9, "_template") == 0))
 		{
-			ostringstream	ost;
-			string			strPageToGet, strFriendsOnSinglePage;
+			MESSAGE_DEBUG("", action, "start");
 
+			auto		template_name = action.substr(0, action.length() - 9) + ".htmlt";
+
+			if(!indexPage.SetTemplate(template_name))
 			{
-				MESSAGE_DEBUG("", action, "start");
+				MESSAGE_ERROR("", action, "can't find template " + template_name);
 			}
 
-			{
-				string		template_name = action.substr(0, action.length() - 9) + ".htmlt";
-
-				if(!indexPage.SetTemplate(template_name))
-				{
-					MESSAGE_ERROR("", action, "can't find template " + template_name);
-				} // if(!indexPage.SetTemplate("my_network.htmlt"))
-			}
-
-			{
-				MESSAGE_DEBUG("", action, "finish");
-			}
+			MESSAGE_DEBUG("", action, "finish");
 		}
 
 		if(action == "AJAX_swapMessageImages")
