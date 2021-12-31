@@ -171,7 +171,7 @@ sub DiffFile
 	    }
 	    else
 	    {
-		PrintError("found ".($#files + 1)." x ".$curr_file." in ".$root_dir.", must be ".($#domains + 1)) if($DEBUG);
+			PrintError("found ".($#files + 1)." x ".$curr_file." in ".$root_dir.", must be ".($#domains + 1)) if($DEBUG);
 	    }
 	}
 
