@@ -208,7 +208,6 @@ string GenerateImage(string randStr)
 	{
 		if(annotateFlag == "yes")
 		{
-			string				fileNameWater;
 			Magick::Image		imageMaster, imageDest;
 			// ImageInfo	*image1_info, *anotherInfo;
 			// char			geometry[128];
