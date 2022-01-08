@@ -244,18 +244,18 @@ string GenerateImage(string randStr)
 					{
 						fileFlagExist = false;
 
-						MESSAGE_DEBUG("", "", "GenerateImage: trying file " + fileResultFull + " -> can be used for writing");
+						MESSAGE_DEBUG("", "", "trying file " + fileResultFull + " -> can be used for writing");
 					}
 					else 
 					{ 
 						close(fh); 
 
-						MESSAGE_DEBUG("", "", "GenerateImage: trying file " + fileResultFull + " -> can't be used, needs another one");
+						MESSAGE_DEBUG("", "", "trying file " + fileResultFull + " -> can't be used, needs another one");
 					}
 				} while(fileFlagExist == true);
 
 
-				MESSAGE_DEBUG("", "", "GenerateImage: write captcha-image to " + fileResultFull);
+				MESSAGE_DEBUG("", "", "write captcha-image to " + fileResultFull);
 
 				imageDest.write(fileResultFull);
 			}
