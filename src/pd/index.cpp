@@ -215,6 +215,7 @@ string GenerateImage(string randStr)
 			ostringstream 	ost;
 
 			Magick::InitializeMagick(NULL);
+			MESSAGE_DEBUG("", "", "InitializeMagick timing");
 
 			try 
 			{
