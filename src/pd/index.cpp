@@ -198,11 +198,11 @@ bool ImageSaveAsJpgToFeedFolder (const string src, const string dst, struct Exif
 // --- Output: path to the file
 string GenerateImage(string randStr)
 {
-	string	fileName = "dessin.gif", fileFont, fileResultFull, fileResult;
-	string	annotateFlag = "yes";
+	MESSAGE_DEBUG("", "", "start");
 
-	fileName = IMAGE_DIRECTORY;
-	fileName += "pages/login/dessin.gif";
+	string	fileFont, fileResultFull, fileResult;
+	auto	annotateFlag = "yes"s;
+	auto	fileName = IMAGE_DIRECTORY + "pages/login/dessin.gif";
 
 	if(!fileName.empty())
 	{
@@ -218,7 +218,7 @@ string GenerateImage(string randStr)
 
 			try 
 			{
-				bool 		fileFlagExist;
+				auto 		fileFlagExist = true;
 
 				imageMaster.read(fileName);    /* Flawfinder: ignore */
 				imageDest = imageMaster;
@@ -230,7 +230,6 @@ string GenerateImage(string randStr)
 				imageDest.annotate(randStr, Magick::Geometry(ost.str()));
 
 			
-				fileFlagExist = true;	
 				do {
 					MESSAGE_DEBUG("", "", "checking captcha file existence")
 
