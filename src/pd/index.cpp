@@ -208,17 +208,14 @@ string GenerateImage(string randStr)
 	{
 		if(annotateFlag == "yes")
 		{
-			Magick::Image		imageMaster, imageDest;
-			// ImageInfo	*image1_info, *anotherInfo;
-			// char			geometry[128];
-			ostringstream 	ost;
-
 			Magick::InitializeMagick(NULL);
 			MESSAGE_DEBUG("", "", "InitializeMagick timing");
 
-			try 
+			try
 			{
-				auto 		fileFlagExist = true;
+				Magick::Image		imageMaster, imageDest;
+				ostringstream 		ost;
+				auto 				fileFlagExist = true;
 
 				imageMaster.read(fileName);    /* Flawfinder: ignore */
 				imageDest = imageMaster;
