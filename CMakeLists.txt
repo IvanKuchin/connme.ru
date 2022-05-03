@@ -36,6 +36,9 @@ set(CMAKE_CXX_STANDARD 14)
 # --- cmake 3.12 have -D switch, capable remove definition per-target
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -pedantic")
 
+# --- static linkage
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+
 # --- Doesn't work properly, enable and give it a try
 # --- set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE "include-what-you-use")
 
@@ -127,6 +130,11 @@ include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION_MAJOR "${My_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${My_VERSION_MINOR}")
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_SOURCE_GENERATOR TGZ)
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_PACKAGE_CONTACT "ivan.kuchin@gmail.com")
 
 include(CPack)
 
