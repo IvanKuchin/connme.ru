@@ -8,13 +8,14 @@ endif()
 
 cmake_minimum_required(VERSION 3.5)
 
-project("connme.ru" CXX)
-
+option(PROJECT_NAME "PROJECT_NAME" OFF)
 option(MAIN_SUBDOMAIN "MAIN_SUBDOMAIN" OFF)
 option(IMAGE_SUBDOMAIN "IMAGE_SUBDOMAIN" OFF)
+option(BUILD_RELEASE_NUMBER "BUILD_RELEASE_NUMBER" "0.0.0")
 
-message( "Project: " ${PROJECT_NAME} )
-
+if (${PROJECT_NAME} STREQUAL OFF)
+    message( FATAL_ERROR "project name required (for ex: -DPROJECT_NAME=my-proj)" )
+endif()
 if (${MAIN_SUBDOMAIN} STREQUAL OFF)
     message( FATAL_ERROR "data sub-domain required (for ex: -DMAIN_SUBDOMAIN=www)" )
 endif()
@@ -22,9 +23,12 @@ if (${IMAGE_SUBDOMAIN} STREQUAL OFF)
     message( FATAL_ERROR "image sub-domain required (for ex: -DIMAGE_SUBDOMAIN=images)" )
 endif()
 
+project(${PROJECT_NAME} CXX)
+
 set(MAIN_DOMAIN_NAME "${MAIN_SUBDOMAIN}.${PROJECT_NAME}")
 set(IMAGE_DOMAIN_NAME "${IMAGE_SUBDOMAIN}.${PROJECT_NAME}")
 
+message( "Project: " ${PROJECT_NAME} )
 message( "Web-server domain: "        ${MAIN_DOMAIN_NAME} )
 message( "Image web domain: "         ${IMAGE_DOMAIN_NAME} )
 
@@ -98,13 +102,15 @@ set(TEMPLATES_INSTALL_DIR	${LOCAL_INSTALL_DIR}/templates)
 # ---- to treat it as a regular lib I have to copy it to /usr/local/share..... folder
 # ---- 1) copy libxl to application location
 # ---- 2) work with it as w/ regular library
-# if(EXISTS ${LIBXL_INSTALL_DIR})
-#     message	(STATUS	"install libxl to ${LIBXL_INSTALL_DIR}")
-#     file	(COPY	${LIBXL_PROJECT_DIR}lib/libxl.so	DESTINATION	${LIBXL_INSTALL_DIR}/lib)
-#     file	(COPY	${LIBXL_PROJECT_DIR}lib64/libxl.so	DESTINATION	${LIBXL_INSTALL_DIR}/lib64)
-# else()
-#     message	(WARNING "libxl.so will be taken from source-tree, because ${LIBXL_INSTALL_DIR} doesn't exist")
-# endif()
+#if(EXISTS ${LIBXL_PROJECT_DIR})
+#    if(EXISTS ${LIBXL_INSTALL_DIR})
+#        message	(STATUS	"install libxl to ${LIBXL_INSTALL_DIR}")
+#	file	(COPY	${LIBXL_PROJECT_DIR}lib/libxl.so	DESTINATION	${LIBXL_INSTALL_DIR}/lib)
+#        file	(COPY	${LIBXL_PROJECT_DIR}lib64/libxl.so	DESTINATION	${LIBXL_INSTALL_DIR}/lib64)
+#    else()
+#	message	(WARNING "libxl.so will be taken from source-tree, because ${LIBXL_INSTALL_DIR} doesn't exist")
+#    endif()
+#endif()
 
 add_subdirectory(src/)
 add_subdirectory(supplemental/cron/)
@@ -130,13 +136,14 @@ add_subdirectory(tests/)
 # --- CPack
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_VERSION_MAJOR "${My_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${My_VERSION_MINOR}")
+#set(CPACK_PACKAGE_VERSION "${BUILD_RELEASE_NUMBER}")
+set(CPACK_PACKAGE_VERSION "0.0.0")
 
 set(CPACK_GENERATOR "DEB")
 set(CPACK_SOURCE_GENERATOR TGZ)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_PACKAGE_CONTACT "ivan.kuchin@gmail.com")
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}")
 
 include(CPack)
 
