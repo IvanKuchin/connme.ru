@@ -11,6 +11,7 @@ foreach(config_file ${CONFIG_FILES})
 
     install(FILES	"${CHAT_PROJECT_DIR}/${file_wo_ext}"
 	DESTINATION	${CHAT_INSTALL_DIR}
+	COMPONENT	chat
 	PERMISSIONS	OWNER_READ OWNER_WRITE GROUP_READ
     )
 

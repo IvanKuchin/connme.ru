@@ -105,6 +105,6 @@ target_link_libraries(chat-server Threads::Threads)
 # --- Install settings
 
 # --- Install part
-install(TARGETS chat-server       DESTINATION     ${CHAT_INSTALL_DIR})
+install(TARGETS chat-server       DESTINATION     ${CHAT_INSTALL_DIR} COMPONENT chat)
 
 # print_all_variables()

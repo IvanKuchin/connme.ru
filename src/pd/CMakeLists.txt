@@ -83,19 +83,19 @@ endforeach()
 
 # --- Install part
 
-install(TARGETS index.cgi			    DESTINATION		${CGIDIR})
-install(TARGETS anyrole_1.cgi           DESTINATION     ${CGIDIR})
-install(TARGETS book.cgi    		    DESTINATION		${CGIDIR})
-install(TARGETS company.cgi			    DESTINATION		${CGIDIR})
-install(TARGETS group.cgi               DESTINATION		${CGIDIR})
-install(TARGETS system.cgi              DESTINATION     ${CGIDIR})
-install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR})
-install(TARGETS complain.cgi            DESTINATION     ${CGIDIR})
-install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR})
+install(TARGETS index.cgi			    DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS anyrole_1.cgi           DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS book.cgi    		    DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS company.cgi			    DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS group.cgi               DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS system.cgi              DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS complain.cgi            DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR}	COMPONENT app)
 
 
-install(TARGETS admin.cgi               DESTINATION     ${CGIADMINDIR})
+install(TARGETS admin.cgi               DESTINATION     ${CGIADMINDIR}	COMPONENT app)
 
-install(TARGETS cron_daily_pd   	   DESTINATION		${CRON_INSTALL_DIR})
+install(TARGETS cron_daily_pd   	   DESTINATION		${CRON_INSTALL_DIR}	COMPONENT cron)
 
 # print_all_variables()
