@@ -98,8 +98,8 @@ set(CONFIG_INSTALL_DIR		${LOCAL_INSTALL_DIR}/config)
 set(SSMTP_INSTALL_DIR		${LOCAL_INSTALL_DIR}/ssmtp)
 set(TEMPLATES_INSTALL_DIR	${LOCAL_INSTALL_DIR}/templates)
 
-# ---- libxl library is not in apt-reporsitory, therefore is not installed on the OS
-# ---- to treat it as a regular lib I have to copy it to /usr/local/share..... folder
+# ---- libxl library is not in apt-reporsitory, therefore it is not in the OS libraries
+# ---- I have to copy it to /usr/local/share..... folder
 # ---- 1) copy libxl to application location
 # ---- 2) work with it as w/ regular library
 #if(EXISTS ${LIBXL_PROJECT_DIR})
