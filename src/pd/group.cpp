@@ -22,7 +22,7 @@ int main()
 
 		indexPage.ParseURL();
 
-		if(!indexPage.SetTemplate("index.htmlt"))
+		if(!indexPage.SetProdTemplate("index.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template file was missing");
 			throw CException("Template file was missing");
@@ -122,7 +122,7 @@ int main()
 			if(id.length()) indexPage.RegisterVariableForce("id", id);
 			if(link.length()) indexPage.RegisterVariableForce("link", link);
 
-			if(!indexPage.SetTemplate("view_group_profile.htmlt"))
+			if(!indexPage.SetProdTemplate("view_group_profile.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file getGroupWall.htmlt was missing");
 				throw CException("Template file was missing");
@@ -245,7 +245,7 @@ int main()
 				indexPage.RegisterVariableForce("myLastName", user.GetNameLast());
 
 
-				if(!indexPage.SetTemplate("groups_i_own_list.htmlt"))
+				if(!indexPage.SetProdTemplate("groups_i_own_list.htmlt"))
 				{
 					MESSAGE_ERROR("", action, "can't find template my_network.htmlt");
 					throw CExceptionHTML("user not activated");
@@ -299,11 +299,11 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
-			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
+			}  // if(!indexPage.SetProdTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			MESSAGE_DEBUG("", action, "start");
 		}
@@ -378,11 +378,11 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
-			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
+			}  // if(!indexPage.SetProdTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			MESSAGE_DEBUG("", action, "start");
 		}
@@ -438,11 +438,11 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file json_response.htmlt was missing");
-			}  // if(!indexPage.SetTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
+			}  // if(!indexPage.SetProdTemplate("AJAX_precreateNewOpenVacancy.htmlt"))
 
 			MESSAGE_DEBUG("", action, "start");
 		}
@@ -497,7 +497,7 @@ int main()
 
 				indexPage.RegisterVariableForce("result", ostFinal.str());
 
-				if(!indexPage.SetTemplate("json_response.htmlt"))
+				if(!indexPage.SetProdTemplate("json_response.htmlt"))
 				{
 					MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 					throw CException("Template file was missing");
@@ -531,7 +531,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "can't find template json_response.htmlt");
 				throw CExceptionHTML("user not activated");
@@ -558,11 +558,11 @@ int main()
 
 			indexPage.RegisterVariableForce("title", "Редактирование группы");
 
-			if(!indexPage.SetTemplate("edit_group.htmlt"))
+			if(!indexPage.SetProdTemplate("edit_group.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file edit_group.htmlt was missing");
 				throw CException("Template file edit_group.htmlt was missing");
-			}  // if(!indexPage.SetTemplate("edit_group.htmlt"))
+			}  // if(!indexPage.SetProdTemplate("edit_group.htmlt"))
 
 			MESSAGE_DEBUG("", action, "end");
 		} 	// if(action == "edit_group")
@@ -586,11 +586,11 @@ int main()
 
 			indexPage.RegisterVariableForce("title", "Новая группа");
 
-			if(!indexPage.SetTemplate("create_group.htmlt"))
+			if(!indexPage.SetProdTemplate("create_group.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file createnewgroup.htmlt was missing");
 				throw CException("Template file createnewgroup.htmlt was missing");
-			}  // if(!indexPage.SetTemplate("createnewgroup.htmlt"))
+			}  // if(!indexPage.SetProdTemplate("createnewgroup.htmlt"))
 
 			MESSAGE_DEBUG("", action, "end");
 		} 	// if(action == "createnewgroup")
@@ -674,7 +674,7 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostFinal.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
@@ -763,7 +763,7 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostFinal.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
@@ -925,7 +925,7 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostFinal.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
@@ -1048,7 +1048,7 @@ int main()
 
 			indexPage.RegisterVariableForce("result", ostFinal.str());
 
-			if(!indexPage.SetTemplate("json_response.htmlt"))
+			if(!indexPage.SetProdTemplate("json_response.htmlt"))
 			{
 				MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
 				throw CException("Template file was missing");
@@ -1121,7 +1121,7 @@ int main()
 
 		MESSAGE_DEBUG("", action, "catch CExceptionHTML: DEBUG exception reason: [" + c.GetReason() + "]");
 
-		if(!indexPage.SetTemplate(c.GetTemplate()))
+		if(!indexPage.SetProdTemplate(c.GetTemplate()))
 		{
 			MESSAGE_ERROR("", "", "template (" + c.GetTemplate() + ") not found");
 			return(-1);
@@ -1136,7 +1136,7 @@ int main()
 	{
 		MESSAGE_ERROR("", action, "catch CException: exception: ERROR  " + c.GetReason());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		if(!indexPage.SetProdTemplate("error.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template not found");
 			return(-1);
@@ -1151,7 +1151,7 @@ int main()
 	{
 		MESSAGE_ERROR("", action, "catch(exception& e): catch standard exception: ERROR  " + e.what());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		if(!indexPage.SetProdTemplate("error.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template not found");
 			return(-1);

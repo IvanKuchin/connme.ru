@@ -1,0 +1,11 @@
+<<template:prod/header.htmlt>>
+
+<img src='/images/<<vars:file>>'><br>
+<hr>
+<<vars:content_brief>>
+<hr>
+<<vars:content>>
+<hr>
+<<vars:price>>
+
+<<template:prod/footer.htmlt>>

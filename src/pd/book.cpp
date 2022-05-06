@@ -22,7 +22,7 @@ int main()
 
 	indexPage.ParseURL();
 
-	if(!indexPage.SetTemplate("index.htmlt"))
+	if(!indexPage.SetProdTemplate("index.htmlt"))
 	{
 
 		MESSAGE_ERROR("", "", "template file was missing");
@@ -91,7 +91,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -211,7 +211,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -261,7 +261,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -327,7 +327,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -405,7 +405,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -496,7 +496,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostFinal.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", action, "template file json_response.htmlt was missing");
@@ -554,7 +554,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -612,7 +612,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -1035,7 +1035,7 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 
 			MESSAGE_ERROR("", "", "template file json_response.htmlt was missing");
@@ -1060,7 +1060,7 @@ int main()
 
 		MESSAGE_DEBUG("", action, "catch CExceptionHTML: DEBUG exception reason: [" + c.GetReason() + "]");
 
-		if(!indexPage.SetTemplate(c.GetTemplate()))
+		if(!indexPage.SetProdTemplate(c.GetTemplate()))
 		{
 			MESSAGE_ERROR("", "", "template (" + c.GetTemplate() + ") not found");
 			return(-1);
@@ -1075,7 +1075,7 @@ int main()
 	{
 		MESSAGE_ERROR("", action, "catch CException: exception: ERROR  " + c.GetReason());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		if(!indexPage.SetProdTemplate("error.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template not found");
 			return(-1);
@@ -1090,7 +1090,7 @@ int main()
 	{
 		MESSAGE_ERROR("", action, "catch(exception& e): catch standard exception: ERROR  " + e.what());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		if(!indexPage.SetProdTemplate("error.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template not found");
 			return(-1);

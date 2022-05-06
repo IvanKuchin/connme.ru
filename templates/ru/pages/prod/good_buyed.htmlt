@@ -1,0 +1,6 @@
+<<template:prod/header.htmlt>><center>
+
+Товар добавлен в вашу корзину покупок. <br>
+<a href="/bucket&rand=<<vars:rand>>"> <b>Перейти в корзину покупок </b><img src=/images/korzina.jpg border=0 align=absmiddle></a>
+
+<<template:prod/footer.htmlt>>

@@ -6,6 +6,7 @@ ARG IMAGE_SUBDOMAIN=images
 ARG ROOTDIR=/home/httpd/www
 ARG IMAGEROOTDIR=/home/httpd/images
 ARG LOCAL_INSTALL_DIR=/usr/local/share/www
+ARG BUILD_RELEASE_NUMBER=0.0.1
 
 ARG GIT_FOLDER=/backend
 
@@ -140,11 +141,13 @@ RUN a2enmod cgi \
 RUN mkdir build
 RUN cd build \ 
     && cmake \
+        -DPROJECT_NAME=${BUILD_REPO} \
         -DMAIN_SUBDOMAIN=${MAIN_SUBDOMAIN} \
         -DIMAGE_SUBDOMAIN=${IMAGE_SUBDOMAIN} \
         -DROOTDIR=${ROOTDIR} \
         -DIMAGEROOTDIR=${IMAGEROOTDIR} \
         -DLOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR} \
+        -DBUILD_RELEASE_NUMBERS=${BUILD_RELEASE_NUMBERS} \
         .. \
     && make -j2 \
     && make install \

@@ -21,7 +21,7 @@ int main()
 
 		indexPage.ParseURL();
 
-		if(!indexPage.SetTemplateFile("templates/admin_index.htmlt"))
+		if(!indexPage.SetAdminTemplate("admin_index.htmlt"))
 		{
 			CLog	log(ADMIN_LOG_FILE_NAME);
 
@@ -55,7 +55,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_chat_get_cnx_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_chat_get_cnx_list.htmlt");
+			indexPage.SetAdminTemplate("admin_chat_get_cnx_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -69,7 +69,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_chat_get_presence_cache: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_chat_get_presence_cache.htmlt");
+			indexPage.SetAdminTemplate("admin_chat_get_presence_cache.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -83,7 +83,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_user_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_user_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_user_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -97,7 +97,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_certificates_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_certificates_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_certificates_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -111,7 +111,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_courses_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_courses_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_courses_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -125,7 +125,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_languages_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_languages_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_languages_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -139,7 +139,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_universities_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_universities_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_universities_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -153,7 +153,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_schools_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_schools_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_schools_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -167,7 +167,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_book_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_book_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_book_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -181,7 +181,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_book_complains_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_book_complains_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_book_complains_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -195,7 +195,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_complains_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_complains_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_complains_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -209,7 +209,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_companies_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_companies_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_companies_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -223,7 +223,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_occupations_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_occupations_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_occupations_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -237,7 +237,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_regions_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_regions_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_regions_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -251,7 +251,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_localities_list: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_localities_list.htmlt");
+			indexPage.SetAdminTemplate("admin_get_localities_list.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -265,7 +265,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_companies_duplicates: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_companies_duplicates.htmlt");
+			indexPage.SetAdminTemplate("admin_get_companies_duplicates.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -279,7 +279,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_pictures_lostindb: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_pictures_lostindb.htmlt");
+			indexPage.SetAdminTemplate("admin_get_pictures_lostindb.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -294,7 +294,7 @@ int main()
 				log.Write(DEBUG, __func__ + string("[") + to_string(__LINE__) + "]: act == admin_get_recommendation_adverse: begin");
 			}
 
-			indexPage.SetTemplateFile("templates/admin_get_recommendation_adverse.htmlt");
+			indexPage.SetAdminTemplate("admin_get_recommendation_adverse.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -312,7 +312,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetUserListInJSONFormat("select * from `users` ORDER BY `users`.`id` ASC;", &db, &user) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -349,7 +349,7 @@ int main()
 
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -387,7 +387,7 @@ int main()
 
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -425,7 +425,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -464,7 +464,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -503,7 +503,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -541,7 +541,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -583,7 +583,7 @@ int main()
 
 
 			indexPage.RegisterVariableForce("result", "[" + ostResult.str() + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -602,7 +602,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "{\"complains\":[" + GetComplainListInJSONFormat("select * from `users_complains` ORDER BY `id` ASC;", &db, true) + "]}");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -621,7 +621,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetBookListInJSONFormat("select * from `book` ORDER BY `id` ASC;", &db, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -639,7 +639,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetCertificationListInJSONFormat("select * from `certification_tracks` ORDER BY `vendor_id` ASC;", &db, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -657,7 +657,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetCourseListInJSONFormat("select * from `certification_tracks` ORDER BY `vendor_id` ASC;", &db, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -675,7 +675,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetLanguageListInJSONFormat("select * from `language` ORDER BY `language`.`title` ASC;", &db, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -693,7 +693,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetUniversityListInJSONFormat("select * from `university` ORDER BY `id` ASC;", &db, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -711,7 +711,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetSchoolListInJSONFormat("select * from `school` ORDER BY `geo_locality_id` ASC;", &db, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -791,7 +791,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + result + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -871,7 +871,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + result + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -951,7 +951,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + result + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -972,7 +972,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetCompanyListInJSONFormat("select * from `company`", &db, NULL, true, true) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -991,7 +991,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetCompanyDuplicates(&db) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1010,7 +1010,7 @@ int main()
 			indexPage.RegisterVariableForce("lostWithZeroSetID", GetPicturesWithEmptySet(&db));
 			indexPage.RegisterVariableForce("lostWithUnknownMessage", GetPicturesWithUnknownMessage(&db));
 			indexPage.RegisterVariableForce("lostWithUnknownUser", GetPicturesWithUnknownUser(&db));
-			indexPage.SetTemplateFile("templates/json_lostpictures.htmlt");
+			indexPage.SetAdminTemplate("json_lostpictures.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1047,7 +1047,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1086,7 +1086,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1139,7 +1139,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1192,7 +1192,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1245,7 +1245,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1297,7 +1297,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1350,7 +1350,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1407,7 +1407,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1465,7 +1465,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1522,7 +1522,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1579,7 +1579,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1599,7 +1599,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", "[" + GetRecommendationAdverse(&db) + "]");
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1635,7 +1635,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1671,7 +1671,7 @@ int main()
 			}
 
 			indexPage.RegisterVariableForce("result", ostResult.str());
-			indexPage.SetTemplateFile("templates/json_response.htmlt");
+			indexPage.SetAdminTemplate("json_response.htmlt");
 
 			{
 				CLog	log(ADMIN_LOG_FILE_NAME);
@@ -1688,7 +1688,7 @@ int main()
 	}
 	catch(CException c)
 	{
-		indexPage.SetTemplateFile("templates/error.htmlt");
+		indexPage.SetAdminTemplate("error.htmlt");
 		indexPage.RegisterVariable("content", c.GetReason().c_str());
 		indexPage.OutTemplate();
 	return(-1);
