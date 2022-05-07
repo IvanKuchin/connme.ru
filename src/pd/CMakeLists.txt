@@ -6,8 +6,10 @@ set(EXECUTABLE_CGIs_with_PD_PI_LIBS
     company.cgi
     group.cgi
     system.cgi
-    companylogouploader.cgi
     complain.cgi
+    )
+set(EXECUTABLE_UPLOADERs_with_PD_PI_LIBS
+    companylogouploader.cgi
     grouplogouploader.cgi
     )
 set(EXECUTABLE_CGIs_with_PI_LIBS
@@ -76,6 +78,9 @@ foreach(EXECUTABLE_CGI ${EXECUTABLE_CGIs_with_PI_LIBS})
 endforeach()
 foreach(EXECUTABLE_CGI ${EXECUTABLE_CGIs_with_PD_PI_LIBS})
     __add_executable_3libs(${EXECUTABLE_CGI} "${PROJECT_ALL_INCLUDE_DIRECTORIES}" "${PROJECT_PD_LIBS}" "${PROJECT_PI_LIBS}" "${PROJECT_EXTERNAL_LIBS}")
+endforeach()
+foreach(EXECUTABLE_UPLOADER ${EXECUTABLE_UPLOADERs_with_PD_PI_LIBS})
+    __add_executable_3libs(${EXECUTABLE_UPLOADER} "${PROJECT_ALL_INCLUDE_DIRECTORIES}" "${PROJECT_PD_LIBS}" "${PROJECT_PI_LIBS}" "${PROJECT_EXTERNAL_LIBS}")
 endforeach()
 
 
