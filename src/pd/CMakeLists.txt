@@ -94,9 +94,9 @@ install(TARGETS book.cgi    		    DESTINATION		${CGIDIR}	COMPONENT app)
 install(TARGETS company.cgi			    DESTINATION		${CGIDIR}	COMPONENT app)
 install(TARGETS group.cgi               DESTINATION		${CGIDIR}	COMPONENT app)
 install(TARGETS system.cgi              DESTINATION     ${CGIDIR}	COMPONENT app)
-install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR}	COMPONENT app)
 install(TARGETS complain.cgi            DESTINATION     ${CGIDIR}	COMPONENT app)
-install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR}	COMPONENT uploaders)
+install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR}	COMPONENT uploadres)
 
 
 install(TARGETS admin.cgi               DESTINATION     ${CGIADMINDIR}	COMPONENT app)
