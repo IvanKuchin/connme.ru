@@ -1,5 +1,0 @@
-<<template:admin/adminheader.htmlt>>
-
-<<vars:content>>
-
-<<template:admin/adminfooter.htmlt>>

@@ -1,5 +1,4 @@
 set(EXECUTABLE_CGIs_with_PD_PI_LIBS
-    admin.cgi
     index.cgi
     anyrole_1.cgi
     book.cgi
@@ -97,9 +96,6 @@ install(TARGETS system.cgi              DESTINATION     ${CGIDIR}	COMPONENT app)
 install(TARGETS complain.cgi            DESTINATION     ${CGIDIR}	COMPONENT app)
 install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR}	COMPONENT uploaders)
 install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR}	COMPONENT uploaders)
-
-
-install(TARGETS admin.cgi               DESTINATION     ${CGIADMINDIR}	COMPONENT app)
 
 install(TARGETS cron_daily_pd   	   DESTINATION		${CRON_INSTALL_DIR}	COMPONENT cron)
 
