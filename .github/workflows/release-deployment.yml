@@ -62,20 +62,20 @@ jobs:
         run: |
           echo ::set-output name=BUILD_RELEASE::${GITHUB_REF#refs/tags/}
           echo ::set-output name=BUILD_RELEASE_MAJOR::`echo ${GITHUB_REF%%.*} | awk -F/ '{ print v$3; }'`
-          echo ::set-output name=BUILD_RELEASE_NUMBERS::`echo ${GITHUB_REF#refs/tags/v}`
+          echo ::set-output name=BUILD_RELEASE_NUMBER::`echo ${GITHUB_REF#refs/tags/v}`
           echo ::set-output name=BUILD_DATE::`date -u +'%Y-%m-%dT%H:%M:%SZ'`
           echo ::set-output name=BUILD_REPO::$(echo ${GITHUB_REPOSITORY} | awk -F/ '{ print $2; }')
       - name: print deploymnet variables
         run: |
           echo $BUILD_RELEASE
           echo $BUILD_RELEASE_MAJOR
-          echo $BUILD_RELEASE_NUMBERS
+          echo $BUILD_RELEASE_NUMBER
           echo $BUILD_DATE
           echo $BUILD_REPO
         env:
           BUILD_RELEASE: ${{ steps.set_variables.outputs.BUILD_RELEASE }}
           BUILD_RELEASE_MAJOR: ${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-          BUILD_RELEASE_NUMBERS: ${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
+          BUILD_RELEASE_NUMBER: ${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBER }}
           BUILD_DATE: ${{ steps.set_variables.outputs.BUILD_DATE }}
           BUILD_REPO: ${{ steps.set_variables.outputs.BUILD_REPO }}
 
@@ -131,7 +131,7 @@ jobs:
             BUILD_REVISION=${{ github.sha }}
             BUILD_VERSION=${{ github.sha }}
             BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
+            BUILD_RELEASE_NUMBER=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBER }}
           target: app
           push: true
           tags: |
@@ -150,7 +150,7 @@ jobs:
             BUILD_REVISION=${{ github.sha }}
             BUILD_VERSION=${{ github.sha }}
             BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
+            BUILD_RELEASE_NUMBER=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBER }}
           target: images
           push: true
           tags: |
@@ -169,7 +169,7 @@ jobs:
             BUILD_REVISION=${{ github.sha }}
             BUILD_VERSION=${{ github.sha }}
             BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
+            BUILD_RELEASE_NUMBER=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBER }}
           target: cron
           push: true
           tags: |
@@ -188,7 +188,7 @@ jobs:
             BUILD_REVISION=${{ github.sha }}
             BUILD_VERSION=${{ github.sha }}
             BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
-            BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
+            BUILD_RELEASE_NUMBER=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBER }}
           target: uploaders
           push: true
           tags: |

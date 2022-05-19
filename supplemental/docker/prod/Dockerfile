@@ -60,6 +60,7 @@ ARG IMAGE_SUBDOMAIN
 ARG ROOTDIR
 ARG IMAGEROOTDIR
 ARG LOCAL_INSTALL_DIR
+ARG BUILD_RELEASE_NUMBER
 
 ########################
 # install dependencies #
@@ -158,7 +159,7 @@ RUN cd build \
         -DROOTDIR=${ROOTDIR} \
         -DIMAGEROOTDIR=${IMAGEROOTDIR} \
         -DLOCAL_INSTALL_DIR=${LOCAL_INSTALL_DIR} \
-        -DBUILD_RELEASE_NUMBERS=${BUILD_RELEASE_NUMBERS} \
+        -DBUILD_RELEASE_NUMBER=${BUILD_RELEASE_NUMBER} \
         .. \
     && make -j2 package \
     && make install \
