@@ -119,7 +119,6 @@ add_subdirectory(supplemental/libpdf-font/)
 add_subdirectory(supplemental/git/)
 add_subdirectory(supplemental/config/)
 add_subdirectory(supplemental/ssmtp/)
-add_subdirectory(supplemental/init_d/)
 add_subdirectory(templates/)
 add_subdirectory(po/)
 
