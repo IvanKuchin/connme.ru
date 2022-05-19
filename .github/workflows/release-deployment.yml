@@ -189,12 +189,12 @@ jobs:
             BUILD_VERSION=${{ github.sha }}
             BUILD_REPO=${{ steps.set_variables.outputs.BUILD_REPO }}
             BUILD_RELEASE_NUMBERS=${{ steps.set_variables.outputs.BUILD_RELEASE_NUMBERS }}
-          target: chat
+          target: uploaders
           push: true
           tags: |
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-chat:${{ steps.set_variables.outputs.BUILD_RELEASE }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-chat:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
-            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-chat:latest
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-uploaders:${{ steps.set_variables.outputs.BUILD_RELEASE }}
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-uploaders:${{ steps.set_variables.outputs.BUILD_RELEASE_MAJOR }}
+            ghcr.io/ivankuchin/${{ steps.set_variables.outputs.BUILD_REPO }}-uploaders:latest
 
       ##########################
       # Stop deployment        #
