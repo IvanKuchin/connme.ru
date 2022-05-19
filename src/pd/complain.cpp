@@ -22,7 +22,7 @@ int main()
 
 	indexPage.ParseURL();
 
-	if(!indexPage.SetTemplate("index.htmlt"))
+	if(!indexPage.SetProdTemplate("index.htmlt"))
 	{
 		CLog	log;
 
@@ -116,13 +116,13 @@ int main()
 
 		indexPage.RegisterVariableForce("result", ostResult.str());
 
-		if(!indexPage.SetTemplate("json_response.htmlt"))
+		if(!indexPage.SetProdTemplate("json_response.htmlt"))
 		{
 			CLog	log;
 
 			log.Write(ERROR, string(__func__) + "[" + to_string(__LINE__) + "]:ERROR: template file json_response.htmlt was missing");
 			throw CException("Template file json_response.htmlt was missing");
-		}  // if(!indexPage.SetTemplate("AJAX_SubmitImageComplain.htmlt"))
+		}  // if(!indexPage.SetProdTemplate("AJAX_SubmitImageComplain.htmlt"))
 
 		{
 			CLog	log;
@@ -159,7 +159,7 @@ int main()
 
 		c.SetDB(&db);
 
-		if(!indexPage.SetTemplate(c.GetTemplate())) {
+		if(!indexPage.SetProdTemplate(c.GetTemplate())) {
 
 			ost.str("");
 			ost << string(__func__) + ":: catch CRedirectHTML: ERROR, template redirect.htmlt not found";
@@ -180,7 +180,7 @@ int main()
 
 		MESSAGE_DEBUG("", action, "catch CExceptionHTML: DEBUG exception reason: [" + c.GetReason() + "]");
 
-		if(!indexPage.SetTemplate(c.GetTemplate()))
+		if(!indexPage.SetProdTemplate(c.GetTemplate()))
 		{
 			MESSAGE_ERROR("", "", "template (" + c.GetTemplate() + ") not found");
 			return(-1);
@@ -195,7 +195,7 @@ int main()
 	{
 		MESSAGE_ERROR("", action, "catch CException: exception: ERROR  " + c.GetReason());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		if(!indexPage.SetProdTemplate("error.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template not found");
 			return(-1);
@@ -210,7 +210,7 @@ int main()
 	{
 		MESSAGE_ERROR("", action, "catch(exception& e): catch standard exception: ERROR  " + e.what());
 
-		if(!indexPage.SetTemplateFile("templates/error.htmlt"))
+		if(!indexPage.SetProdTemplate("error.htmlt"))
 		{
 			MESSAGE_ERROR("", "", "template not found");
 			return(-1);

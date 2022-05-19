@@ -1,13 +1,14 @@
 set(EXECUTABLE_CGIs_with_PD_PI_LIBS
-    admin.cgi
     index.cgi
     anyrole_1.cgi
     book.cgi
     company.cgi
     group.cgi
     system.cgi
-    companylogouploader.cgi
     complain.cgi
+    )
+set(EXECUTABLE_UPLOADERs_with_PD_PI_LIBS
+    companylogouploader.cgi
     grouplogouploader.cgi
     )
 set(EXECUTABLE_CGIs_with_PI_LIBS
@@ -77,25 +78,25 @@ endforeach()
 foreach(EXECUTABLE_CGI ${EXECUTABLE_CGIs_with_PD_PI_LIBS})
     __add_executable_3libs(${EXECUTABLE_CGI} "${PROJECT_ALL_INCLUDE_DIRECTORIES}" "${PROJECT_PD_LIBS}" "${PROJECT_PI_LIBS}" "${PROJECT_EXTERNAL_LIBS}")
 endforeach()
+foreach(EXECUTABLE_UPLOADER ${EXECUTABLE_UPLOADERs_with_PD_PI_LIBS})
+    __add_executable_3libs(${EXECUTABLE_UPLOADER} "${PROJECT_ALL_INCLUDE_DIRECTORIES}" "${PROJECT_PD_LIBS}" "${PROJECT_PI_LIBS}" "${PROJECT_EXTERNAL_LIBS}")
+endforeach()
 
 
 # --- Install settings
 
 # --- Install part
 
-install(TARGETS index.cgi			    DESTINATION		${CGIDIR})
-install(TARGETS anyrole_1.cgi           DESTINATION     ${CGIDIR})
-install(TARGETS book.cgi    		    DESTINATION		${CGIDIR})
-install(TARGETS company.cgi			    DESTINATION		${CGIDIR})
-install(TARGETS group.cgi               DESTINATION		${CGIDIR})
-install(TARGETS system.cgi              DESTINATION     ${CGIDIR})
-install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR})
-install(TARGETS complain.cgi            DESTINATION     ${CGIDIR})
-install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR})
+install(TARGETS index.cgi			    DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS anyrole_1.cgi           DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS book.cgi    		    DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS company.cgi			    DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS group.cgi               DESTINATION		${CGIDIR}	COMPONENT app)
+install(TARGETS system.cgi              DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS complain.cgi            DESTINATION     ${CGIDIR}	COMPONENT app)
+install(TARGETS companylogouploader.cgi DESTINATION     ${CGIDIR}	COMPONENT uploaders)
+install(TARGETS grouplogouploader.cgi   DESTINATION     ${CGIDIR}	COMPONENT uploaders)
 
-
-install(TARGETS admin.cgi               DESTINATION     ${CGIADMINDIR})
-
-install(TARGETS cron_daily_pd   	   DESTINATION		${CRON_INSTALL_DIR})
+install(TARGETS cron_daily_pd   	   DESTINATION		${CRON_INSTALL_DIR}	COMPONENT cron)
 
 # print_all_variables()
