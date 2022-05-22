@@ -16,8 +16,6 @@ name: QA testing
 # Start the job on all push to master #
 #######################################
 on:
-  push:
-    branches-ignore: [master]
   pull_request:
     branches: [master]
     types: [opened, reopened, synchronize]
@@ -50,7 +48,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2
 
      #############################
      # Init deployment variables #
