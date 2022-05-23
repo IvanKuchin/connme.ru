@@ -212,6 +212,7 @@ RUN apt update \
                #software-properties-common \
                ssmtp \
                apache2 \
+               gsfonts \
     # && add-apt-repository -y ppa:jonathonf/ffmpeg-4 \
     # && apt update \
     && apt install  --no-install-recommends --no-install-suggests -y ./*.deb \
