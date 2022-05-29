@@ -112,7 +112,7 @@ set(TEMPLATES_INSTALL_DIR	${LOCAL_INSTALL_DIR}/templates)
 
 add_subdirectory(src/)
 add_subdirectory(supplemental/cron/)
-add_subdirectory(supplemental/archive/)
+# add_subdirectory(supplemental/archive/)
 add_subdirectory(supplemental/maxmind/)
 add_subdirectory(supplemental/ci-scripts/)
 add_subdirectory(supplemental/libpdf-font/)
