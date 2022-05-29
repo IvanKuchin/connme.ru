@@ -1,25 +1,6 @@
 configure_file(cron_config.in		"${CRON_PROJECT_DIR}/cron_config")
-configure_file(health.in		"${CRON_PROJECT_DIR}/health")
-configure_file(health_srcdiff.conf.in	"${CRON_PROJECT_DIR}/health_srcdiff.conf")
-
-install(FILES		"${CRON_PROJECT_DIR}/health"
-	DESTINATION	${CRON_INSTALL_DIR}
-	COMPONENT	cron
-	PERMISSIONS	OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-)
 
 install(FILES		"${CRON_PROJECT_DIR}/cron_config"
-	DESTINATION	${CRON_INSTALL_DIR}
-	COMPONENT	cron
-)
-
-install(FILES		"health_srcdiff.pl"
-	DESTINATION	${CRON_INSTALL_DIR}
-	COMPONENT	cron
-	PERMISSIONS	OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-)
-
-install(FILES		"${CRON_PROJECT_DIR}/health_srcdiff.conf"
 	DESTINATION	${CRON_INSTALL_DIR}
 	COMPONENT	cron
 )
