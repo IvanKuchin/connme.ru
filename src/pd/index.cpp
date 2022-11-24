@@ -7351,17 +7351,14 @@ int main()
 						}
 						else
 						{
-							// ----- Check captcha and session coincidence
-							if((affected = db.Query("SELECT id FROM `captcha` WHERE `purpose`='regNewUser' and `code`='" + regSecurityCode + "' and `session`='" + sessid + "' and `timestamp` > NOW() - INTERVAL " + to_string(SESSION_LEN) + " MINUTE")) == 0)
-							{
-								{
-									MESSAGE_DEBUG("", action, "check captcha fail");
-								}
+							c_captcha captcha(sessid, &config);
 
-								error_message = "Некорректный код с картинки";
-								redirect_url = "/cgi-bin/index.cgi?action=weberror_captcha_template&regEmail=" + regEmail + "&rand=" + GetRandom(10);
-							}
-							else
+							auto is_ok = false;
+							tie(is_ok, error_message) = captcha.Verify(regSecurityCode);
+
+							// ----- Check captcha and session match
+							// if((affected = db.Query("SELECT id FROM `captcha` WHERE `purpose`='regNewUser' and `code`='" + regSecurityCode + "' and `session`='" + sessid + "' and `timestamp` > NOW() - INTERVAL " + to_string(SESSION_LEN) + " MINUTE")) == 0)
+							if(is_ok && error_message.empty())
 							{
 								CActivator 	act;
 								CMailLocal	mail;
@@ -7409,7 +7406,14 @@ int main()
 								}
 
 							}
+							else
+							{
+								if(error_message.empty())
+									error_message = "Некорректный код с картинки";
+								redirect_url = "/cgi-bin/index.cgi?action=weberror_captcha_template&regEmail=" + regEmail + "&rand=" + GetRandom(10);
 
+								MESSAGE_DEBUG("", action, error_message);
+							}
 						}
 					}
 

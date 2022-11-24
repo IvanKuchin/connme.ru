@@ -665,3 +665,13 @@ ratelimited
 IGroup
 tls
 uploader
+CHTML
+companylogo
+DBby
+Dest
+grouplogo
+HDR
+LEN
+REFERER
+Unsubscribe
+XXXX

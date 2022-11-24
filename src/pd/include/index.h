@@ -9,6 +9,7 @@
 #include "cmail.h"
 #include "utilities_connme.h"
 #include "utilities_common.h"
+#include "c_captcha.h"
 
 // --- HTML definition
 #define	HTML_MAX_POLL_URL_LENGTH					512
