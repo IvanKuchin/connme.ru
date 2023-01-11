@@ -840,7 +840,7 @@ string GetUserListInJSONFormat(string dbQuery, CMysql *db, CUser *user)
 							  "\"last_onlineSecondsSinceY2k\": \""  + userLastOnlineSecondSinceY2k + "\","
 							  "\"userFriendship\": \""				+ userFriendship + "\","
 							  "\"avatar\": \""						+ avatarPath + "\","
-							  "\"ribbons\": ["						+ GetUserRibbons_InJSONFormat("SELECT * FROM `users_ribbons` WHERE `id` IN (" + Get_UserRibbonsIDByUserID_sqlquery(userID) + ");", db) + "],"
+							  "\"ribbons\": ["						+ GetUserRibbons_InJSONFormat("SELECT * FROM `users_ribbons` WHERE `user_id` IN (" + userID + ");", db) + "],"
 							  "\"currentEmployment\": "				+ userCurrentEmployment + ", "
 							  "\"currentCity\": \""					+ userCurrentCity + "\", "
 							  "\"numberUnreadMessages\": \""		+ numberUreadMessages + "\", "
