@@ -9263,7 +9263,7 @@ int main()
 				{
 					ostFinal.str("");
 					ostFinal << "{"
-							 << "\"result\" : \"success\","
+							 << "\"result\" : \"success\""
 							 << "}";
 				}
 				else
