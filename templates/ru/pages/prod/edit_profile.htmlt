@@ -14,6 +14,7 @@
 		<script src="/js/imageuploader/js/jquery.fileupload-validate.js"></script>
 
 		<link href="/css/pages/switcher.css" rel="stylesheet">
+		<link href="/css/pages/ribbons.css" rel="stylesheet">
 
 		<script src="/js/pages/edit_profile.js" type="module"></script>
 
@@ -699,7 +700,7 @@
 
 	<div class="container single_block box-shadow--6dp">
 		<div class="row">
-			<div class="col-sm-3 col-xs-4 col-sm-offset-2 ">
+			<div class="col-sm-3 col-xs-12 col-sm-offset-2 ">
 					  <span class="h3">Знаки отличия</span>
 			</div>
 		</div>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-
 		<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 		<<template:prod/header.htmlt>>
 		
@@ -11,13 +10,8 @@
 		<!-- tool tip bouncing -->
 		<!-- Custom styles for this template -->
 		<link href="/css/pages/view_profile.css" rel="stylesheet">
-		<script src="/js/pages/view_profile.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				view_profile.Init();
-			});
-		</script>
-
+		<link href="/css/pages/ribbons.css" rel="stylesheet">
+		<script src="/js/pages/view_profile.js" type="module"></script>
 	</head>
 
 	<body>
@@ -255,6 +249,20 @@
 				<div id="BookPath">
 					<<vars:BookPath>>
 				</div>
+		</div>
+
+		<div class="container single_block box-shadow--6dp">
+			<div class="row">
+				<div class="col-sm-3 col-xs-12 col-sm-offset-2 ">
+						  <span class="h3">Знаки отличия</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+				  <p></p>
+				</div>
+			</div>
+			<div id="RibbonPath"></div>
 		</div>
 
 		<div class="container single_block box-shadow--6dp">
