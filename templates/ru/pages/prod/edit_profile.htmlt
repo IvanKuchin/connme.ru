@@ -1,33 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+		<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+		<<template:prod/header.htmlt>>
 
-	<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-	<<template:prod/header.htmlt>>
+		 <!-- Image uploader -->
+		<script src="/js/imageuploader/js/vendor/jquery.ui.widget.js"></script>
+		<script src="/js/imageuploader/js/load-image.all.min.js"></script>
+		<script src="/js/imageuploader/js/jquery.iframe-transport.js"></script>
+		<script src="/js/imageuploader/js/jquery.fileupload.js"></script>
+		<script src="/js/imageuploader/js/jquery.fileupload-process.js"></script>
+		<script src="/js/imageuploader/js/jquery.fileupload-image.js"></script>
+		<script src="/js/imageuploader/js/jquery.fileupload-validate.js"></script>
 
-	 <!-- Image uploader -->
-	<script src="/js/imageuploader/js/vendor/jquery.ui.widget.js"></script>
-	<script src="/js/imageuploader/js/load-image.all.min.js"></script>
-	<script src="/js/imageuploader/js/jquery.iframe-transport.js"></script>
-	<script src="/js/imageuploader/js/jquery.fileupload.js"></script>
-	<script src="/js/imageuploader/js/jquery.fileupload-process.js"></script>
-	<script src="/js/imageuploader/js/jquery.fileupload-image.js"></script>
-	<script src="/js/imageuploader/js/jquery.fileupload-validate.js"></script>
+		<link href="/css/pages/switcher.css" rel="stylesheet">
+		<link href="/css/pages/ribbons.css" rel="stylesheet">
 
-	<link href="/css/pages/switcher.css" rel="stylesheet">
+		<script src="/js/pages/edit_profile.js" type="module"></script>
 
-	<script src="/js/pages/edit_profile.js"></script>
+		<title><<vars:title_head>></title>
 
-	<title><<vars:title_head>></title>
-
-	<!-- Custom styles for this template -->
-	<link href="/css/pages/edit_profile.css" rel="stylesheet">
-	<script>
-	  $(document).ready(function() {
-		edit_profile.Init();
-	  });
-	</script>
-
+		<!-- Custom styles for this template -->
+		<link href="/css/pages/edit_profile.css" rel="stylesheet">
   </head>
 
   <body>
@@ -703,6 +697,21 @@
 		<div id="BookPath">
 		</div>
 	</div> <!-- /container -->
+
+	<div class="container single_block box-shadow--6dp">
+		<div class="row">
+			<div class="col-sm-3 col-xs-12 col-sm-offset-2 ">
+					  <span class="h3">Знаки отличия</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+			  <p></p>
+			</div>
+		</div>
+		<div id="RibbonPath"></div>
+	</div>
+
 
 	<div class="container single_block box-shadow--6dp">
 		<div class="row">
