@@ -311,11 +311,6 @@ RUN apt update \
     && apt install  --no-install-recommends --no-install-suggests -y ./*.deb \
     && rm -rf /var/lib/apt/lists/*
 
-#########################
-# configure mail sender #
-#########################
-#RUN sed -i "s/#rewriteDomain=/rewriteDomain=${BUILD_REPO}/g" /etc/ssmtp/ssmtp.conf
-
 #####################
 # configure apache2 #
 #####################
