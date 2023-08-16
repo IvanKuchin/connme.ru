@@ -199,7 +199,7 @@ RUN cd build \
 
 # STOPSIGNAL SIGTERM
 
-# CMD ["apachectl", "-D", "FOREGROUND", ""]
+# CMD ["apachectl", "-D", "FOREGROUND"]
 
 ############################################################################################
 
@@ -279,7 +279,7 @@ RUN chown -R www-data:www-data ${ROOTDIR} \
 
 EXPOSE 80
 
-CMD ["apachectl", "-D", "FOREGROUND", ""]
+CMD ["apachectl", "-D", "FOREGROUND"]
 
 ############################################################################################
 
@@ -339,10 +339,9 @@ RUN chown -R www-data:www-data ${ROOTDIR} \
 
 EXPOSE 80
 
-CMD ["apachectl", "-D", "FOREGROUND", ""]
+CMD ["apachectl", "-D", "FOREGROUND"]
 
 ############################################################################################
-
 
 FROM base as cron
 
