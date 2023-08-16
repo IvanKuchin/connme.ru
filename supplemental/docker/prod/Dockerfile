@@ -306,14 +306,9 @@ COPY --from=build ${GIT_FOLDER}/supplemental/apache2/ /etc/apache2/
 ####################
 RUN apt update \
     && apt-get install --no-install-recommends --no-install-suggests -y \
-               software-properties-common \
-               # ssmtp \
                apache2 \
-    && add-apt-repository -y ppa:jonathonf/ffmpeg-4 \
-    && apt update \
     && apt install  --no-install-recommends --no-install-suggests -y ffmpeg \
     && apt install  --no-install-recommends --no-install-suggests -y ./*.deb \
-    && apt autoremove -y software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 
 #########################
