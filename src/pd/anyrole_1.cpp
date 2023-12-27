@@ -1,5 +1,30 @@
 #include "anyrole.h"
 
+static auto Is_ImageSet_Ordered(const string &set_id, CMysql *db) 
+{
+	MESSAGE_DEBUG("", "", "start");
+
+	auto 	error_message = "";
+	auto	result = false;
+
+	auto	affected = db->Query("SELECT `order` FROM `feed_images` WHERE `setID`=" + quoted(set_id) + " ORDER BY `order` DESC;");
+
+	if(affected)
+	{
+		auto	last_number_str = db->Get(0, "order");
+		auto	last_number = stoi(last_number_str);
+
+		if(last_number == affected - 1)
+		{
+			result = true;
+		}
+	}
+
+	MESSAGE_DEBUG("", "", "finish(" + to_string(result) + ", " + error_message + ")");
+
+	return make_tuple(result, error_message);
+}
+
 static auto RenumberOrder_in_ImageSet(const string &set_id, CMysql *db)
 {
 	MESSAGE_DEBUG("", "", "start");
@@ -126,29 +151,52 @@ int main(void)
 
 								if(set_id1 == set_id2)
 								{
-									if(db.Query(Get_OrderByImageID_sqlquery(id1)))
+									auto sorted_tuple = Is_ImageSet_Ordered(set_id1, &db);
+									error_message = get<1>(sorted_tuple);
+
+									if(error_message == "")
 									{
-										auto	order1 = db.Get(0, 0);
-
-										if(db.Query(Get_OrderByImageID_sqlquery(id2)))
+										if(!get<0>(sorted_tuple)) 
 										{
-											auto	order2 = db.Get(0, 0);
+											error_message = RenumberOrder_in_ImageSet(set_id1, &db);
+										}
 
-											db.Query("UPDATE `feed_images` SET `order`=" + quoted(order1) + " WHERE `id`=(" + id2 + ");");
-											db.Query("UPDATE `feed_images` SET `order`=" + quoted(order2) + " WHERE `id`=(" + id1 + ");");
+										if(error_message.empty())
+										{
+											if(db.Query(Get_OrderByImageID_sqlquery(id1)))
+											{
+												auto	order1 = db.Get(0, 0);
+
+												if(db.Query(Get_OrderByImageID_sqlquery(id2)))
+												{
+													auto	order2 = db.Get(0, 0);
+
+													db.Query("UPDATE `feed_images` SET `order`=" + quoted(order1) + " WHERE `id`=(" + id2 + ");");
+													db.Query("UPDATE `feed_images` SET `order`=" + quoted(order2) + " WHERE `id`=(" + id1 + ");");
+												}
+												else
+												{
+													error_message = gettext("Access prohibited");
+													MESSAGE_DEBUG("", "", error_message);
+												}
+											}
+											else
+											{
+												error_message = gettext("Access prohibited");
+												MESSAGE_DEBUG("", "", error_message);
+											}
 										}
 										else
 										{
-											error_message = gettext("Access prohibited");
+											error_message = gettext("Issues with sorting message images");
 											MESSAGE_DEBUG("", "", error_message);
 										}
 									}
 									else
 									{
-										error_message = gettext("Access prohibited");
+										error_message = gettext("Issues with sorting message images");
 										MESSAGE_DEBUG("", "", error_message);
 									}
-
 								}
 								else
 								{
