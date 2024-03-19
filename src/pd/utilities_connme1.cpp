@@ -641,6 +641,9 @@ string GetMessageImageList(string imageSetID, CMysql *db)
 				ost << "\"id\":\"" << db->Get(i, "id") << "\",";
 				ost << "\"folder\":\"" << db->Get(i, "folder") << "\",";
 				ost << "\"filename\":\"" << db->Get(i, "filename") << "\",";
+				ost << "\"exifGPSAltitude\":\""  << db->Get(i, "exifGPSAltitude")  << "\",";
+				ost << "\"exifGPSLatitude\":\""  << db->Get(i, "exifGPSLatitude")  << "\",";
+				ost << "\"exifGPSLongitude\":\"" << db->Get(i, "exifGPSLongitude") << "\",";
 				ost << "\"mediaType\":\"" << db->Get(i, "mediaType") << "\",";
 				ost << "\"order\":\"" << db->Get(i, "order") << "\",";
 				ost << "\"isActive\":\"" << db->Get(i, "isActive") << "\"";
