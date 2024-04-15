@@ -40,7 +40,7 @@
 									<i class="glyphicon glyphicon-picture"></i>
 									<span>Загрузить фото...</span>
 									<!-- The file input field used as target for the file upload widget -->
-									<input id="newMessageFileUpload" type="file" name="files[]" multiple accept="image/*, video/*" class="__file_upload">
+									<input id="newMessageFileUpload" type="file" name="files[]" multiple accept="image/*, video/*, .heic, .heif" class="__file_upload">
 							<!-- The global progress bar -->
 							</span> 
 					 
@@ -114,7 +114,7 @@
 									<i class="glyphicon glyphicon-picture"></i>
 									<span>Загрузить фото...</span>
 									<!-- The file input field used as target for the file upload widget -->
-									<input id="editFileupload" type="file" name="files[]" multiple accept="image/*, video/*" class="__file_upload">
+									<input id="editFileupload" type="file" name="files[]" multiple accept="image/*, video/*, .heic, .heif" class="__file_upload">
 							<!-- The global progress bar -->
 							</span> 
 							<div id="EditMessageProgress" class="progress __progress" width="100%" style="position:relative">
