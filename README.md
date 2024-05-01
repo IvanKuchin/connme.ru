@@ -1,3 +1,3 @@
 # connme.ru
 
-Backend containers for your own social network.
+Backend containers for your own social network
